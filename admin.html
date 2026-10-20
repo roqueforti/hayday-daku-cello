@@ -1088,6 +1088,15 @@
             if (parsed.thx) state.thx = parsed.thx;
             if (parsed.sections && Array.isArray(parsed.sections)) {
               state.sections = parsed.sections;
+              if (typeof cleanItemName === "function") {
+                state.sections.forEach(function (sec) {
+                  if (sec && Array.isArray(sec.items)) {
+                    sec.items.forEach(function (it) {
+                      if (it && it.n) it.n = cleanItemName(it.n);
+                    });
+                  }
+                });
+              }
             }
           }
         } catch (e) {

@@ -6,37 +6,37 @@ var DEFAULT_SECTIONS = [
   {
     t: "🧰 Alat & Bahan",
     items: [
-      { id: "sekop", e: "assets/icons/sekop.png", n: "100 Sekop", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-      { id: "kapak", e: "assets/icons/kapak.png", n: "100 Kapak", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
-      { id: "gergaji", e: "assets/icons/gergaji.png", n: "100 Gergaji", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" }
+      { id: "sekop", e: "assets/icons/sekop.png", n: "Sekop", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
+      { id: "kapak", e: "assets/icons/kapak.png", n: "Kapak", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
+      { id: "gergaji", e: "assets/icons/gergaji.png", n: "Gergaji", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" }
     ]
   },
   {
     t: "🥛 Dapur & Peternakan",
     items: [
-      { id: "krim", e: "assets/icons/krim.png", n: "100 Krim", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#f57c1f" },
-      { id: "gulaputih", e: "assets/icons/gulaputih.png", n: "100 Gula Putih", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e9b200" },
-      { id: "gulamerah", e: "assets/icons/gulamerah.png", n: "100 Gula Merah", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#27b83a" },
-      { id: "babi", e: "assets/icons/babi.png", n: "100 Daging Babi", u: 100, ut: "pcs", p: 1200, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" },
-      { id: "telor", e: "assets/icons/telor.png", n: "100 Telor", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#2d73e6" },
-      { id: "mentega", e: "assets/icons/mentega.png", n: "100 Mentega", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-      { id: "keju", e: "assets/icons/keju.png", n: "100 Keju", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
-      { id: "madu", e: "assets/icons/madu.png", n: "100 Madu", u: 100, ut: "pcs", p: 2000, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" }
+      { id: "krim", e: "assets/icons/krim.png", n: "Krim", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#f57c1f" },
+      { id: "gulaputih", e: "assets/icons/gulaputih.png", n: "Gula Putih", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e9b200" },
+      { id: "gulamerah", e: "assets/icons/gulamerah.png", n: "Gula Merah", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#27b83a" },
+      { id: "babi", e: "assets/icons/babi.png", n: "Daging Babi", u: 100, ut: "pcs", p: 1200, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" },
+      { id: "telor", e: "assets/icons/telor.png", n: "Telor", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#2d73e6" },
+      { id: "mentega", e: "assets/icons/mentega.png", n: "Mentega", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
+      { id: "keju", e: "assets/icons/keju.png", n: "Keju", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
+      { id: "madu", e: "assets/icons/madu.png", n: "Madu", u: 100, ut: "pcs", p: 2000, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" }
     ]
   },
   {
     t: "🌊 Laut",
     items: [
-      { id: "ikan", e: "assets/icons/ikan.png", n: "100 Ikan", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-      { id: "lopster", e: "assets/icons/lopster.png", n: "100 Lopster", u: 100, ut: "pcs", p: 2500, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" }
+      { id: "ikan", e: "assets/icons/ikan.png", n: "Ikan", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
+      { id: "lopster", e: "assets/icons/lopster.png", n: "Lopster", u: 100, ut: "pcs", p: 2500, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" }
     ]
   },
   {
     t: "🏡 Tagar BEM (per paket)",
     pk: 1,
     items: [
-      { id: "bem1", e: "assets/icons/bem.png", n: "1 Tagar BEM", u: 1, ut: "paket", p: 1500, d: "Per paket", c: "#2e9a3a" },
-      { id: "bem30", e: "assets/icons/bem.png", n: "30 Tagar BEM", u: 1, ut: "paket", p: 28500, d: "Per paket", c: "#2d73e6" }
+      { id: "bem1", e: "assets/icons/bem.png", n: "Tagar BEM", u: 1, ut: "paket", p: 1500, d: "Per paket", c: "#2e9a3a" },
+      { id: "bem30", e: "assets/icons/bem.png", n: "Tagar BEM (30 pcs)", u: 1, ut: "paket", p: 28500, d: "Per paket", c: "#2d73e6" }
     ]
   },
   {
@@ -110,6 +110,21 @@ function calcPrice(it, qty) {
   return (it.p / getUnitVal(it)) * qty;
 }
 
+// Membersihkan awalan angka/jumlah seperti "100 Kapak" -> "Kapak"
+function cleanItemName(n) {
+  if (!n) return "";
+  var trimmed = String(n).trim();
+  // Hanya bersihkan awalan angka bulat murni diikuti spasi (misal "100 Kapak", "1 Tagar BEM", bukan "1 Juta Koin" / "10 Juta Koin")
+  var m = trimmed.match(/^(\d+)\s+(.+)$/);
+  if (m) {
+    var firstWord = m[2].trim().toLowerCase();
+    if (firstWord !== "juta" && firstWord !== "k" && firstWord !== "m") {
+      return m[2].trim();
+    }
+  }
+  return trimmed;
+}
+
 function getStoreData() {
   var data = {
     wa: DEFAULT_WA,
@@ -124,6 +139,16 @@ function getStoreData() {
       if (parsed.thx) data.thx = parsed.thx;
       if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
         data.sections = parsed.sections;
+        // Bersihkan nama produk lama dari angka di depannya (misal "100 Kapak" -> "Kapak")
+        data.sections.forEach(function (sec) {
+          if (sec && Array.isArray(sec.items)) {
+            sec.items.forEach(function (it) {
+              if (it && it.n) {
+                it.n = cleanItemName(it.n);
+              }
+            });
+          }
+        });
       }
     }
   } catch (e) {
