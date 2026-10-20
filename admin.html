@@ -48,9 +48,10 @@
         padding-bottom: 90px;
       }
       .wrap {
-        max-width: 950px;
+        max-width: 1400px;
+        width: 96%;
         margin: 0 auto;
-        padding: 20px 14px;
+        padding: 20px 14px 100px;
       }
       header {
         text-align: center;
@@ -99,10 +100,10 @@
         border: 2px solid #6b3c12;
         cursor: pointer;
         box-shadow: 0 4px 0 #6b3c12;
-        transition: 0.1s;
+        transition: 0.15s;
       }
       .nav-top a:active,
-      .btn:active {
+      .btn:active:not([disabled]) {
         transform: translateY(2px);
         box-shadow: 0 2px 0 #6b3c12;
       }
@@ -113,6 +114,22 @@
       .btn-save {
         background: #46b23c;
         color: #fff;
+        box-shadow: 0 4px 0 #2b8423;
+      }
+      .btn-save[disabled] {
+        background: #a3a89e;
+        border-color: #7b8077;
+        box-shadow: 0 3px 0 #646860;
+        cursor: not-allowed;
+        opacity: 0.65;
+        transform: none !important;
+      }
+      .btn-save:not([disabled]) {
+        animation: pulseSave 2s infinite;
+      }
+      @keyframes pulseSave {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.03); }
       }
       .btn-reset {
         background: #f7a627;
@@ -125,18 +142,19 @@
       .btn-danger {
         background: var(--red);
         color: #fff;
-        padding: 4px 10px;
+        padding: 6px 12px;
         font-size: 13px;
         border-radius: 8px;
         border: none;
         box-shadow: 0 2px 0 #80180e;
+        cursor: pointer;
       }
 
       .panel {
         background: var(--card);
         border: 3px solid var(--line);
         border-radius: 20px;
-        padding: 18px;
+        padding: 22px;
         box-shadow: 0 6px 0 var(--line), 0 12px 24px var(--shadow);
         margin-bottom: 22px;
       }
@@ -153,8 +171,8 @@
       /* Admin Layout with Category Sidebar */
       .admin-layout {
         display: grid;
-        grid-template-columns: 240px 1fr;
-        gap: 16px;
+        grid-template-columns: 260px 1fr;
+        gap: 18px;
         align-items: start;
       }
       .cat-sidebar {
@@ -324,16 +342,19 @@
         width: 100%;
       }
       .row-n {
-        min-width: 130px;
+        min-width: 170px;
+        font-weight: 800;
       }
       .row-u {
-        width: 80px;
+        width: 90px;
+        text-align: center;
       }
       .row-p {
-        width: 100px;
+        width: 130px;
       }
       .row-d {
-        min-width: 160px;
+        min-width: 280px;
+        width: 100%;
       }
       .row-c {
         width: 44px;
@@ -676,8 +697,7 @@
     <input type="file" id="imgUploadInput" accept="image/*" style="display:none;" />
 
     <div class="bottom-bar" id="bottomBar" style="display:none;">
-      <button id="btnSave" class="btn btn-save" style="font-size:16px; padding:10px 28px;">💾 Simpan Perubahan</button>
-      <button id="btnResetDefault" class="btn btn-reset">🔄 Reset ke Bawaan</button>
+      <button id="btnSave" class="btn btn-save" style="font-size:16px; padding:12px 36px;" disabled>💾 Simpan Perubahan</button>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -880,6 +900,31 @@
         return eVal || "📦";
       }
 
+      var isDirty = false;
+      var savedSnapshot = "";
+
+      function setClean() {
+        collectCurrentState();
+        savedSnapshot = JSON.stringify(state);
+        isDirty = false;
+        var btn = document.getElementById("btnSave");
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "💾 Tersimpan";
+        }
+      }
+
+      function markDirty() {
+        collectCurrentState();
+        var currentSnapshot = JSON.stringify(state);
+        isDirty = (currentSnapshot !== savedSnapshot);
+        var btn = document.getElementById("btnSave");
+        if (btn) {
+          btn.disabled = !isDirty;
+          btn.textContent = isDirty ? "💾 Simpan Perubahan (*)" : "💾 Tersimpan";
+        }
+      }
+
       function render() {
         document.getElementById("cfgWa").value = state.wa || "";
         document.getElementById("cfgThx").value = state.thx || "";
@@ -913,7 +958,7 @@
           var h = `
             <div class="sec-header">
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <input type="text" class="sec-title-input" value="${(sec.t || '').replace(/"/g, '&quot;')}" style="font-weight:800; width:260px;" data-sidx="${sIdx}" />
+                <input type="text" class="sec-title-input" value="${(sec.t || '').replace(/"/g, '&quot;')}" style="font-weight:800; width:280px;" data-sidx="${sIdx}" />
                 <label style="font-size:13px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
                   <input type="checkbox" class="sec-pk-input" data-sidx="${sIdx}" ${isPk ? 'checked' : ''} />
                   Per Paket (bukan per 100 pcs)
@@ -929,9 +974,9 @@
                 <thead>
                   <tr>
                     <th style="width:140px;">Icon Produk</th>
-                    <th style="width:130px;">Nama Item</th>
-                    <th style="width:75px;" title="Jumlah satuan dasar (default 100 pcs untuk reguler, atau 1 untuk per paket)">Satuan</th>
-                    <th style="width:105px;">Harga (Rp)</th>
+                    <th style="width:180px;">Nama Item</th>
+                    <th style="width:85px;" title="Jumlah satuan dasar (default 100 pcs untuk reguler, atau 1 untuk per paket)">Satuan</th>
+                    <th style="width:125px;">Harga (Rp)</th>
                     <th>Deskripsi Produk</th>
                     <th style="width:45px;">Warna</th>
                     <th style="width:45px; text-align:center;">Aksi</th>
@@ -958,10 +1003,10 @@
                     </div>
                   </div>
                 </td>
-                <td><input type="text" class="row-n" value="${(it.n || '').replace(/"/g, '&quot;')}" placeholder="Nama..." data-s="${sIdx}" data-i="${iIdx}" data-f="n" /></td>
+                <td><input type="text" class="row-n" value="${(it.n || '').replace(/"/g, '&quot;')}" placeholder="Nama item..." data-s="${sIdx}" data-i="${iIdx}" data-f="n" /></td>
                 <td><input type="number" class="row-u" value="${unitVal}" placeholder="${defaultUnitPlaceholder}" min="1" step="1" title="Contoh: 100, 1, 10" data-s="${sIdx}" data-i="${iIdx}" data-f="u" /></td>
                 <td><input type="number" class="row-p" value="${it.p || 0}" step="100" data-s="${sIdx}" data-i="${iIdx}" data-f="p" /></td>
-                <td><input type="text" class="row-d" value="${descVal.replace(/"/g, '&quot;')}" placeholder="Deskripsi/catatan..." data-s="${sIdx}" data-i="${iIdx}" data-f="d" /></td>
+                <td><input type="text" class="row-d" value="${descVal.replace(/"/g, '&quot;')}" placeholder="Ketik deskripsi / catatan..." data-s="${sIdx}" data-i="${iIdx}" data-f="d" /></td>
                 <td><input type="color" class="row-c" value="${it.c || '#7a2fe0'}" data-s="${sIdx}" data-i="${iIdx}" data-f="c" /></td>
                 <td class="row-act"><button class="btn-danger" onclick="deleteItem(${sIdx}, ${iIdx})">✕</button></td>
               </tr>
@@ -980,7 +1025,7 @@
 
         // Event listener title & checkbox
         container.querySelectorAll(".sec-title-input").forEach(function(inp) {
-          inp.onchange = function(e) {
+          inp.oninput = function(e) {
             var idx = e.target.dataset.sidx;
             state.sections[idx].t = e.target.value;
             // Update label sidebar realtime
@@ -989,6 +1034,7 @@
               var count = (state.sections[idx].items || []).length;
               navItem.innerHTML = `<span>${(e.target.value || 'Kategori ' + (parseInt(idx, 10) + 1)).replace(/"/g, '&quot;')}</span><span class="cat-badge">${count}</span>`;
             }
+            markDirty();
           };
         });
 
@@ -1001,12 +1047,13 @@
               delete state.sections[idx].pk;
             }
             render();
+            markDirty();
           };
         });
 
         // Event listener field item (nama, satuan, harga, deskripsi, warna)
         container.querySelectorAll("table input").forEach(function(inp) {
-          inp.onchange = function(e) {
+          inp.oninput = function(e) {
             var s = e.target.dataset.s;
             var i = e.target.dataset.i;
             var f = e.target.dataset.f;
@@ -1017,6 +1064,7 @@
               val = val === "" ? "" : (Number(val) || 1);
             }
             state.sections[s].items[i][f] = val;
+            markDirty();
           };
         });
       }
@@ -1149,6 +1197,7 @@
           c: "#46b23c"
         });
         render();
+        markDirty();
         toast("Item baru ditambahkan ✨");
       };
 
@@ -1156,12 +1205,14 @@
         if (!confirm("Hapus item ini?")) return;
         state.sections[sIdx].items.splice(iIdx, 1);
         render();
+        markDirty();
       };
 
       window.deleteSection = function(sIdx) {
         if (!confirm("Hapus kategori ini beserta seluruh isinya?")) return;
         state.sections.splice(sIdx, 1);
         render();
+        markDirty();
       };
 
       document.getElementById("btnAddSection").onclick = function() {
@@ -1170,34 +1221,29 @@
           items: []
         });
         render();
+        markDirty();
         toast("Kategori baru ditambahkan 📁");
       };
 
       function collectCurrentState() {
-        state.wa = document.getElementById("cfgWa").value.trim() || DEFAULT_WA;
-        state.thx = document.getElementById("cfgThx").value.trim() || DEFAULT_THX;
+        var waInput = document.getElementById("cfgWa");
+        var thxInput = document.getElementById("cfgThx");
+        if (waInput) state.wa = waInput.value.trim() || DEFAULT_WA;
+        if (thxInput) state.thx = thxInput.value.trim() || DEFAULT_THX;
       }
+
+      document.getElementById("cfgWa").oninput = markDirty;
+      document.getElementById("cfgThx").oninput = markDirty;
 
       document.getElementById("btnSave").onclick = function() {
         collectCurrentState();
         try {
           localStorage.setItem("hayday_daku_cello_data", JSON.stringify(state));
-          toast("Perubahan berhasil disimpan! ✅");
+          setClean();
+          toast("Semua perubahan berhasil disimpan! ✅");
         } catch (e) {
           alert("Gagal menyimpan ke penyimpanan lokal: " + e.message);
         }
-      };
-
-      document.getElementById("btnResetDefault").onclick = function() {
-        if (!confirm("Yakin ingin mengembalikan semua data ke setelan awal?")) return;
-        localStorage.removeItem("hayday_daku_cello_data");
-        state = {
-          wa: DEFAULT_WA,
-          thx: DEFAULT_THX,
-          sections: JSON.parse(JSON.stringify(DEFAULT_SECTIONS))
-        };
-        render();
-        toast("Data dikembalikan ke default 🔄");
       };
 
       // Export ke File Excel (.xlsx)
@@ -1458,6 +1504,7 @@
       loadData();
       buildIconLibrary();
       render();
+      setClean();
     </script>
   </body>
 </html>
