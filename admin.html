@@ -937,14 +937,31 @@
         if (catCountEl) catCountEl.textContent = state.sections.length;
         if (navListEl) navListEl.innerHTML = "";
 
+        var activeCatFilter = window.activeCategoryFilter !== undefined ? window.activeCategoryFilter : "all";
+        var totalAllProducts = 0;
+        state.sections.forEach(function(sec) {
+          totalAllProducts += (sec.items || []).length;
+        });
+
+        // 1. Tombol 'Semua Kategori' di Sidebar
+        if (navListEl) {
+          var allBtn = document.createElement("button");
+          allBtn.type = "button";
+          allBtn.className = "cat-nav-item" + (activeCatFilter === "all" ? " active" : "");
+          allBtn.id = "catNavItem-all";
+          allBtn.onclick = function() { selectCategoryFilter("all"); };
+          allBtn.innerHTML = `<span>🌟 Semua Kategori</span><span class="cat-badge">${totalAllProducts}</span>`;
+          navListEl.appendChild(allBtn);
+        }
+
         state.sections.forEach(function(sec, sIdx) {
           // Render item sidebar
           if (navListEl) {
             var navBtn = document.createElement("button");
             navBtn.type = "button";
-            navBtn.className = "cat-nav-item";
+            navBtn.className = "cat-nav-item" + (String(activeCatFilter) === String(sIdx) ? " active" : "");
             navBtn.id = "catNavItem-" + sIdx;
-            navBtn.onclick = function() { scrollToCategory(sIdx); };
+            navBtn.onclick = function() { selectCategoryFilter(sIdx); };
             navBtn.innerHTML = `<span>${(sec.t || 'Kategori ' + (sIdx + 1)).replace(/"/g, '&quot;')}</span><span class="cat-badge">${(sec.items || []).length}</span>`;
             navListEl.appendChild(navBtn);
           }
@@ -952,6 +969,9 @@
           var secEl = document.createElement("div");
           secEl.className = "sec-box";
           secEl.id = "adminSecBox-" + sIdx;
+          if (activeCatFilter !== "all" && String(activeCatFilter) !== String(sIdx)) {
+            secEl.style.display = "none";
+          }
 
           var isPk = sec.pk ? true : false;
 
@@ -1069,16 +1089,43 @@
         });
       }
 
-      window.scrollToCategory = function(sIdx) {
-        var targetEl = document.getElementById("adminSecBox-" + sIdx);
-        if (targetEl) {
-          targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-          document.querySelectorAll(".cat-nav-item").forEach(function(el) {
-            el.classList.remove("active");
-          });
-          var curBtn = document.getElementById("catNavItem-" + sIdx);
-          if (curBtn) curBtn.classList.add("active");
+      window.activeCategoryFilter = "all";
+
+      window.selectCategoryFilter = function(sIdx) {
+        window.activeCategoryFilter = sIdx;
+
+        // Update active class pada tombol sidebar
+        document.querySelectorAll(".cat-nav-item").forEach(function(el) {
+          el.classList.remove("active");
+        });
+
+        var activeBtn = document.getElementById(sIdx === "all" ? "catNavItem-all" : "catNavItem-" + sIdx);
+        if (activeBtn) activeBtn.classList.add("active");
+
+        // Tampilkan/sembunyikan box kategori sesuai filter
+        state.sections.forEach(function(sec, idx) {
+          var secEl = document.getElementById("adminSecBox-" + idx);
+          if (!secEl) return;
+          if (sIdx === "all" || String(sIdx) === String(idx)) {
+            secEl.style.display = "";
+          } else {
+            secEl.style.display = "none";
+          }
+        });
+
+        // Scroll halus ke kategori terpilih atau ke container atas
+        if (sIdx === "all") {
+          scrollToTopCategory();
+        } else {
+          var targetEl = document.getElementById("adminSecBox-" + sIdx);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         }
+      };
+
+      window.scrollToCategory = function(sIdx) {
+        selectCategoryFilter(sIdx);
       };
 
       window.scrollToTopCategory = function() {
@@ -1211,18 +1258,26 @@
       window.deleteSection = function(sIdx) {
         if (!confirm("Hapus kategori ini beserta seluruh isinya?")) return;
         state.sections.splice(sIdx, 1);
+        window.activeCategoryFilter = "all";
         render();
         markDirty();
       };
 
       document.getElementById("btnAddSection").onclick = function() {
+        var newIdx = state.sections.length;
         state.sections.push({
           t: "✨ Kategori Baru",
           items: []
         });
+        window.activeCategoryFilter = newIdx;
         render();
         markDirty();
         toast("Kategori baru ditambahkan 📁");
+        var newInp = document.querySelector("#adminSecBox-" + newIdx + " .sec-title-input");
+        if (newInp) {
+          newInp.focus();
+          newInp.select();
+        }
       };
 
       function collectCurrentState() {
