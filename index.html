@@ -1414,9 +1414,7 @@
               : (it.e || '📦');
 
           var uName = unitName(it);
-          var detailQty = uName === "paket" && unit(it) === 1
-            ? qty + " paket (@ " + rp(it.p) + ")"
-            : qty + " " + uName + " (@ " + rp(it.p) + " / " + unitLabel(it) + ")";
+          var detailQty = qty + " " + uName;
 
           html +=
             '<div class="cart-item-row">' +
@@ -1556,9 +1554,7 @@
             var subtotal = price(it);
             total += subtotal;
             var uName = unitName(it);
-            var rincian = (uName === "paket" && unit(it) === 1)
-              ? "• *" + (it.n || label(it)) + "*: " + qty + " paket x " + rp(it.p) + " = *" + rp(subtotal) + "*"
-              : "• *" + (it.n || label(it)) + "*: " + qty + " " + uName + " (harga " + rp(it.p) + " / " + unitLabel(it) + ") = *" + rp(subtotal) + "*";
+            var rincian = "• *" + (it.n || label(it)) + "*: " + qty + " " + uName + " = *" + rp(subtotal) + "*";
             lines.push(rincian);
           }
         });
