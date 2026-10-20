@@ -182,3 +182,98 @@ function getStoreData() {
   }
   return data;
 }
+
+// ==========================================
+// FIREBASE CLOUD DATABASE REALTIME SYNC
+// ==========================================
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyB2vKWEt55J6A5mBJaCyI3eB70tvXkkQnk",
+  authDomain: "dakucello.firebaseapp.com",
+  projectId: "dakucello",
+  storageBucket: "dakucello.firebasestorage.app",
+  messagingSenderId: "395549212760",
+  appId: "1:395549212760:web:5b7374880a31023862ca2d",
+  measurementId: "G-103C816WWQ"
+};
+
+var firestoreDb = null;
+
+function initFirebaseDb() {
+  if (firestoreDb) return firestoreDb;
+  try {
+    if (typeof firebase !== "undefined" && firebase.initializeApp) {
+      if (!firebase.apps.length) {
+        firebase.initializeApp(FIREBASE_CONFIG);
+      }
+      firestoreDb = firebase.firestore();
+      return firestoreDb;
+    }
+  } catch (err) {
+    console.warn("Inisialisasi Firebase gagal, fallback ke offline:", err);
+  }
+  return null;
+}
+
+// Simpan data toko ke Cloud Firestore
+function saveStoreDataToCloud(dataObj, callback) {
+  var db = initFirebaseDb();
+  if (!db) {
+    if (callback) callback(null);
+    return;
+  }
+  try {
+    var payload = {
+      wa: dataObj.wa || DEFAULT_WA,
+      thx: dataObj.thx || DEFAULT_THX,
+      sections: dataObj.sections || DEFAULT_SECTIONS,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    db.collection("settings").doc("store").set(payload, { merge: true })
+      .then(function() {
+        console.log("Data berhasil tersimpan di Firebase Firestore Cloud ✅");
+        if (callback) callback(true);
+      })
+      .catch(function(err) {
+        console.error("Gagal simpan ke Firestore:", err);
+        if (callback) callback(false, err);
+      });
+  } catch (e) {
+    console.error("Error saveStoreDataToCloud:", e);
+    if (callback) callback(false, e);
+  }
+}
+
+// Berlangganan (listen) perubahan data secara realtime dari Firestore
+function listenStoreDataCloud(onUpdateCallback) {
+  var db = initFirebaseDb();
+  if (!db) return;
+  try {
+    db.collection("settings").doc("store").onSnapshot(function(doc) {
+      if (doc.exists) {
+        var cloudData = doc.data();
+        if (cloudData && cloudData.sections && Array.isArray(cloudData.sections)) {
+          // Bersihkan nama jika perlu
+          cloudData.sections.forEach(function (sec) {
+            if (sec && Array.isArray(sec.items)) {
+              sec.items.forEach(function (it) {
+                if (it && it.n && typeof cleanItemName === "function") {
+                  it.n = cleanItemName(it.n);
+                }
+              });
+            }
+          });
+          // Update cache lokal
+          try {
+            localStorage.setItem("hayday_daku_cello_data", JSON.stringify(cloudData));
+          } catch(e) {}
+          if (onUpdateCallback) onUpdateCallback(cloudData);
+        }
+      }
+    }, function(err) {
+      console.warn("Firestore listener error:", err);
+    });
+  } catch(e) {
+    console.warn("listenStoreDataCloud error:", e);
+  }
+}
+

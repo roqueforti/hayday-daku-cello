@@ -1254,6 +1254,10 @@
 
     <div class="toast" id="toast"></div>
 
+    <!-- Firebase App & Firestore SDKs (v8 Compat CDN for seamless browser runtime) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <!-- Shared Store Data & Logic -->
     <script src="data.js"></script>
     <script>
@@ -2007,7 +2011,19 @@
         try {
           localStorage.setItem("hayday_daku_cello_data", JSON.stringify(state));
           setClean();
-          toast("Semua perubahan berhasil disimpan! ✅");
+          toast("Menyimpan ke Cloud Database... ☁️");
+          // Sync ke Firebase Firestore Cloud
+          if (typeof saveStoreDataToCloud === "function") {
+            saveStoreDataToCloud(state, function(success, err) {
+              if (success) {
+                toast("Tersimpan ke Cloud Database & Semua Pembeli! 🚀");
+              } else {
+                toast("Tersimpan lokal (Cloud belum tersinkron) 💾");
+              }
+            });
+          } else {
+            toast("Semua perubahan berhasil disimpan! ✅");
+          }
         } catch (e) {
           alert("Gagal menyimpan ke penyimpanan lokal: " + e.message);
         }
@@ -2284,6 +2300,20 @@
       buildIconLibrary();
       render();
       setClean();
+
+      // Sinkronisasi realtime jika ada perubahan dari Cloud Firestore
+      if (typeof listenStoreDataCloud === "function") {
+        listenStoreDataCloud(function(cloudData) {
+          if (!isDirty && cloudData && cloudData.sections) {
+            state.wa = cloudData.wa || state.wa;
+            state.thx = cloudData.thx || state.thx;
+            state.sections = cloudData.sections;
+            render();
+            savedSnapshot = JSON.stringify(state);
+            setClean();
+          }
+        });
+      }
     </script>
   </body>
 </html>

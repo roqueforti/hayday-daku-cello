@@ -1518,6 +1518,10 @@
 
     <div class="toast" id="toast"></div>
 
+    <!-- Firebase App & Firestore SDKs (v8 Compat CDN for seamless browser runtime) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <!-- Shared Store Data & Logic -->
     <script src="data.js"></script>
     <script>
@@ -1548,14 +1552,73 @@
       var root = document.getElementById("root");
       var catNavPills = document.getElementById("catNavPills");
 
-      // Inisialisasi Tombol Pills Kategori Sticky
-      if (catNavPills) {
-        var pillsHtml = '<button type="button" class="cat-pill active" data-cat="all">🌾 Semua Kategori</button>';
-        SECTIONS.forEach(function (s, sIdx) {
-          pillsHtml += '<button type="button" class="cat-pill" data-cat="' + sIdx + '">' + (s.t || ('Kategori ' + (sIdx + 1))) + '</button>';
-        });
-        catNavPills.innerHTML = pillsHtml;
+      function buildCatalog() {
+        ALL = [];
+        root.innerHTML = "";
+        
+        // Inisialisasi Tombol Pills Kategori Sticky
+        if (catNavPills) {
+          var pillsHtml = '<button type="button" class="cat-pill active" data-cat="all">🌾 Semua Kategori</button>';
+          SECTIONS.forEach(function (s, sIdx) {
+            pillsHtml += '<button type="button" class="cat-pill" data-cat="' + sIdx + '">' + (s.t || ('Kategori ' + (sIdx + 1))) + '</button>';
+          });
+          catNavPills.innerHTML = pillsHtml;
+        }
 
+        SECTIONS.forEach(function (s, sIdx) {
+          var h =
+            '<div class="sec" data-sec="' + sIdx + '" id="sec-anchor-' + sIdx + '"><span>' +
+            s.t +
+            '</span><i></i></div><div class="grid" data-sec="' + sIdx + '">';
+          s.items.forEach(function (it) {
+            it.pk = s.pk || 0;
+            ALL.push(it);
+            var iconHtml = "";
+            if (it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
+              iconHtml = '<div class="ico-bundle">';
+              it.icons.forEach(function (icSrc) {
+                iconHtml += '<img src="' + icSrc + '" alt="' + (it.n || '') + '" />';
+              });
+              iconHtml += '</div>';
+            } else {
+              iconHtml =
+                it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
+                  ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
+                  : (it.e || '📦');
+            }
+            
+            var descText = it.d && it.d.trim() ? it.d.trim() : (it.pk ? "Per paket" : "Min. beli " + minq(it) + " • harga per " + unitLabel(it));
+
+            var baseUnitQty = getUnitVal(it);
+            var qtyBadge = baseUnitQty + "x";
+
+            h +=
+              '<div class="card" id="c-' +
+              it.id +
+              '" data-name="' + (it.n || '').toLowerCase() + '" data-desc="' + (it.d || '').toLowerCase() + '" data-id="' + it.id + '">' +
+              '<div class="crate-box">' +
+              '<div class="crate-qty">' + qtyBadge + '</div>' +
+              '<div class="ico">' + iconHtml + '</div>' +
+              '<div class="price-tag-wrap">' +
+              '<div class="price-tag">' +
+              '<span class="price-num">' + rp(it.p) + '</span>' +
+              '<img src="assets/icons/Coins.png" class="coin-icon" alt="Koin" />' +
+              '</div>' +
+              '</div>' +
+              '</div>' +
+              '<div class="nm">' + (it.n || '') + '</div>' +
+              '<div class="desc">' + descText.replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</div>' +
+              '<div id="x-' + it.id + '"></div></div>';
+          });
+          root.insertAdjacentHTML("beforeend", h + "</div>");
+        });
+
+        ALL.forEach(ctrl);
+        upd();
+      }
+
+      // Klik event delegasi untuk kategori pills sticky
+      if (catNavPills) {
         catNavPills.addEventListener("click", function (e) {
           var btn = e.target.closest(".cat-pill");
           if (!btn) return;
@@ -1579,53 +1642,23 @@
         });
       }
 
-      SECTIONS.forEach(function (s, sIdx) {
-        var h =
-          '<div class="sec" data-sec="' + sIdx + '" id="sec-anchor-' + sIdx + '"><span>' +
-          s.t +
-          '</span><i></i></div><div class="grid" data-sec="' + sIdx + '">';
-        s.items.forEach(function (it) {
-          it.pk = s.pk || 0;
-          ALL.push(it);
-          var iconHtml = "";
-          if (it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
-            iconHtml = '<div class="ico-bundle">';
-            it.icons.forEach(function (icSrc) {
-              iconHtml += '<img src="' + icSrc + '" alt="' + (it.n || '') + '" />';
-            });
-            iconHtml += '</div>';
-          } else {
-            iconHtml =
-              it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
-                ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
-                : (it.e || '📦');
+      buildCatalog();
+
+      // Sinkronisasi Realtime dari Firebase Firestore Cloud Database
+      if (typeof listenStoreDataCloud === "function") {
+        listenStoreDataCloud(function(cloudData) {
+          if (cloudData && cloudData.sections && Array.isArray(cloudData.sections)) {
+            SECTIONS = cloudData.sections;
+            if (cloudData.wa) WA = cloudData.wa;
+            if (cloudData.thx) {
+              var thxEl = document.getElementById("thxText");
+              if (thxEl) thxEl.textContent = cloudData.thx;
+            }
+            buildCatalog();
+            console.log("Katalog pembeli tersinkronisasi realtime dari Cloud Firestore 🌾");
           }
-          
-          var descText = it.d && it.d.trim() ? it.d.trim() : (it.pk ? "Per paket" : "Min. beli " + minq(it) + " • harga per " + unitLabel(it));
-
-          var baseUnitQty = getUnitVal(it);
-          var qtyBadge = baseUnitQty + "x";
-
-          h +=
-            '<div class="card" id="c-' +
-            it.id +
-            '" data-name="' + (it.n || '').toLowerCase() + '" data-desc="' + (it.d || '').toLowerCase() + '" data-id="' + it.id + '">' +
-            '<div class="crate-box">' +
-            '<div class="crate-qty">' + qtyBadge + '</div>' +
-            '<div class="ico">' + iconHtml + '</div>' +
-            '<div class="price-tag-wrap">' +
-            '<div class="price-tag">' +
-            '<span class="price-num">' + rp(it.p) + '</span>' +
-            '<img src="assets/icons/Coins.png" class="coin-icon" alt="Koin" />' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '<div class="nm">' + (it.n || '') + '</div>' +
-            '<div class="desc">' + descText.replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</div>' +
-            '<div id="x-' + it.id + '"></div></div>';
         });
-        root.insertAdjacentHTML("beforeend", h + "</div>");
-      });
+      }
       function updateCardVisual(it) {
         var cardEl = document.getElementById("c-" + it.id);
         if (!cardEl) return;
