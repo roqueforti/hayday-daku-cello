@@ -143,7 +143,7 @@
         gap: 10px;
       }
 
-      /* Buttons Standardized */
+      /* Buttons Standardized with Clear Visual Hierarchy */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -151,73 +151,116 @@
         text-decoration: none;
         font-family: inherit;
         font-size: 13px;
-        font-weight: 600;
-        padding: 8px 14px;
+        font-weight: 700;
+        padding: 8px 15px;
         border-radius: var(--radius-md);
         border: 1px solid transparent;
         cursor: pointer;
-        transition: all 0.15s ease;
-        line-height: 1.2;
+        transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+        line-height: 1.25;
         user-select: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       }
       .btn:active:not([disabled]) {
         transform: translateY(1px);
+        box-shadow: none !important;
       }
-      .btn-default {
-        background: var(--surface);
-        color: var(--text-secondary);
-        border-color: var(--border-subtle);
-        box-shadow: var(--shadow-xs);
-      }
-      .btn-default:hover {
-        background: var(--surface-subtle);
-        color: var(--text-primary);
-        border-color: var(--border-hover);
-      }
+
+      /* 1. PRIMARY ACTION (Tombol aksi utama: + Kategori Baru, Simpan Perubahan) */
       .btn-primary {
-        background: var(--primary);
-        color: #ffffff;
-        box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+        background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        color: #ffffff !important;
+        border-color: #047857;
+        box-shadow: 0 2px 4px rgba(5, 150, 105, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
       }
-      .btn-primary:hover {
-        background: var(--primary-hover);
+      .btn-primary:hover:not([disabled]) {
+        background: linear-gradient(180deg, #059669 0%, #047857 100%);
+        box-shadow: 0 4px 8px rgba(5, 150, 105, 0.35);
+        transform: translateY(-1px);
       }
+
+      /* 2. SECONDARY / ACCENT (Aksi sekunder yang produktif: Tambah Item / Navigasi penting) */
       .btn-accent {
-        background: var(--accent);
-        color: #ffffff;
-        box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+        background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+        color: #ffffff !important;
+        border-color: #1d4ed8;
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       }
-      .btn-accent:hover {
-        background: var(--accent-hover);
+      .btn-accent:hover:not([disabled]) {
+        background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.35);
+        transform: translateY(-1px);
       }
+
+      /* 3. OUTLINE SUCCESS (+ Tambah Item di header kategori & sidebar) */
       .btn-outline-primary {
-        background: var(--primary-light);
-        color: var(--primary-dark);
-        border-color: rgba(16, 185, 129, 0.3);
+        background: #f0fdf4;
+        color: #15803d !important;
+        border: 1.5px solid #86efac;
+        font-weight: 700;
+        box-shadow: 0 1px 2px rgba(22, 101, 52, 0.06);
       }
-      .btn-outline-primary:hover {
-        background: #d1fae5;
+      .btn-outline-primary:hover:not([disabled]) {
+        background: #dcfce7;
+        border-color: #4ade80;
+        color: #166534 !important;
+        box-shadow: 0 2px 6px rgba(22, 101, 52, 0.12);
+        transform: translateY(-1px);
       }
+
+      /* 4. DEFAULT / UTILITY BUTTONS (Lihat Toko, Export, Import) */
+      .btn-default {
+        background: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .btn-default:hover:not([disabled]) {
+        background: #f8fafc;
+        color: #0f172a;
+        border-color: #94a3b8;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      }
+
+      /* 5. OUTLINE DANGER (Hapus Kategori) */
       .btn-outline-danger {
-        background: transparent;
-        color: var(--danger);
-        border-color: rgba(239, 68, 68, 0.25);
+        background: #fff;
+        color: #dc2626 !important;
+        border: 1px solid #fca5a5;
+        box-shadow: 0 1px 2px rgba(220, 38, 38, 0.06);
       }
-      .btn-outline-danger:hover {
-        background: var(--danger-light);
-        border-color: var(--danger);
+      .btn-outline-danger:hover:not([disabled]) {
+        background: #fee2e2;
+        border-color: #ef4444;
+        color: #b91c1c !important;
+        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.15);
       }
+
+      /* 6. SOLID DANGER (Konfirmasi hapus permanen) */
       .btn-danger {
-        background: var(--danger);
-        color: #fff;
+        background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+        color: #ffffff !important;
+        border-color: #b91c1c;
+        box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25);
       }
-      .btn-danger:hover {
-        background: var(--danger-hover);
+      .btn-danger:hover:not([disabled]) {
+        background: #dc2626;
       }
+
       .btn-sm {
-        padding: 5px 10px;
+        padding: 5px 11px;
         font-size: 12px;
         border-radius: var(--radius-sm);
+      }
+
+      /* Tombol Save saat disabled (State tersimpan yang kalem) */
+      .btn-saved-idle {
+        background: #f1f5f9 !important;
+        color: #64748b !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: none !important;
+        cursor: default !important;
       }
 
       /* Main Container */
@@ -541,24 +584,63 @@
         flex-direction: column;
         gap: 3px;
       }
-      .btn-ico-picker,
+      .btn-ico-picker {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: var(--radius-sm);
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.15s;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      .btn-ico-picker:hover {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-color: #93c5fd;
+      }
       .btn-ico-upload {
         font-size: 11px;
         font-weight: 600;
         padding: 3px 8px;
         border-radius: var(--radius-sm);
-        border: 1px solid var(--border-subtle);
-        background: var(--surface);
-        color: var(--text-secondary);
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
         cursor: pointer;
         white-space: nowrap;
         transition: 0.15s;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
       }
-      .btn-ico-picker:hover,
       .btn-ico-upload:hover {
-        background: var(--surface-subtle);
-        color: var(--text-primary);
-        border-color: var(--border-hover);
+        background: #f0fdf4;
+        color: #15803d;
+        border-color: #86efac;
+      }
+      .btn-row-del {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        border: 1px solid #fecaca;
+        background: #fff;
+        color: #ef4444;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        box-shadow: 0 1px 2px rgba(239, 68, 68, 0.06);
+      }
+      .btn-row-del:hover {
+        background: #fee2e2;
+        border-color: #ef4444;
+        color: #b91c1c;
+        transform: scale(1.08);
       }
 
       /* Modal Picker */
@@ -952,8 +1034,8 @@
         <span class="status-dot" id="saveStatusDot"></span>
         <span id="saveStatusText">Semua perubahan telah tersimpan</span>
       </div>
-      <button id="btnSave" class="btn btn-primary" style="padding:10px 24px; font-size:14px; font-weight:700;" disabled>
-        💾 Simpan Perubahan
+      <button id="btnSave" class="btn btn-saved-idle" style="padding:10px 24px; font-size:14px; font-weight:700;" disabled>
+        ✓ Tersimpan
       </button>
     </div>
 
@@ -1136,7 +1218,7 @@
 
         if (btn) {
           btn.disabled = true;
-          btn.className = "btn btn-default";
+          btn.className = "btn btn-saved-idle";
           btn.textContent = "✓ Tersimpan";
         }
       }
@@ -1162,7 +1244,7 @@
           if (text) text.textContent = "Semua perubahan telah tersimpan";
           if (btn) {
             btn.disabled = true;
-            btn.className = "btn btn-default";
+            btn.className = "btn btn-saved-idle";
             btn.textContent = "✓ Tersimpan";
           }
         }
@@ -1287,7 +1369,7 @@
                 <td><input type="text" class="row-d" value="${descVal.replace(/"/g, '&quot;')}" placeholder="Ketik deskripsi / catatan..." data-s="${sIdx}" data-i="${iIdx}" data-f="d" /></td>
                 <td><input type="color" class="row-c" value="${it.c || '#7a2fe0'}" data-s="${sIdx}" data-i="${iIdx}" data-f="c" title="Warna aksen produk" /></td>
                 <td class="row-act">
-                  <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem(${sIdx}, ${iIdx})" title="Hapus produk ini" style="padding:4px 8px; font-size:12px;">✕</button>
+                  <button type="button" class="btn-row-del" onclick="deleteItem(${sIdx}, ${iIdx})" title="Hapus produk ini">✕</button>
                 </td>
               </tr>
             `;
