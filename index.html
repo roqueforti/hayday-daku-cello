@@ -281,6 +281,16 @@
         line-height: 1.1;
         filter: drop-shadow(0 4px 3px #0003);
         transition: 0.2s;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ico img {
+        max-width: 58px;
+        max-height: 58px;
+        object-fit: contain;
+        display: block;
       }
       .card:hover .ico {
         transform: scale(1.18) rotate(8deg);
@@ -677,11 +687,15 @@
         s.items.forEach(function (it) {
           it.pk = s.pk || 0;
           ALL.push(it);
+          var iconHtml =
+            it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0)
+              ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
+              : (it.e || '📦');
           h +=
             '<div class="card" id="c-' +
             it.id +
             '"><div class="ico">' +
-            it.e +
+            iconHtml +
             '</div><div class="nm">' +
             label(it) +
             "</div>" +

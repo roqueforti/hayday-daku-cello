@@ -45,7 +45,7 @@
         padding-bottom: 90px;
       }
       .wrap {
-        max-width: 900px;
+        max-width: 950px;
         margin: 0 auto;
         padding: 20px 14px;
       }
@@ -190,11 +190,6 @@
         align-items: center;
         margin-bottom: 10px;
       }
-      .sec-title {
-        font-family: "Lilita One", sans-serif;
-        font-size: 18px;
-        color: var(--wood);
-      }
       .table-resp {
         width: 100%;
         overflow-x: auto;
@@ -218,19 +213,14 @@
       td input {
         width: 100%;
       }
-      .row-e {
-        width: 65px;
-        text-align: center;
-        font-size: 20px;
-      }
       .row-n {
-        min-width: 130px;
+        min-width: 140px;
       }
       .row-p {
-        width: 120px;
+        width: 110px;
       }
       .row-c {
-        width: 60px;
+        width: 50px;
         padding: 2px;
         height: 38px;
         border-radius: 8px;
@@ -238,15 +228,138 @@
         cursor: pointer;
       }
       .row-act {
-        width: 50px;
+        width: 45px;
         text-align: center;
       }
 
-      .backup-box {
+      /* Icon cell components */
+      .ico-cell {
         display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+        align-items: center;
+        gap: 6px;
+        width: 140px;
+      }
+      .ico-preview {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #fff;
+        border: 2px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: 0.15s;
+        box-shadow: 0 2px 4px var(--shadow);
+      }
+      .ico-preview:hover {
+        border-color: var(--wood);
+        transform: scale(1.08);
+      }
+      .ico-preview img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+      }
+      .ico-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .btn-ico-picker,
+      .btn-ico-upload {
+        font-size: 11px;
+        padding: 3px 6px;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--wood2);
+        cursor: pointer;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .btn-ico-picker:hover,
+      .btn-ico-upload:hover {
+        background: #f7ede0;
+        border-color: var(--wood);
+      }
+
+      /* Modal Picker */
+      .modal-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(30, 15, 5, 0.6);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 16px;
+      }
+      .modal-bg.active {
+        display: flex;
+      }
+      .modal-card {
+        background: var(--card);
+        border: 4px solid var(--wood);
+        border-radius: 24px;
+        max-width: 520px;
+        width: 100%;
+        max-height: 85vh;
+        overflow-y: auto;
+        padding: 20px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      }
+      .modal-title {
+        font-family: "Lilita One", sans-serif;
+        font-size: 22px;
+        color: var(--wood2);
+        margin: 0 0 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .modal-close {
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: var(--muted);
+      }
+      .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+        gap: 8px;
         margin-top: 10px;
+      }
+      .icon-opt {
+        width: 44px;
+        height: 44px;
+        background: #fff;
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        transition: 0.15s;
+      }
+      .icon-opt:hover {
+        transform: scale(1.15);
+        border-color: var(--green);
+        background: #eaf8e6;
+      }
+      .cat-label {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 800;
+        margin: 14px 0 6px;
       }
 
       .toast {
@@ -331,6 +444,23 @@
       </div>
     </div>
 
+    <!-- Modal Icon Picker -->
+    <div class="modal-bg" id="iconModal">
+      <div class="modal-card">
+        <div class="modal-title">
+          <span>🎨 Pilih Icon Produk</span>
+          <button class="modal-close" id="btnCloseModal">✕</button>
+        </div>
+        <p style="margin:0 0 10px; font-size:13px; color:var(--muted);">
+          Pilih salah satu ikon Hay Day populer di bawah ini, atau gunakan tombol <b>Upload Gambar</b>.
+        </p>
+        <div id="iconLibrary"></div>
+      </div>
+    </div>
+
+    <!-- Hidden file input for image upload -->
+    <input type="file" id="imgUploadInput" accept="image/*" style="display:none;" />
+
     <div class="bottom-bar">
       <button id="btnSave" class="btn btn-save" style="font-size:16px; padding:10px 28px;">💾 Simpan Perubahan</button>
       <button id="btnResetDefault" class="btn btn-reset">🔄 Reset ke Bawaan</button>
@@ -388,11 +518,33 @@
         }
       ];
 
+      // Daftar Pilihan Icon Hay Day Populer
+      var ICON_CATEGORIES = [
+        {
+          name: "🧰 Alat Tambang & Kebun",
+          icons: ["⛏️", "🪓", "🪚", "🧨", "💣", "🔨", "🔩", "🧱", "🪛", "📦", "🪵", "📜"]
+        },
+        {
+          name: "🌾 Hasil Tani & Makanan",
+          icons: ["🌾", "🌽", "🥕", "🍓", "🍅", "🥔", "🎃", "🍎", "🫐", "🍇", "☕", "🍞", "🥞", "🍕", "🧁", "🎂", "🍯", "🥣", "🧂", "🍫", "🧈", "🧀", "🥚", "🥩", "🥓"]
+        },
+        {
+          name: "🌊 Hewan & Hasil Laut",
+          icons: ["🐟", "🦞", "🦐", "🐙", "🐄", "🐔", "🐖", "🐑", "🐐", "🐎", "🦆", "🐶", "🐱", "🐰"]
+        },
+        {
+          name: "🪙 Koin, Hadiah & BEM",
+          icons: ["🪙", "💰", "💎", "🏡", "🏘️", "🚜", "🏆", "🎁", "⭐", "🎟️", "🛒", "🏷️", "✨"]
+        }
+      ];
+
       var state = {
         wa: DEFAULT_WA,
         thx: DEFAULT_THX,
         sections: JSON.parse(JSON.stringify(DEFAULT_SECTIONS))
       };
+
+      var activeTarget = null; // { sIdx, iIdx }
 
       function loadData() {
         try {
@@ -417,6 +569,13 @@
         setTimeout(function() {
           t.classList.remove("s");
         }, 2200);
+      }
+
+      function renderIconPreview(eVal) {
+        if (eVal && (eVal.indexOf("data:image") === 0 || eVal.indexOf("http") === 0)) {
+          return '<img src="' + eVal + '" alt="icon" />';
+        }
+        return eVal || "📦";
       }
 
       function render() {
@@ -450,11 +609,11 @@
               <table>
                 <thead>
                   <tr>
-                    <th style="width:60px;">Icon</th>
+                    <th style="width:140px;">Icon Produk</th>
                     <th>Nama Item</th>
-                    <th style="width:130px;">Harga (Rp)</th>
-                    <th style="width:60px;">Warna</th>
-                    <th style="width:50px; text-align:center;">Aksi</th>
+                    <th style="width:120px;">Harga (Rp)</th>
+                    <th style="width:50px;">Warna</th>
+                    <th style="width:45px; text-align:center;">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -463,7 +622,17 @@
           sec.items.forEach(function(it, iIdx) {
             h += `
               <tr>
-                <td><input type="text" class="row-e" value="${it.e || '📦'}" data-s="${sIdx}" data-i="${iIdx}" data-f="e" /></td>
+                <td>
+                  <div class="ico-cell">
+                    <div class="ico-preview" title="Klik untuk pilih ikon" onclick="openIconPicker(${sIdx}, ${iIdx})">
+                      ${renderIconPreview(it.e)}
+                    </div>
+                    <div class="ico-actions">
+                      <button type="button" class="btn-ico-picker" onclick="openIconPicker(${sIdx}, ${iIdx})">🎨 Pilih</button>
+                      <button type="button" class="btn-ico-upload" onclick="triggerUpload(${sIdx}, ${iIdx})">📁 Upload</button>
+                    </div>
+                  </div>
+                </td>
                 <td><input type="text" class="row-n" value="${(it.n || '').replace(/"/g, '&quot;')}" data-s="${sIdx}" data-i="${iIdx}" data-f="n" /></td>
                 <td><input type="number" class="row-p" value="${it.p || 0}" step="100" data-s="${sIdx}" data-i="${iIdx}" data-f="p" /></td>
                 <td><input type="color" class="row-c" value="${it.c || '#7a2fe0'}" data-s="${sIdx}" data-i="${iIdx}" data-f="c" /></td>
@@ -501,18 +670,99 @@
           };
         });
 
-        // Event listener field item
+        // Event listener field item (nama, harga, warna)
         container.querySelectorAll("table input").forEach(function(inp) {
           inp.onchange = function(e) {
             var s = e.target.dataset.s;
             var i = e.target.dataset.i;
             var f = e.target.dataset.f;
+            if (!s || !i || !f) return;
             var val = e.target.value;
             if (f === "p") val = Number(val) || 0;
             state.sections[s].items[i][f] = val;
           };
         });
       }
+
+      // Icon Library Rendering
+      function buildIconLibrary() {
+        var libEl = document.getElementById("iconLibrary");
+        libEl.innerHTML = "";
+        ICON_CATEGORIES.forEach(function(cat) {
+          var h = '<div class="cat-label">' + cat.name + '</div><div class="icon-grid">';
+          cat.icons.forEach(function(icon) {
+            h += '<div class="icon-opt" onclick="selectPresetIcon(\'' + icon + '\')">' + icon + '</div>';
+          });
+          h += '</div>';
+          libEl.insertAdjacentHTML("beforeend", h);
+        });
+      }
+
+      window.openIconPicker = function(sIdx, iIdx) {
+        activeTarget = { sIdx: sIdx, iIdx: iIdx };
+        document.getElementById("iconModal").classList.add("active");
+      };
+
+      document.getElementById("btnCloseModal").onclick = function() {
+        document.getElementById("iconModal").classList.remove("active");
+        activeTarget = null;
+      };
+
+      window.selectPresetIcon = function(icon) {
+        if (!activeTarget) return;
+        state.sections[activeTarget.sIdx].items[activeTarget.iIdx].e = icon;
+        document.getElementById("iconModal").classList.remove("active");
+        activeTarget = null;
+        render();
+        toast("Ikon berhasil diubah ✨");
+      };
+
+      // Upload Custom Image with canvas compression to keep size minimal
+      window.triggerUpload = function(sIdx, iIdx) {
+        activeTarget = { sIdx: sIdx, iIdx: iIdx };
+        document.getElementById("imgUploadInput").value = "";
+        document.getElementById("imgUploadInput").click();
+      };
+
+      document.getElementById("imgUploadInput").onchange = function(e) {
+        var file = e.target.files[0];
+        if (!file || !activeTarget) return;
+
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+          var img = new Image();
+          img.onload = function() {
+            // Kompres gambar ke ukuran maksimal 128x128 pixel
+            var canvas = document.createElement("canvas");
+            var maxDim = 128;
+            var w = img.width;
+            var h = img.height;
+            if (w > h) {
+              if (w > maxDim) {
+                h = Math.round((h * maxDim) / w);
+                w = maxDim;
+              }
+            } else {
+              if (h > maxDim) {
+                w = Math.round((w * maxDim) / h);
+                h = maxDim;
+              }
+            }
+            canvas.width = w;
+            canvas.height = h;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, w, h);
+
+            var compressedDataUrl = canvas.toDataURL("image/webp", 0.85);
+            state.sections[activeTarget.sIdx].items[activeTarget.iIdx].e = compressedDataUrl;
+            activeTarget = null;
+            render();
+            toast("Gambar ikon berhasil di-upload! 📸");
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
 
       window.addItem = function(sIdx) {
         var id = "item_" + Date.now();
@@ -611,6 +861,7 @@
       };
 
       loadData();
+      buildIconLibrary();
       render();
     </script>
   </body>
