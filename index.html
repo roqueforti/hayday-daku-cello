@@ -1129,151 +1129,30 @@
     </div>
 
     <div class="toast" id="toast"></div>
+
+    <!-- Shared Store Data & Logic -->
+    <script src="data.js"></script>
     <script>
-      var WA = "6287719747833";
-      var DEFAULT_SECTIONS = [
-        {
-          t: "🧰 Alat & Bahan",
-          items: [
-            { id: "sekop", e: "assets/icons/sekop.png", n: "100 Sekop", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-            { id: "kapak", e: "assets/icons/kapak.png", n: "100 Kapak", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
-            { id: "gergaji", e: "assets/icons/gergaji.png", n: "100 Gergaji", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" },
-          ],
-        },
-        {
-          t: "🥛 Dapur & Peternakan",
-          items: [
-            { id: "krim", e: "assets/icons/krim.png", n: "100 Krim", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#f57c1f" },
-            {
-              id: "gulaputih",
-              e: "assets/icons/gulaputih.png",
-              n: "100 Gula Putih",
-              p: 1500,
-              d: "Min. beli 10 • harga per 100 pcs",
-              c: "#e9b200",
-            },
-            {
-              id: "gulamerah",
-              e: "assets/icons/gulamerah.png",
-              n: "100 Gula Merah",
-              p: 1000,
-              d: "Min. beli 10 • harga per 100 pcs",
-              c: "#27b83a",
-            },
-            { id: "babi", e: "assets/icons/babi.png", n: "100 Daging Babi", p: 1200, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" },
-            { id: "telor", e: "assets/icons/telor.png", n: "100 Telor", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#2d73e6" },
-            { id: "mentega", e: "assets/icons/mentega.png", n: "100 Mentega", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-            { id: "keju", e: "assets/icons/keju.png", n: "100 Keju", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
-            { id: "madu", e: "assets/icons/madu.png", n: "100 Madu", p: 2000, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" },
-          ],
-        },
-        {
-          t: "🌊 Laut",
-          items: [
-            { id: "ikan", e: "assets/icons/ikan.png", n: "100 Ikan", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-            { id: "lopster", e: "assets/icons/lopster.png", n: "100 Lopster", p: 2500, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" },
-          ],
-        },
-        {
-          t: "🏡 Tagar BEM (per paket)",
-          pk: 1,
-          items: [
-            { id: "bem1", e: "assets/icons/bem.png", n: "1 Tagar BEM", p: 1500, d: "Per paket", c: "#2e9a3a" },
-            { id: "bem30", e: "assets/icons/bem.png", n: "30 Tagar BEM", p: 28500, d: "Per paket", c: "#2d73e6" },
-          ],
-        },
-        {
-          t: "🪙 Koin LV 40++ (Lumbung kosong 250)",
-          pk: 1,
-          items: [
-            { id: "k1", e: "assets/icons/koin.png", n: "1 Juta Koin", p: 8000, d: "Lumbung kosong 250", c: "#7a2fe0" },
-            { id: "k10", e: "assets/icons/koin.png", n: "10 Juta Koin", p: 70000, d: "Lumbung kosong 250", c: "#e8359b" },
-          ],
-        },
-      ];
-      var SECTIONS = DEFAULT_SECTIONS;
-      try {
-        var savedStore = localStorage.getItem("hayday_daku_cello_data");
-        if (savedStore) {
-          var parsed = JSON.parse(savedStore);
-          if (parsed.wa) WA = parsed.wa;
-          if (parsed.thx) {
-            var thxEl = document.getElementById("thxText");
-            if (thxEl) thxEl.textContent = parsed.thx;
-          }
-          if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
-            SECTIONS = parsed.sections;
-          }
-        }
-      } catch (err) {
-        console.warn("Memakai data default:", err);
+      var storeData = getStoreData();
+      var WA = storeData.wa;
+      var SECTIONS = storeData.sections;
+      if (storeData.thx) {
+        var thxEl = document.getElementById("thxText");
+        if (thxEl) thxEl.textContent = storeData.thx;
       }
+
       var ALL = [],
         q = {};
-      function rp(n) {
-        return (
-          "Rp" +
-          Math.round(n)
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        );
-      }
-      function unit(it) {
-        if (it.u !== undefined && it.u !== null && it.u !== "") {
-          var customUnit = Number(it.u);
-          return customUnit > 0 ? customUnit : 1;
-        }
-        return it.pk ? 1 : 100;
-      }
-      function unitName(it) {
-        if (it.ut && it.ut.trim()) return it.ut.trim();
-        return it.pk ? "paket" : "pcs";
-      }
-      function unitLabel(it) {
-        var name = unitName(it);
-        var u = unit(it);
-        if (name === "paket" && u === 1) return "paket";
-        return u === 1 ? name : u + " " + name;
-      }
-      function getQuickOptions(it) {
-        if (it.opsi && String(it.opsi).trim()) {
-          var arr = String(it.opsi)
-            .split(/[,;\s]+/)
-            .map(function (x) {
-              return parseInt(x.trim(), 10);
-            })
-            .filter(function (x) {
-              return !isNaN(x) && x > 0;
-            });
-          if (arr.length > 0) return arr;
-        }
-        return [];
-      }
-      function minq(it) {
-        var opts = getQuickOptions(it);
-        if (opts.length > 0) {
-          return opts[0];
-        }
-        if (it.min !== undefined && it.min !== null && it.min !== "") {
-          var m = Number(it.min);
-          if (m > 0) return m;
-        }
-        if (it.pk || unitName(it) === "paket") return 1;
-        var u = unit(it);
-        // Jika satuan dasar 1 (atau <= 5), minimal pembelian adalah 1
-        return u <= 5 ? 1 : (u <= 10 ? 10 : 10);
-      }
-      function stepq(it) {
-        var opts = getQuickOptions(it);
-        if (opts.length > 0) {
-          return opts[0];
-        }
-        if (it.pk || unitName(it) === "paket") return 1;
-        var u = unit(it);
-        return u === 1 ? 1 : (u <= 10 ? u : 10);
-      }
+
+      // Aliases ke fungsi universal data.js
+      var unit = getUnitVal;
+      var unitName = getUnitName;
+      var unitLabel = getUnitLabel;
+      var getQuickOptions = parseQuickOptions;
+      var minq = getMinQty;
+      var stepq = getStepQty;
       function price(it) {
-        return (it.p / unit(it)) * (q[it.id] || 0);
+        return calcPrice(it, q[it.id]);
       }
       function label(it) {
         return it.n || "";
