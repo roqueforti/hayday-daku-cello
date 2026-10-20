@@ -161,6 +161,16 @@
         user-select: none;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       }
+      .btn svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        stroke-width: 2;
+      }
+      .btn-sm svg {
+        width: 13px;
+        height: 13px;
+      }
       .btn:active:not([disabled]) {
         transform: translateY(1px);
         box-shadow: none !important;
@@ -933,17 +943,21 @@
           </div>
           <div class="header-actions">
             <a href="index.html" class="btn btn-default" title="Buka Toko Pelanggan">
-              <span>🏠</span> Lihat Toko
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              Lihat Toko
             </a>
             <button id="btnExport" class="btn btn-default" title="Export katalog ke Excel">
-              <span>📊</span> Export Excel
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export Excel
             </button>
             <label class="btn btn-default" style="cursor:pointer; margin:0;" title="Import katalog dari file Excel">
-              <span>📥</span> Import Excel
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              Import Excel
               <input type="file" id="importFile" accept=".xlsx, .xls" style="display:none;" />
             </label>
             <button id="btnLogout" class="btn btn-outline-danger btn-sm" onclick="handleLogout()" title="Keluar dari sesi admin">
-              <span>🚪</span> Keluar
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              Keluar
             </button>
           </div>
         </div>
@@ -955,7 +969,7 @@
         <section class="panel">
           <div class="panel-header">
             <h2 class="panel-title">
-              <span class="panel-title-icon">⚙️</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px; height:18px; color:var(--accent); stroke-width:2;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
               Pengaturan Kontak & Catatan Toko
             </h2>
           </div>
@@ -977,13 +991,16 @@
           <aside class="cat-sidebar">
             <div class="cat-sidebar-header">
               <span class="cat-sidebar-title">Kategori (<span id="catTotalCount">0</span>)</span>
-              <button class="btn btn-default btn-sm" onclick="scrollToTopCategory()" title="Gulir ke atas">⬆️</button>
+              <button class="btn btn-default btn-sm" onclick="scrollToTopCategory()" title="Gulir ke atas">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px; height:13px;"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              </button>
             </div>
             <div class="cat-nav-list" id="catNavList">
               <!-- Populated by JS -->
             </div>
             <button id="btnSidebarAddSection" class="btn btn-outline-primary" style="width:100%; justify-content:center; margin-top:4px;" onclick="document.getElementById('btnAddSection').click()">
-              ＋ Tambah Kategori
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Tambah Kategori
             </button>
           </aside>
 
@@ -993,14 +1010,17 @@
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                 <div>
                   <h2 class="panel-title" style="margin:0 0 4px 0;">
-                    <span class="panel-title-icon">📦</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px; height:18px; color:var(--accent); stroke-width:2;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                     Daftar Produk & Pengaturan Harga
                   </h2>
                   <p style="margin:0; font-size:13px; color:var(--text-muted);">
                     Atur nama, icon, satuan dasar, harga, dan variasi kelipatan secara langsung pada tabel.
                   </p>
                 </div>
-                <button id="btnAddSection" class="btn btn-primary">＋ Kategori Baru</button>
+                <button id="btnAddSection" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  Kategori Baru
+                </button>
               </div>
             </div>
 
@@ -1035,7 +1055,8 @@
         <span id="saveStatusText">Semua perubahan telah tersimpan</span>
       </div>
       <button id="btnSave" class="btn btn-saved-idle" style="padding:10px 24px; font-size:14px; font-weight:700;" disabled>
-        ✓ Tersimpan
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px; height:14px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Tersimpan
       </button>
     </div>
 
@@ -1219,7 +1240,7 @@
         if (btn) {
           btn.disabled = true;
           btn.className = "btn btn-saved-idle";
-          btn.textContent = "✓ Tersimpan";
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px; height:14px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Tersimpan';
         }
       }
 
@@ -1237,7 +1258,7 @@
           if (btn) {
             btn.disabled = false;
             btn.className = "btn btn-primary";
-            btn.textContent = "💾 Simpan Perubahan";
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:15px; height:15px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Simpan Perubahan';
           }
         } else {
           if (dot) dot.className = "status-dot";
@@ -1245,7 +1266,7 @@
           if (btn) {
             btn.disabled = true;
             btn.className = "btn btn-saved-idle";
-            btn.textContent = "✓ Tersimpan";
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px; height:14px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Tersimpan';
           }
         }
       }
@@ -1307,10 +1328,12 @@
               </div>
               <div style="display:flex; gap:8px; align-items:center;">
                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="addItem(${sIdx})">
-                  <span>＋</span> Tambah Item
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  Tambah Item
                 </button>
                 <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteSection(${sIdx})" title="Hapus seluruh kategori ini">
-                  <span>🗑️</span> Hapus Kategori
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  Hapus Kategori
                 </button>
               </div>
             </div>
@@ -1344,8 +1367,12 @@
                       ${renderIconPreview(it.e)}
                     </div>
                     <div class="ico-actions">
-                      <button type="button" class="btn-ico-picker" onclick="openIconPicker(${sIdx}, ${iIdx})">🎨 Pilih</button>
-                      <button type="button" class="btn-ico-upload" onclick="triggerUpload(${sIdx}, ${iIdx})">📁 Upload</button>
+                      <button type="button" class="btn-ico-picker" onclick="openIconPicker(${sIdx}, ${iIdx})">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:11px; height:11px; vertical-align:-1px; margin-right:3px; display:inline-block;"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 10 10 0 0 0 0-20"></path></svg>Pilih
+                      </button>
+                      <button type="button" class="btn-ico-upload" onclick="triggerUpload(${sIdx}, ${iIdx})">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:11px; height:11px; vertical-align:-1px; margin-right:3px; display:inline-block;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>Upload
+                      </button>
                     </div>
                   </div>
                 </td>
