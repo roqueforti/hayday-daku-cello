@@ -546,8 +546,11 @@
           ><span style="background: #f08a00">SeaBank</span
           ><span style="background: #00a5cf">GoPay</span>
         </div>
-        <div class="thx">
+        <div class="thx" id="thxText">
           🌻 Terima kasih sudah percaya! WA: 087719747833 🌻
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+          <a href="admin.html" style="color: var(--muted); font-size: 13px; text-decoration: none; opacity: 0.7;">⚙️ Pengaturan Admin</a>
         </div>
       </div>
     </div>
@@ -565,7 +568,7 @@
     <div class="toast" id="toast"></div>
     <script>
       var WA = "6287719747833";
-      var SECTIONS = [
+      var DEFAULT_SECTIONS = [
         {
           t: "🧰 Alat & Bahan",
           items: [
@@ -623,6 +626,23 @@
           ],
         },
       ];
+      var SECTIONS = DEFAULT_SECTIONS;
+      try {
+        var savedStore = localStorage.getItem("hayday_daku_cello_data");
+        if (savedStore) {
+          var parsed = JSON.parse(savedStore);
+          if (parsed.wa) WA = parsed.wa;
+          if (parsed.thx) {
+            var thxEl = document.getElementById("thxText");
+            if (thxEl) thxEl.textContent = parsed.thx;
+          }
+          if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+            SECTIONS = parsed.sections;
+          }
+        }
+      } catch (err) {
+        console.warn("Memakai data default:", err);
+      }
       var ALL = [],
         q = {};
       function rp(n) {
