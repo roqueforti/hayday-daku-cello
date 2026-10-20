@@ -135,11 +135,6 @@ export default function StorePage() {
       <div className="wrap">
         {/* Header Sign with Wooden Plank, Pets, and Notice */}
         <header className="main-sign-header">
-          <div style={{ position: 'absolute', top: 0, right: 0 }}>
-            <Link href="/admin" className="admin-portal-link" title="Buka Admin Portal">
-              🔒 Admin
-            </Link>
-          </div>
           <div className="sign">
             <img src="/logo-daku-cello.jpeg" alt="Hay Day Daku Cello" className="logo-img" />
           </div>
