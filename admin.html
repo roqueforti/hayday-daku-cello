@@ -573,8 +573,9 @@
         width: 135px;
       }
       .ico-preview {
-        width: 38px;
+        min-width: 42px;
         height: 38px;
+        padding: 2px 4px;
         border-radius: var(--radius-md);
         background: var(--surface-subtle);
         border: 1px solid var(--border-subtle);
@@ -593,6 +594,19 @@
       .ico-preview img {
         width: 28px;
         height: 28px;
+        object-fit: contain;
+      }
+      .ico-preview .ico-bundle-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: 100%;
+        height: 100%;
+      }
+      .ico-preview .ico-bundle-preview img {
+        width: 18px;
+        height: 18px;
         object-fit: contain;
       }
       .ico-actions {
@@ -1359,6 +1373,12 @@
                   if (sec && Array.isArray(sec.items)) {
                     sec.items.forEach(function (it) {
                       if (it && it.n) it.n = cleanItemName(it.n);
+                      // Sinkronisasi bundle ikon BEM jika di storage lama belum memiliki property icons
+                      if (it && (it.id === "bem1" || it.id === "bem30" || (it.n && it.n.toLowerCase().indexOf("bem") !== -1))) {
+                        if (!it.icons || !Array.isArray(it.icons) || it.icons.length === 0) {
+                          it.icons = ["assets/icons/Bolt.png", "assets/icons/Plank.png", "assets/icons/Duct Tape.png"];
+                        }
+                      }
                     });
                   }
                 });
@@ -1381,9 +1401,9 @@
 
       function renderIconPreview(eVal, it) {
         if (it && it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
-          var h = '<div style="display:flex; align-items:center; justify-content:center; gap:1px; width:100%; height:100%;">';
-          it.icons.slice(0, 3).forEach(function (icSrc) {
-            h += '<img src="' + icSrc + '" alt="item" style="width:16px; height:16px; object-fit:contain;" />';
+          var h = '<div class="ico-bundle-preview">';
+          it.icons.slice(0, 4).forEach(function (icSrc) {
+            h += '<img src="' + icSrc + '" alt="item" />';
           });
           h += '</div>';
           return h;
