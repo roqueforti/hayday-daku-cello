@@ -1048,9 +1048,18 @@
         reader.readAsText(file);
       };
 
-      // Password Authentication
-      var ADMIN_KEY = "cellodakucello2026dayhay";
+      // Password Authentication (SHA-256 Hashed + Rate Limiting)
+      var ADMIN_HASH = "12222e06fa6847a3b4a8f6fe79ea75d8ce39bfdbef5f054ea4a902cb0a48ef3d";
       var AUTH_STORAGE_KEY = "hayday_admin_authenticated";
+      var failedAttempts = 0;
+      var lockUntil = 0;
+
+      async function sha256(message) {
+        var msgBuffer = new TextEncoder().encode(message);
+        var hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+        var hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
+      }
 
       function checkAuth() {
         var isAuth = sessionStorage.getItem(AUTH_STORAGE_KEY) === "true";
@@ -1065,17 +1074,35 @@
         }
       }
 
-      window.handleLogin = function(e) {
+      window.handleLogin = async function(e) {
         if (e) e.preventDefault();
-        var passInput = document.getElementById("adminPass");
+        var now = Date.now();
         var errEl = document.getElementById("loginError");
-        if (passInput.value === ADMIN_KEY) {
+        if (now < lockUntil) {
+          var sRemaining = Math.ceil((lockUntil - now) / 1000);
+          errEl.textContent = "Terlalu banyak percobaan! Coba lagi dalam " + sRemaining + " detik.";
+          errEl.style.display = "block";
+          return;
+        }
+
+        var passInput = document.getElementById("adminPass");
+        var inputHash = await sha256(passInput.value.trim());
+
+        if (inputHash === ADMIN_HASH) {
           sessionStorage.setItem(AUTH_STORAGE_KEY, "true");
           errEl.style.display = "none";
           passInput.value = "";
+          failedAttempts = 0;
           checkAuth();
           toast("Selamat datang, Admin! 🚜✨");
         } else {
+          failedAttempts++;
+          if (failedAttempts >= 5) {
+            lockUntil = Date.now() + 30000; // Lock 30 detik
+            errEl.textContent = "⚠️ Salah 5 kali! Terkunci sementara selama 30 detik.";
+          } else {
+            errEl.textContent = "⚠️ Password salah! (" + (5 - failedAttempts) + "x kesempatan lagi)";
+          }
           errEl.style.display = "block";
           passInput.select();
         }
