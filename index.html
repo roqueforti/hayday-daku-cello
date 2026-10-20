@@ -1201,12 +1201,15 @@
           var m = Number(it.min);
           if (m > 0) return m;
         }
-        return it.pk ? 1 : 10;
+        if (it.pk) return 1;
+        var u = unit(it);
+        // Jika satuan dasar 1 pcs (atau <= 5), minimal pembelian adalah 1
+        return u <= 5 ? 1 : (u <= 10 ? 10 : 10);
       }
       function stepq(it) {
         if (it.pk) return 1;
-        var m = minq(it);
-        return m > 0 && m <= 10 ? m : 10;
+        var u = unit(it);
+        return u === 1 ? 1 : (u <= 10 ? u : 10);
       }
       function price(it) {
         return (it.p / unit(it)) * (q[it.id] || 0);
