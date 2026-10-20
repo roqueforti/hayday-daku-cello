@@ -717,10 +717,11 @@
         margin-top: 10px;
       }
       .icon-opt {
+        position: relative;
         width: 44px;
         height: 44px;
         background: var(--surface-subtle);
-        border: 1px solid var(--border-subtle);
+        border: 2px solid var(--border-subtle);
         border-radius: var(--radius-md);
         display: flex;
         align-items: center;
@@ -728,12 +729,84 @@
         font-size: 22px;
         cursor: pointer;
         transition: 0.15s;
+        user-select: none;
       }
       .icon-opt:hover {
         transform: translateY(-2px);
         border-color: var(--border-focus);
         background: #fff;
         box-shadow: var(--shadow-sm);
+      }
+      .icon-opt.selected {
+        border-color: #2563eb;
+        background: #eff6ff;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+      }
+      .icon-opt-check {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 16px;
+        height: 16px;
+        background: #2563eb;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: 800;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      }
+      .icon-opt.selected .icon-opt-check {
+        display: flex;
+      }
+      .modal-bundle-bar {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--radius-lg);
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .modal-bundle-pills {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .modal-bundle-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 20px;
+        padding: 3px 8px;
+        font-size: 12px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      }
+      .modal-bundle-pill img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+      }
+      .modal-bundle-del {
+        background: none;
+        border: none;
+        color: #ef4444;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 13px;
+        padding: 0 2px;
+        line-height: 1;
+      }
+      .modal-bundle-del:hover {
+        color: #b91c1c;
       }
       .cat-label {
         font-size: 12px;
@@ -1115,12 +1188,22 @@
     <div class="modal-bg" id="iconModal">
       <div class="modal-card">
         <div class="modal-title">
-          <span>🎨 Pilih Icon Produk</span>
+          <span id="iconModalTitle">🎨 Pilih Icon Produk</span>
           <button class="modal-close" id="btnCloseModal">✕</button>
         </div>
-        <p style="margin:0 0 10px; font-size:13px; color:var(--text-muted);">
+        <p id="iconModalDesc" style="margin:0 0 10px; font-size:13px; color:var(--text-muted);">
           Pilih salah satu ikon resmi Hay Day di bawah ini, atau gunakan tombol <b>Upload Gambar</b> untuk gambar kustom.
         </p>
+        <!-- Bar preview bundle jika produk adalah paket / multi-icon -->
+        <div class="modal-bundle-bar" id="modalBundleBar" style="display:none;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <b style="font-size:13px; color:var(--text-primary);">Icon Paket Terpilih:</b>
+            <div class="modal-bundle-pills" id="modalBundlePills"></div>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="btnSaveBundleIcons" style="padding:5px 14px; font-size:12px; font-weight:700;">
+            ✓ Selesai & Simpan Icon
+          </button>
+        </div>
         <div id="iconLibrary"></div>
       </div>
     </div>
@@ -1599,20 +1682,27 @@
         ICON_CATEGORIES.forEach(function(cat) {
           var h = '<div class="cat-label">' + cat.name + '</div><div class="icon-grid">';
           cat.icons.forEach(function(item) {
+            var iconVal = cat.isImg ? item.src : item;
+            var isSelected = tempSelectedIcons.indexOf(iconVal) !== -1;
+            var checkHtml = '<span class="icon-opt-check">✓</span>';
             if (cat.isImg) {
               h +=
-                '<div class="icon-opt" title="' +
-                item.label +
-                '" onclick="selectPresetIcon(\'' +
+                '<div class="icon-opt' + (isSelected ? ' selected' : '') + '" data-icon="' +
                 item.src +
-                '\')"><img src="' +
+                '" title="' +
+                item.label +
+                '" onclick="handleIconClick(\'' +
+                item.src +
+                '\')">' + checkHtml + '<img src="' +
                 item.src +
                 '" style="width:32px; height:32px; object-fit:contain;" /></div>';
             } else {
               h +=
-                '<div class="icon-opt" onclick="selectPresetIcon(\'' +
+                '<div class="icon-opt' + (isSelected ? ' selected' : '') + '" data-icon="' +
                 item +
-                '\')">' +
+                '" onclick="handleIconClick(\'' +
+                item +
+                '\')">' + checkHtml +
                 item +
                 '</div>';
             }
@@ -1622,23 +1712,135 @@
         });
       }
 
+      var tempSelectedIcons = [];
+
+      function updateModalBundleBar() {
+        var bundleBar = document.getElementById("modalBundleBar");
+        var pillsContainer = document.getElementById("modalBundlePills");
+        var modalDesc = document.getElementById("iconModalDesc");
+        var modalTitle = document.getElementById("iconModalTitle");
+
+        if (!activeTarget) return;
+        var sec = state.sections[activeTarget.sIdx];
+        var it = sec.items[activeTarget.iIdx];
+        var isPkg = sec.pk || (it.ut === "paket") || (it.u === 1 && it.ut === "paket");
+
+        if (isPkg) {
+          if (bundleBar) bundleBar.style.display = "flex";
+          if (modalTitle) modalTitle.textContent = "📦 Pilih Icon Paket (Bisa Pilih Beberapa)";
+          if (modalDesc) modalDesc.innerHTML = "Klik item di bawah untuk <b>menambah / menghapus</b> ikon dari paket produk ini (maksimal 4 ikon). Klik <b>Selesai & Simpan</b> jika sudah.";
+
+          var pillsHtml = "";
+          if (tempSelectedIcons.length === 0) {
+            pillsHtml = '<span style="font-size:12px; color:var(--text-muted); font-style:italic;">Belum ada ikon dipilih</span>';
+          } else {
+            tempSelectedIcons.forEach(function(ic, idx) {
+              var isImg = ic && (ic.indexOf("data:image") === 0 || ic.indexOf("http") === 0 || ic.indexOf(".png") !== -1 || ic.indexOf(".jpg") !== -1 || ic.indexOf("assets/") === 0);
+              var imgPart = isImg ? '<img src="' + ic + '" alt="ic" />' : ic;
+              pillsHtml += '<span class="modal-bundle-pill">' + imgPart + '<button type="button" class="modal-bundle-del" onclick="removeTempIcon(' + idx + ')" title="Hapus ikon">✕</button></span>';
+            });
+          }
+          if (pillsContainer) pillsContainer.innerHTML = pillsHtml;
+        } else {
+          if (bundleBar) bundleBar.style.display = "none";
+          if (modalTitle) modalTitle.textContent = "🎨 Pilih Icon Produk";
+          if (modalDesc) modalDesc.innerHTML = "Pilih salah satu ikon resmi Hay Day di bawah ini, atau gunakan tombol <b>Upload Gambar</b> untuk gambar kustom.";
+        }
+
+        // Highlight icon grid elements
+        document.querySelectorAll("#iconLibrary .icon-opt").forEach(function(el) {
+          var ic = el.getAttribute("data-icon");
+          if (tempSelectedIcons.indexOf(ic) !== -1) {
+            el.classList.add("selected");
+          } else {
+            el.classList.remove("selected");
+          }
+        });
+      }
+
+      window.removeTempIcon = function(idx) {
+        tempSelectedIcons.splice(idx, 1);
+        updateModalBundleBar();
+      };
+
       window.openIconPicker = function(sIdx, iIdx) {
         activeTarget = { sIdx: sIdx, iIdx: iIdx };
+        var sec = state.sections[sIdx];
+        var it = sec.items[iIdx];
+
+        if (it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
+          tempSelectedIcons = it.icons.slice();
+        } else if (it.e) {
+          tempSelectedIcons = [it.e];
+        } else {
+          tempSelectedIcons = [];
+        }
+
+        buildIconLibrary();
+        updateModalBundleBar();
         document.getElementById("iconModal").classList.add("active");
       };
 
       document.getElementById("btnCloseModal").onclick = function() {
         document.getElementById("iconModal").classList.remove("active");
         activeTarget = null;
+        tempSelectedIcons = [];
+      };
+
+      var btnSaveBundleIcons = document.getElementById("btnSaveBundleIcons");
+      if (btnSaveBundleIcons) {
+        btnSaveBundleIcons.onclick = function() {
+          if (!activeTarget) return;
+          var it = state.sections[activeTarget.sIdx].items[activeTarget.iIdx];
+          if (tempSelectedIcons.length > 0) {
+            it.icons = tempSelectedIcons.slice();
+            it.e = tempSelectedIcons[0]; // fallback icon
+          } else {
+            delete it.icons;
+          }
+          document.getElementById("iconModal").classList.remove("active");
+          activeTarget = null;
+          tempSelectedIcons = [];
+          render();
+          markDirty();
+          toast("Ikon paket berhasil diperbarui ✨");
+        };
+      }
+
+      window.handleIconClick = function(icon) {
+        if (!activeTarget) return;
+        var sec = state.sections[activeTarget.sIdx];
+        var it = sec.items[activeTarget.iIdx];
+        var isPkg = sec.pk || (it.ut === "paket") || (it.u === 1 && it.ut === "paket");
+
+        if (isPkg) {
+          // Mode Multiple / Paket: toggle icon
+          var existIdx = tempSelectedIcons.indexOf(icon);
+          if (existIdx !== -1) {
+            tempSelectedIcons.splice(existIdx, 1);
+          } else {
+            if (tempSelectedIcons.length >= 4) {
+              toast("Maksimal 4 ikon untuk 1 paket produk ya");
+              return;
+            }
+            tempSelectedIcons.push(icon);
+          }
+          updateModalBundleBar();
+        } else {
+          // Mode Single item: langsung pilih & tutup modal
+          it.e = icon;
+          delete it.icons;
+          document.getElementById("iconModal").classList.remove("active");
+          activeTarget = null;
+          tempSelectedIcons = [];
+          render();
+          markDirty();
+          toast("Ikon berhasil diubah ✨");
+        }
       };
 
       window.selectPresetIcon = function(icon) {
-        if (!activeTarget) return;
-        state.sections[activeTarget.sIdx].items[activeTarget.iIdx].e = icon;
-        document.getElementById("iconModal").classList.remove("active");
-        activeTarget = null;
-        render();
-        toast("Ikon berhasil diubah ✨");
+        handleIconClick(icon);
       };
 
       // Upload Custom Image with canvas compression to keep size minimal
@@ -1678,9 +1880,26 @@
             ctx.drawImage(img, 0, 0, w, h);
 
             var compressedDataUrl = canvas.toDataURL("image/webp", 0.85);
-            state.sections[activeTarget.sIdx].items[activeTarget.iIdx].e = compressedDataUrl;
+            var sec = state.sections[activeTarget.sIdx];
+            var it = sec.items[activeTarget.iIdx];
+            var isPkg = sec.pk || (it.ut === "paket") || (it.u === 1 && it.ut === "paket");
+            if (isPkg) {
+              if (!it.icons || !Array.isArray(it.icons)) {
+                it.icons = it.e ? [it.e] : [];
+              }
+              if (it.icons.length < 4) {
+                it.icons.push(compressedDataUrl);
+              } else {
+                it.icons[it.icons.length - 1] = compressedDataUrl;
+              }
+              it.e = it.icons[0];
+            } else {
+              it.e = compressedDataUrl;
+              delete it.icons;
+            }
             activeTarget = null;
             render();
+            markDirty();
             toast("Gambar ikon berhasil di-upload! 📸");
           };
           img.src = evt.target.result;
