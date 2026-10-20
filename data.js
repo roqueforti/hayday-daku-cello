@@ -35,8 +35,28 @@ var DEFAULT_SECTIONS = [
     t: "🏡 Tagar BEM (per paket)",
     pk: 1,
     items: [
-      { id: "bem1", e: "assets/icons/bem.png", n: "Tagar BEM", u: 1, ut: "paket", p: 1500, d: "Per paket", c: "#2e9a3a" },
-      { id: "bem30", e: "assets/icons/bem.png", n: "Tagar BEM (30 pcs)", u: 1, ut: "paket", p: 28500, d: "Per paket", c: "#2d73e6" }
+      {
+        id: "bem1",
+        e: "assets/icons/bem.png",
+        icons: ["assets/icons/Bolt.png", "assets/icons/Plank.png", "assets/icons/Duct Tape.png"],
+        n: "Tagar BEM",
+        u: 1,
+        ut: "paket",
+        p: 1500,
+        d: "Include Baut, Papan, Lakban",
+        c: "#2e9a3a"
+      },
+      {
+        id: "bem30",
+        e: "assets/icons/bem.png",
+        icons: ["assets/icons/Bolt.png", "assets/icons/Plank.png", "assets/icons/Duct Tape.png"],
+        n: "Tagar BEM (30 pcs)",
+        u: 1,
+        ut: "paket",
+        p: 28500,
+        d: "Include Baut, Papan, Lakban (30 pcs)",
+        c: "#2d73e6"
+      }
     ]
   },
   {
@@ -145,6 +165,12 @@ function getStoreData() {
             sec.items.forEach(function (it) {
               if (it && it.n) {
                 it.n = cleanItemName(it.n);
+              }
+              // Dukungan bawaan icons bundle untuk paket BEM jika belum tersetup
+              if (it && (it.id === "bem1" || it.id === "bem30" || (it.n && it.n.toLowerCase().indexOf("bem") !== -1))) {
+                if (!it.icons || !Array.isArray(it.icons) || it.icons.length === 0) {
+                  it.icons = ["assets/icons/Bolt.png", "assets/icons/Plank.png", "assets/icons/Duct Tape.png"];
+                }
               }
             });
           }

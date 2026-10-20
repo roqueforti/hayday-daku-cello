@@ -1296,7 +1296,15 @@
         }, 2200);
       }
 
-      function renderIconPreview(eVal) {
+      function renderIconPreview(eVal, it) {
+        if (it && it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
+          var h = '<div style="display:flex; align-items:center; justify-content:center; gap:1px; width:100%; height:100%;">';
+          it.icons.slice(0, 3).forEach(function (icSrc) {
+            h += '<img src="' + icSrc + '" alt="item" style="width:16px; height:16px; object-fit:contain;" />';
+          });
+          h += '</div>';
+          return h;
+        }
         if (eVal && (eVal.indexOf("data:image") === 0 || eVal.indexOf("http") === 0 || eVal.indexOf(".png") !== -1 || eVal.indexOf(".jpg") !== -1 || eVal.indexOf("assets/") === 0)) {
           return '<img src="' + eVal + '" alt="icon" />';
         }
@@ -1444,7 +1452,7 @@
                 <td>
                   <div class="ico-cell">
                     <div class="ico-preview" title="Klik untuk pilih ikon" onclick="openIconPicker(${sIdx}, ${iIdx})">
-                      ${renderIconPreview(it.e)}
+                      ${renderIconPreview(it.e, it)}
                     </div>
                     <div class="ico-actions">
                       <button type="button" class="btn-ico-picker" onclick="openIconPicker(${sIdx}, ${iIdx})">

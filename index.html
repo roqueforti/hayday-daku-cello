@@ -679,6 +679,40 @@
         object-fit: contain;
         display: block;
       }
+      /* Tampilan Multi-Item Produk Paket (Contoh: Baut + Papan + Lakban) */
+      .ico-bundle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: 100%;
+        height: 100%;
+      }
+      .ico-bundle img {
+        max-width: 42px;
+        max-height: 48px;
+        filter: drop-shadow(0 4px 3px rgba(60, 30, 5, 0.4));
+        transition: 0.2s;
+      }
+      .ico-bundle img:nth-child(1) {
+        transform: rotate(-8deg) scale(0.95);
+      }
+      .ico-bundle img:nth-child(2) {
+        transform: translateY(-4px) scale(1.05);
+        z-index: 2;
+      }
+      .ico-bundle img:nth-child(3) {
+        transform: rotate(8deg) scale(0.95);
+      }
+      .card:hover .ico-bundle img:nth-child(1) {
+        transform: rotate(-14deg) translateY(-2px);
+      }
+      .card:hover .ico-bundle img:nth-child(2) {
+        transform: translateY(-8px) scale(1.1);
+      }
+      .card:hover .ico-bundle img:nth-child(3) {
+        transform: rotate(14deg) translateY(-2px);
+      }
       .card:hover .ico {
         transform: scale(1.15) rotate(5deg);
       }
@@ -1662,10 +1696,19 @@
         s.items.forEach(function (it) {
           it.pk = s.pk || 0;
           ALL.push(it);
-          var iconHtml =
-            it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
-              ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
-              : (it.e || '📦');
+          var iconHtml = "";
+          if (it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
+            iconHtml = '<div class="ico-bundle">';
+            it.icons.forEach(function (icSrc) {
+              iconHtml += '<img src="' + icSrc + '" alt="' + (it.n || '') + '" />';
+            });
+            iconHtml += '</div>';
+          } else {
+            iconHtml =
+              it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
+                ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
+                : (it.e || '📦');
+          }
           
           var descText = it.d && it.d.trim() ? it.d.trim() : (it.pk ? "Per paket" : "Min. beli " + minq(it) + " • harga per " + unitLabel(it));
 
@@ -1771,10 +1814,19 @@
           var subtotal = price(it);
           total += subtotal;
 
-          var iconHtml =
-            it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
-              ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
-              : (it.e || '📦');
+          var iconHtml = "";
+          if (it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
+            iconHtml = '<div style="display:flex; align-items:center; justify-content:center; gap:1px;">';
+            it.icons.slice(0, 3).forEach(function (icSrc) {
+              iconHtml += '<img src="' + icSrc + '" alt="' + (it.n || '') + '" style="width:16px; height:16px; object-fit:contain;" />';
+            });
+            iconHtml += '</div>';
+          } else {
+            iconHtml =
+              it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
+                ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
+                : (it.e || '📦');
+          }
 
           var uName = unitName(it);
           var detailQty = qty + " " + uName;
@@ -1851,10 +1903,19 @@
             selectedList.forEach(function (it) {
               var qty = q[it.id];
               var subtotal = price(it);
-              var iconHtml =
-                it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
-                  ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
-                  : (it.e || '📦');
+              var iconHtml = "";
+              if (it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
+                iconHtml = '<div style="display:flex; align-items:center; justify-content:center; gap:1px;">';
+                it.icons.slice(0, 3).forEach(function (icSrc) {
+                  iconHtml += '<img src="' + icSrc + '" alt="' + (it.n || '') + '" style="width:14px; height:14px; object-fit:contain;" />';
+                });
+                iconHtml += '</div>';
+              } else {
+                iconHtml =
+                  it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
+                    ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
+                    : (it.e || '📦');
+              }
               var qtyText = qty + " " + unitName(it);
 
               sideHtml +=
