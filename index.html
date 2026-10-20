@@ -1920,6 +1920,17 @@
         }
       }
 
+      function orderViaWa() {
+        var s = text();
+        if (!s) return toast("Pilih item dulu ya 🌱");
+        var cleanWa = (WA || "6287719747833").replace(/[^0-9]/g, "");
+        var url = "https://api.whatsapp.com/send?phone=" + cleanWa + "&text=" + encodeURIComponent(s);
+        var win = window.open(url, "_blank");
+        if (!win || win.closed || typeof win.closed === "undefined") {
+          window.location.href = url;
+        }
+      }
+
       function openConfirmModal() {
         var s = text();
         if (!s) return toast("Pilih item dulu ya 🌱");
