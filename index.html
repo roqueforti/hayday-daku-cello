@@ -1191,23 +1191,28 @@
         }
         return it.pk ? 1 : 100;
       }
+      function unitName(it) {
+        if (it.ut && it.ut.trim()) return it.ut.trim();
+        return it.pk ? "paket" : "pcs";
+      }
       function unitLabel(it) {
-        if (it.pk) return "paket";
+        var name = unitName(it);
         var u = unit(it);
-        return u === 1 ? "pcs" : u + " pcs";
+        if (name === "paket" && u === 1) return "paket";
+        return u === 1 ? name : u + " " + name;
       }
       function minq(it) {
         if (it.min !== undefined && it.min !== null && it.min !== "") {
           var m = Number(it.min);
           if (m > 0) return m;
         }
-        if (it.pk) return 1;
+        if (it.pk || unitName(it) === "paket") return 1;
         var u = unit(it);
-        // Jika satuan dasar 1 pcs (atau <= 5), minimal pembelian adalah 1
+        // Jika satuan dasar 1 (atau <= 5), minimal pembelian adalah 1
         return u <= 5 ? 1 : (u <= 10 ? 10 : 10);
       }
       function stepq(it) {
-        if (it.pk) return 1;
+        if (it.pk || unitName(it) === "paket") return 1;
         var u = unit(it);
         return u === 1 ? 1 : (u <= 10 ? u : 10);
       }
@@ -1265,6 +1270,8 @@
             '">＋ Pilih</button><div class="sub"></div>';
           return;
         }
+        var uName = unitName(it);
+        var subText = (uName === "paket" && v === 1) ? rp(price(it)) : (v + " " + uName + " = " + rp(price(it)));
         el.innerHTML =
           '<div class="ctl"><button data-a="dec" data-i="' +
           it.id +
@@ -1275,8 +1282,7 @@
           '"><button data-a="inc" data-i="' +
           it.id +
           '">+</button></div><div class="sub">' +
-          (it.pk ? "" : v + " pcs = ") +
-          rp(price(it)) +
+          subText +
           "</div>";
       }
       function get(id) {
@@ -1289,7 +1295,7 @@
         if (v <= 0) v = 0;
         else if (v < minq(it)) {
           v = minq(it);
-          toast("Minimal pembelian " + minq(it) + " per item ya! 🌾");
+          toast("Minimal pembelian " + minq(it) + " " + unitName(it) + " ya! 🌾");
         }
         q[it.id] = v;
         ctrl(it);
@@ -1319,9 +1325,10 @@
               ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
               : (it.e || '📦');
 
-          var detailQty = it.pk
+          var uName = unitName(it);
+          var detailQty = uName === "paket" && unit(it) === 1
             ? qty + " paket (@ " + rp(it.p) + ")"
-            : qty + " pcs (@ " + rp(it.p) + " / " + unitLabel(it) + ")";
+            : qty + " " + uName + " (@ " + rp(it.p) + " / " + unitLabel(it) + ")";
 
           html +=
             '<div class="cart-item-row">' +
@@ -1397,7 +1404,7 @@
                 it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
                   ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
                   : (it.e || '📦');
-              var qtyText = it.pk ? qty + " paket" : qty + " pcs";
+              var qtyText = qty + " " + unitName(it);
               trayHtml +=
                 '<div class="selected-chip">' +
                 '<div class="selected-chip-ico">' +
@@ -1453,9 +1460,10 @@
             count++;
             var subtotal = price(it);
             total += subtotal;
-            var rincian = it.pk
-              ? "• *" + it.n + "*: " + qty + " paket x " + rp(it.p) + " = *" + rp(subtotal) + "*"
-              : "• *" + (it.n || label(it)) + "*: " + qty + " pcs (harga " + rp(it.p) + " / " + unitLabel(it) + ") = *" + rp(subtotal) + "*";
+            var uName = unitName(it);
+            var rincian = (uName === "paket" && unit(it) === 1)
+              ? "• *" + (it.n || label(it)) + "*: " + qty + " paket x " + rp(it.p) + " = *" + rp(subtotal) + "*"
+              : "• *" + (it.n || label(it)) + "*: " + qty + " " + uName + " (harga " + rp(it.p) + " / " + unitLabel(it) + ") = *" + rp(subtotal) + "*";
             lines.push(rincian);
           }
         });
