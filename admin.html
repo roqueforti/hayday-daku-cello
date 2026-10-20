@@ -951,10 +951,6 @@
             <div class="sec-header">
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <input type="text" class="sec-title-input" value="${(sec.t || '').replace(/"/g, '&quot;')}" style="font-weight:800; width:280px;" data-sidx="${sIdx}" />
-                <label style="font-size:13px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
-                  <input type="checkbox" class="sec-pk-input" data-sidx="${sIdx}" ${isPk ? 'checked' : ''} />
-                  Per Paket (bukan per 100 pcs)
-                </label>
               </div>
               <div style="display:flex; gap:6px;">
                 <button class="btn btn-add" style="padding:4px 10px; font-size:13px;" onclick="addItem(${sIdx})">＋ Item</button>
@@ -1042,19 +1038,6 @@
               var count = (state.sections[idx].items || []).length;
               navItem.innerHTML = `<span>${(e.target.value || 'Kategori ' + (parseInt(idx, 10) + 1)).replace(/"/g, '&quot;')}</span><span class="cat-badge">${count}</span>`;
             }
-            markDirty();
-          };
-        });
-
-        container.querySelectorAll(".sec-pk-input").forEach(function(inp) {
-          inp.onchange = function(e) {
-            var idx = e.target.dataset.sidx;
-            if (e.target.checked) {
-              state.sections[idx].pk = 1;
-            } else {
-              delete state.sections[idx].pk;
-            }
-            render();
             markDirty();
           };
         });
