@@ -365,14 +365,90 @@
       .row-p {
         width: 130px;
       }
-      .row-opsi {
-        width: 140px;
-        font-size: 13px;
-        text-align: center;
-      }
       .row-d {
         min-width: 240px;
         width: 100%;
+      }
+      .btn-add-var {
+        background: #fdf6e7;
+        color: var(--wood);
+        border: 1.5px dashed var(--wood);
+        font-size: 11px;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        margin-top: 5px;
+        transition: 0.15s;
+      }
+      .btn-add-var:hover {
+        background: var(--wood);
+        color: #fff;
+      }
+      .var-row {
+        background: #fffcf7 !important;
+      }
+      .var-row td {
+        padding: 5px 8px !important;
+        border-top: 1px dashed #e6c8a0 !important;
+        border-bottom: none !important;
+      }
+      .var-tree {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        color: var(--wood);
+        font-weight: 800;
+        font-size: 14px;
+        padding-right: 6px;
+      }
+      .var-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 800;
+        color: #8c5d2e;
+        background: #faebd7;
+        padding: 2px 7px;
+        border-radius: 6px;
+      }
+      .var-input-u, .var-input-p {
+        width: 100%;
+        padding: 6px 8px;
+        font-size: 13px;
+        font-weight: 800;
+        border-radius: 8px;
+        border: 2px solid var(--line);
+        background: #fff;
+        color: var(--text);
+        box-sizing: border-box;
+      }
+      .var-input-u:focus, .var-input-p:focus {
+        border-color: var(--wood);
+        outline: none;
+      }
+      .btn-del-var {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fca5a5;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 800;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.15s;
+      }
+      .btn-del-var:hover {
+        background: #dc2626;
+        color: #fff;
       }
       .row-c {
         width: 44px;
@@ -962,10 +1038,9 @@
                 <thead>
                   <tr>
                     <th style="width:140px;">Icon Produk</th>
-                    <th style="width:180px;">Nama Item</th>
-                    <th style="width:170px;" title="Jumlah satuan dasar dan tipe satuan untuk harga ini. Contoh: 100 pcs, 1 paket, 1000 koin, 1 kg, dll.">Satuan & Jenis</th>
-                    <th style="width:125px;">Harga (Rp)</th>
-                    <th style="width:140px;" title="Pilihan kelipatan pembelian cepat yang bisa diklik user. Contoh: 1, 10, 50, 100 (pisahkan dengan koma)">Opsi Kelipatan</th>
+                    <th style="width:190px;">Nama Item</th>
+                    <th style="width:180px;" title="Jumlah satuan dasar dan tipe satuan untuk harga ini. Contoh: 100 pcs, 1 paket, 1000 koin, 1 kg, dll.">Satuan & Jenis</th>
+                    <th style="width:130px;">Harga (Rp)</th>
                     <th>Deskripsi Produk</th>
                     <th style="width:45px;">Warna</th>
                     <th style="width:45px; text-align:center;">Aksi</th>
@@ -978,11 +1053,11 @@
             var defaultUnitPlaceholder = isPk ? "1" : "100";
             var unitVal = (it.u !== undefined && it.u !== null) ? it.u : "";
             var unitType = (it.ut !== undefined && it.ut !== null && it.ut !== "") ? it.ut : (isPk ? "paket" : "pcs");
-            var opsiVal = it.opsi !== undefined ? it.opsi : "";
             var descVal = it.d || "";
+            var variations = (it.vars && Array.isArray(it.vars)) ? it.vars : [];
 
             h += `
-              <tr>
+              <tr class="main-item-row" data-s="${sIdx}" data-i="${iIdx}">
                 <td>
                   <div class="ico-cell">
                     <div class="ico-preview" title="Klik untuk pilih ikon" onclick="openIconPicker(${sIdx}, ${iIdx})">
@@ -994,10 +1069,17 @@
                     </div>
                   </div>
                 </td>
-                <td><input type="text" class="row-n" value="${(it.n || '').replace(/"/g, '&quot;')}" placeholder="Nama item..." data-s="${sIdx}" data-i="${iIdx}" data-f="n" /></td>
+                <td>
+                  <input type="text" class="row-n" value="${(it.n || '').replace(/"/g, '&quot;')}" placeholder="Nama item..." data-s="${sIdx}" data-i="${iIdx}" data-f="n" />
+                  <div>
+                    <button type="button" class="btn-add-var" onclick="addVariation(${sIdx}, ${iIdx})" title="Tambahkan variasi jumlah & harga berbeda untuk produk ini">
+                      ＋ Tambah Variasi
+                    </button>
+                  </div>
+                </td>
                 <td>
                   <div class="unit-cell">
-                    <input type="number" class="row-u" value="${unitVal}" placeholder="${defaultUnitPlaceholder}" min="1" step="1" title="Jumlah (contoh: 100, 1, 10)" data-s="${sIdx}" data-i="${iIdx}" data-f="u" />
+                    <input type="number" class="row-u" value="${unitVal}" placeholder="${defaultUnitPlaceholder}" min="1" step="1" title="Jumlah satuan dasar (contoh: 100, 1, 10)" data-s="${sIdx}" data-i="${iIdx}" data-f="u" />
                     <select class="row-t" data-s="${sIdx}" data-i="${iIdx}" data-f="ut" title="Tipe Satuan">
                       <option value="pcs" ${unitType === 'pcs' ? 'selected' : ''}>pcs</option>
                       <option value="paket" ${unitType === 'paket' ? 'selected' : ''}>paket</option>
@@ -1009,12 +1091,42 @@
                   </div>
                 </td>
                 <td><input type="number" class="row-p" value="${it.p || 0}" step="100" data-s="${sIdx}" data-i="${iIdx}" data-f="p" /></td>
-                <td><input type="text" class="row-opsi" value="${opsiVal.replace(/"/g, '&quot;')}" placeholder="Contoh: 1, 10, 50" title="Kelipatan pilihan cepat, pisahkan dengan koma. Contoh: 1, 10, 50, 100" data-s="${sIdx}" data-i="${iIdx}" data-f="opsi" /></td>
                 <td><input type="text" class="row-d" value="${descVal.replace(/"/g, '&quot;')}" placeholder="Ketik deskripsi / catatan..." data-s="${sIdx}" data-i="${iIdx}" data-f="d" /></td>
                 <td><input type="color" class="row-c" value="${it.c || '#7a2fe0'}" data-s="${sIdx}" data-i="${iIdx}" data-f="c" /></td>
                 <td class="row-act"><button class="btn-danger" onclick="deleteItem(${sIdx}, ${iIdx})">✕</button></td>
               </tr>
             `;
+
+            // Render baris sub-variasi jika ada
+            if (variations.length > 0) {
+              variations.forEach(function(v, vIdx) {
+                h += `
+                  <tr class="var-row" data-s="${sIdx}" data-i="${iIdx}" data-v="${vIdx}">
+                    <td class="var-tree">↳</td>
+                    <td>
+                      <div class="var-chip">
+                        <span>Variasi #${vIdx + 1}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div style="display:flex; align-items:center; gap:6px;">
+                        <input type="number" class="var-input-u" value="${v.u || ''}" min="1" step="1" placeholder="Jml ${unitType}" title="Jumlah untuk variasi ini" data-s="${sIdx}" data-i="${iIdx}" data-v="${vIdx}" data-f="vu" />
+                        <span style="font-size:12px; font-weight:700; color:var(--muted);">${unitType}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <input type="number" class="var-input-p" value="${v.p || 0}" step="100" placeholder="Harga Rp" title="Harga khusus untuk variasi ini" data-s="${sIdx}" data-i="${iIdx}" data-v="${vIdx}" data-f="vp" />
+                    </td>
+                    <td colspan="2" style="font-size:12px; color:var(--muted); font-style:italic;">
+                      Rincian: Pembelian ${v.u || 0} ${unitType} seharga Rp${(Number(v.p) || 0).toLocaleString('id-ID')}
+                    </td>
+                    <td style="text-align:center;">
+                      <button type="button" class="btn-del-var" onclick="deleteVariation(${sIdx}, ${iIdx}, ${vIdx})" title="Hapus variasi ini">✕</button>
+                    </td>
+                  </tr>
+                `;
+              });
+            }
           });
 
           h += `
@@ -1042,14 +1154,28 @@
           };
         });
 
-        // Event listener field item (nama, satuan, harga, deskripsi, warna)
+        // Event listener field item (nama, satuan, harga, deskripsi, warna, variasi)
         container.querySelectorAll("table input").forEach(function(inp) {
           inp.oninput = function(e) {
             var s = e.target.dataset.s;
             var i = e.target.dataset.i;
+            var v = e.target.dataset.v;
             var f = e.target.dataset.f;
             if (!s || !i || !f) return;
             var val = e.target.value;
+
+            // Handle sub-variasi inputs (vu / vp)
+            if (v !== undefined && v !== null && v !== "") {
+              var targetItem = state.sections[s].items[i];
+              if (!targetItem.vars) targetItem.vars = [];
+              if (targetItem.vars[v]) {
+                if (f === "vu") targetItem.vars[v].u = Number(val) || 0;
+                if (f === "vp") targetItem.vars[v].p = Number(val) || 0;
+                markDirty();
+              }
+              return;
+            }
+
             if (f === "p") val = Number(val) || 0;
             if (f === "u") {
               val = val === "" ? "" : (Number(val) || 1);
@@ -1223,7 +1349,7 @@
           n: "Item Baru",
           u: isPk ? 1 : 100,
           ut: isPk ? "paket" : "pcs",
-          opsi: "",
+          vars: [],
           p: 1000,
           d: "",
           c: "#46b23c"
@@ -1231,6 +1357,41 @@
         render();
         markDirty();
         toast("Item baru ditambahkan ✨");
+      };
+
+      window.addVariation = function(sIdx, iIdx) {
+        var it = state.sections[sIdx].items[iIdx];
+        if (!it.vars || !Array.isArray(it.vars)) {
+          it.vars = [];
+        }
+        var currentQty = Number(it.u) || (state.sections[sIdx].pk ? 1 : 100);
+        var currentPrice = Number(it.p) || 1000;
+        var nextQty = currentQty;
+        var nextPrice = currentPrice;
+
+        if (it.vars.length > 0) {
+          var lastVar = it.vars[it.vars.length - 1];
+          nextQty = (Number(lastVar.u) || currentQty) * 2;
+          nextPrice = (Number(lastVar.p) || currentPrice) * 2;
+        }
+
+        it.vars.push({
+          u: nextQty,
+          p: nextPrice
+        });
+        render();
+        markDirty();
+        toast("Variasi baru ditambahkan ➕");
+      };
+
+      window.deleteVariation = function(sIdx, iIdx, vIdx) {
+        var it = state.sections[sIdx].items[iIdx];
+        if (it && it.vars && it.vars[vIdx]) {
+          it.vars.splice(vIdx, 1);
+          render();
+          markDirty();
+          toast("Variasi dihapus 🗑️");
+        }
       };
 
       window.deleteItem = function(sIdx, iIdx) {
@@ -1300,7 +1461,12 @@
           (sec.items || []).forEach(function(it) {
             var unitVal = (it.u !== undefined && it.u !== null && it.u !== "") ? Number(it.u) : (sec.pk ? 1 : 100);
             var unitType = (it.ut !== undefined && it.ut !== null && it.ut !== "") ? it.ut : (sec.pk ? "paket" : "pcs");
-            var opsiVal = it.opsi !== undefined ? it.opsi : "";
+            var varText = "";
+            if (it.vars && Array.isArray(it.vars) && it.vars.length > 0) {
+              varText = it.vars.map(function(v) { return v.u + ":" + v.p; }).join(", ");
+            } else if (it.opsi) {
+              varText = it.opsi;
+            }
             productsData.push({
               "Kategori": sec.t || "",
               "Tipe Kategori": sec.pk ? "Per Paket" : "Reguler (per 100 pcs)",
@@ -1308,7 +1474,7 @@
               "Satuan Dasar": unitVal,
               "Jenis Satuan": unitType,
               "Harga (Rp)": it.p || 0,
-              "Opsi Kelipatan": opsiVal,
+              "Variasi (Jml:Harga)": varText,
               "Deskripsi / Catatan": it.d || "",
               "Warna Label": it.c || "#7a2fe0",
               "Icon File": it.e || "",
@@ -1335,7 +1501,7 @@
           { wch: 14 }, // Satuan Dasar
           { wch: 14 }, // Jenis Satuan
           { wch: 14 }, // Harga
-          { wch: 18 }, // Opsi Kelipatan
+          { wch: 22 }, // Variasi (Jml:Harga)
           { wch: 32 }, // Deskripsi
           { wch: 14 }, // Warna Label
           { wch: 26 }, // Icon File
@@ -1416,11 +1582,35 @@
               var itemPrice = Number(row["Harga (Rp)"] || row["Harga"] || 0) || 0;
               var itemUnit = row["Satuan Dasar"] !== undefined ? Number(row["Satuan Dasar"]) : (row["Satuan"] !== undefined ? Number(row["Satuan"]) : "");
               var itemUnitType = (row["Jenis Satuan"] || row["Tipe Satuan"] || (isPk ? "paket" : "pcs")).toString().trim().toLowerCase();
-              var itemOpsi = (row["Opsi Kelipatan"] || row["Kelipatan"] || row["Opsi"] || "").toString().trim();
+              var rawVar = (row["Variasi (Jml:Harga)"] || row["Variasi"] || row["Opsi Kelipatan"] || row["Kelipatan"] || row["Opsi"] || "").toString().trim();
               var itemDesc = (row["Deskripsi / Catatan"] || row["Deskripsi"] || "").toString().trim();
               var itemColor = (row["Warna Label"] || row["Warna"] || "#7a2fe0").toString().trim();
               var itemIcon = (row["Icon File"] || row["Icon"] || "🌾").toString().trim();
               var itemId = (row["ID Produk"] || row["ID"] || ("item_" + Date.now() + "_" + idx)).toString().trim();
+
+              var itemVars = [];
+              if (rawVar) {
+                var parts = rawVar.split(/[,;]+/);
+                parts.forEach(function(pStr) {
+                  pStr = pStr.trim();
+                  if (!pStr) return;
+                  if (pStr.indexOf(":") !== -1) {
+                    var vPair = pStr.split(":");
+                    var vu = Number(vPair[0].trim());
+                    var vp = Number(vPair[1].trim());
+                    if (!isNaN(vu) && vu > 0) {
+                      itemVars.push({ u: vu, p: isNaN(vp) ? 0 : vp });
+                    }
+                  } else {
+                    var singleU = Number(pStr);
+                    if (!isNaN(singleU) && singleU > 0) {
+                      var baseU = itemUnit || (isPk ? 1 : 100);
+                      var calcP = baseU > 0 ? (itemPrice / baseU) * singleU : itemPrice;
+                      itemVars.push({ u: singleU, p: Math.round(calcP) });
+                    }
+                  }
+                });
+              }
 
               categoryMap[catName].items.push({
                 id: itemId,
@@ -1428,7 +1618,7 @@
                 n: itemName,
                 u: itemUnit,
                 ut: itemUnitType,
-                opsi: itemOpsi,
+                vars: itemVars,
                 p: itemPrice,
                 d: itemDesc,
                 c: itemColor
