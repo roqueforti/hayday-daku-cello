@@ -86,26 +86,71 @@
         min-height: 100vh;
         overflow-x: hidden;
       }
-      .cloud {
+      /* Fluffy Sky Clouds with Smooth Hardware-Accelerated Floating Animation */
+      .sky-clouds {
         position: fixed;
-        top: 60px;
-        font-size: 54px;
-        opacity: 0.85;
-        animation: drift 38s linear infinite;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
       }
-      .cloud.b {
-        top: 140px;
-        font-size: 38px;
-        animation-duration: 55s;
-        animation-delay: -20s;
+      .cloud {
+        position: absolute;
+        width: 140px;
+        height: 48px;
+        color: #ffffff;
+        filter: drop-shadow(0 8px 16px rgba(45, 115, 230, 0.12));
+        opacity: 0.88;
+        will-change: transform;
+        animation: driftClouds linear infinite;
       }
-      @keyframes drift {
-        from {
-          left: -80px;
+      .cloud svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .cloud-1 {
+        top: 45px;
+        width: 160px;
+        animation-duration: 48s;
+        transform: translate3d(-200px, 0, 0);
+      }
+      .cloud-2 {
+        top: 135px;
+        width: 110px;
+        opacity: 0.72;
+        animation-duration: 72s;
+        animation-delay: -24s;
+        transform: translate3d(-200px, 0, 0);
+      }
+      .cloud-3 {
+        top: 220px;
+        width: 180px;
+        opacity: 0.65;
+        animation-duration: 90s;
+        animation-delay: -50s;
+        transform: translate3d(-250px, 0, 0);
+      }
+      .cloud-4 {
+        top: 320px;
+        width: 95px;
+        opacity: 0.55;
+        animation-duration: 60s;
+        animation-delay: -10s;
+        transform: translate3d(-200px, 0, 0);
+      }
+      @keyframes driftClouds {
+        0% {
+          transform: translate3d(-260px, 0, 0);
         }
-        to {
-          left: 105%;
+        50% {
+          transform: translate3d(calc(50vw - 70px), 8px, 0);
+        }
+        100% {
+          transform: translate3d(calc(100vw + 260px), 0, 0);
         }
       }
       .wrap {
@@ -1188,8 +1233,29 @@
     </style>
   </head>
   <body>
-    <div class="cloud">☁️</div>
-    <div class="cloud b">☁️</div>
+    <!-- Beautiful Fluffy Animated Vector Clouds -->
+    <div class="sky-clouds" aria-hidden="true">
+      <div class="cloud cloud-1">
+        <svg viewBox="0 0 100 45" fill="currentColor">
+          <path d="M 20 38 Q 8 38 8 26 Q 8 16 18 16 Q 22 6 34 6 Q 44 6 48 13 Q 54 4 66 4 Q 78 4 82 14 Q 92 14 92 25 Q 92 38 80 38 Z" />
+        </svg>
+      </div>
+      <div class="cloud cloud-2">
+        <svg viewBox="0 0 100 45" fill="currentColor">
+          <path d="M 22 36 Q 10 36 10 26 Q 10 18 19 18 Q 23 9 33 9 Q 42 9 46 15 Q 52 7 64 7 Q 75 7 79 16 Q 88 16 88 26 Q 88 36 78 36 Z" />
+        </svg>
+      </div>
+      <div class="cloud cloud-3">
+        <svg viewBox="0 0 100 45" fill="currentColor">
+          <path d="M 18 38 Q 6 38 6 27 Q 6 17 16 17 Q 20 7 32 7 Q 41 7 46 14 Q 53 5 65 5 Q 77 5 81 15 Q 92 15 92 26 Q 92 38 78 38 Z" />
+        </svg>
+      </div>
+      <div class="cloud cloud-4">
+        <svg viewBox="0 0 100 45" fill="currentColor">
+          <path d="M 20 35 Q 11 35 11 25 Q 11 18 20 18 Q 24 10 34 10 Q 42 10 46 16 Q 52 8 63 8 Q 74 8 78 17 Q 86 17 86 26 Q 86 35 76 35 Z" />
+        </svg>
+      </div>
+    </div>
     <div class="wrap">
       <header>
         <div class="sign">
