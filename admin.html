@@ -365,8 +365,13 @@
       .row-p {
         width: 130px;
       }
+      .row-opsi {
+        width: 140px;
+        font-size: 13px;
+        text-align: center;
+      }
       .row-d {
-        min-width: 260px;
+        min-width: 240px;
         width: 100%;
       }
       .row-c {
@@ -1010,6 +1015,7 @@
                     <th style="width:180px;">Nama Item</th>
                     <th style="width:170px;" title="Jumlah satuan dasar dan tipe satuan untuk harga ini. Contoh: 100 pcs, 1 paket, 1000 koin, 1 kg, dll.">Satuan & Jenis</th>
                     <th style="width:125px;">Harga (Rp)</th>
+                    <th style="width:140px;" title="Pilihan kelipatan pembelian cepat yang bisa diklik user. Contoh: 1, 10, 50, 100 (pisahkan dengan koma)">Opsi Kelipatan</th>
                     <th>Deskripsi Produk</th>
                     <th style="width:45px;">Warna</th>
                     <th style="width:45px; text-align:center;">Aksi</th>
@@ -1022,6 +1028,7 @@
             var defaultUnitPlaceholder = isPk ? "1" : "100";
             var unitVal = (it.u !== undefined && it.u !== null) ? it.u : "";
             var unitType = (it.ut !== undefined && it.ut !== null && it.ut !== "") ? it.ut : (isPk ? "paket" : "pcs");
+            var opsiVal = it.opsi !== undefined ? it.opsi : "";
             var descVal = it.d || "";
 
             h += `
@@ -1052,6 +1059,7 @@
                   </div>
                 </td>
                 <td><input type="number" class="row-p" value="${it.p || 0}" step="100" data-s="${sIdx}" data-i="${iIdx}" data-f="p" /></td>
+                <td><input type="text" class="row-opsi" value="${opsiVal.replace(/"/g, '&quot;')}" placeholder="Contoh: 1, 10, 50" title="Kelipatan pilihan cepat, pisahkan dengan koma. Contoh: 1, 10, 50, 100" data-s="${sIdx}" data-i="${iIdx}" data-f="opsi" /></td>
                 <td><input type="text" class="row-d" value="${descVal.replace(/"/g, '&quot;')}" placeholder="Ketik deskripsi / catatan..." data-s="${sIdx}" data-i="${iIdx}" data-f="d" /></td>
                 <td><input type="color" class="row-c" value="${it.c || '#7a2fe0'}" data-s="${sIdx}" data-i="${iIdx}" data-f="c" /></td>
                 <td class="row-act"><button class="btn-danger" onclick="deleteItem(${sIdx}, ${iIdx})">✕</button></td>
@@ -1278,6 +1286,7 @@
           n: "Item Baru",
           u: isPk ? 1 : 100,
           ut: isPk ? "paket" : "pcs",
+          opsi: "",
           p: 1000,
           d: "",
           c: "#46b23c"
@@ -1354,6 +1363,7 @@
           (sec.items || []).forEach(function(it) {
             var unitVal = (it.u !== undefined && it.u !== null && it.u !== "") ? Number(it.u) : (sec.pk ? 1 : 100);
             var unitType = (it.ut !== undefined && it.ut !== null && it.ut !== "") ? it.ut : (sec.pk ? "paket" : "pcs");
+            var opsiVal = it.opsi !== undefined ? it.opsi : "";
             productsData.push({
               "Kategori": sec.t || "",
               "Tipe Kategori": sec.pk ? "Per Paket" : "Reguler (per 100 pcs)",
@@ -1361,6 +1371,7 @@
               "Satuan Dasar": unitVal,
               "Jenis Satuan": unitType,
               "Harga (Rp)": it.p || 0,
+              "Opsi Kelipatan": opsiVal,
               "Deskripsi / Catatan": it.d || "",
               "Warna Label": it.c || "#7a2fe0",
               "Icon File": it.e || "",
@@ -1387,6 +1398,7 @@
           { wch: 14 }, // Satuan Dasar
           { wch: 14 }, // Jenis Satuan
           { wch: 14 }, // Harga
+          { wch: 18 }, // Opsi Kelipatan
           { wch: 32 }, // Deskripsi
           { wch: 14 }, // Warna Label
           { wch: 26 }, // Icon File
@@ -1467,6 +1479,7 @@
               var itemPrice = Number(row["Harga (Rp)"] || row["Harga"] || 0) || 0;
               var itemUnit = row["Satuan Dasar"] !== undefined ? Number(row["Satuan Dasar"]) : (row["Satuan"] !== undefined ? Number(row["Satuan"]) : "");
               var itemUnitType = (row["Jenis Satuan"] || row["Tipe Satuan"] || (isPk ? "paket" : "pcs")).toString().trim().toLowerCase();
+              var itemOpsi = (row["Opsi Kelipatan"] || row["Kelipatan"] || row["Opsi"] || "").toString().trim();
               var itemDesc = (row["Deskripsi / Catatan"] || row["Deskripsi"] || "").toString().trim();
               var itemColor = (row["Warna Label"] || row["Warna"] || "#7a2fe0").toString().trim();
               var itemIcon = (row["Icon File"] || row["Icon"] || "🌾").toString().trim();
@@ -1478,6 +1491,7 @@
                 n: itemName,
                 u: itemUnit,
                 ut: itemUnitType,
+                opsi: itemOpsi,
                 p: itemPrice,
                 d: itemDesc,
                 c: itemColor

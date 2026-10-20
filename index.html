@@ -474,6 +474,40 @@
         min-height: 18px;
         font-weight: 800;
       }
+      .opsi-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+        margin-top: 6px;
+      }
+      .opsi-pill {
+        border: 2px solid var(--line);
+        background: #fff;
+        color: #4a2c12;
+        border-radius: 10px;
+        padding: 3px 8px;
+        font-size: 12px;
+        font-weight: 800;
+        font-family: "Nunito", sans-serif;
+        cursor: pointer;
+        transition: 0.15s;
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+      }
+      .opsi-pill:hover {
+        background: #fdf5e6;
+        border-color: var(--wood);
+        transform: translateY(-1px);
+      }
+      .opsi-pill:active {
+        transform: translateY(1px);
+      }
+      .opsi-pill.active {
+        background: var(--wood);
+        color: #fff;
+        border-color: var(--wood2);
+        box-shadow: 0 1px 0 var(--wood2);
+      }
       .desc {
         font-size: 12px;
         color: #634325;
@@ -1201,7 +1235,25 @@
         if (name === "paket" && u === 1) return "paket";
         return u === 1 ? name : u + " " + name;
       }
+      function getQuickOptions(it) {
+        if (it.opsi && String(it.opsi).trim()) {
+          var arr = String(it.opsi)
+            .split(/[,;\s]+/)
+            .map(function (x) {
+              return parseInt(x.trim(), 10);
+            })
+            .filter(function (x) {
+              return !isNaN(x) && x > 0;
+            });
+          if (arr.length > 0) return arr;
+        }
+        return [];
+      }
       function minq(it) {
+        var opts = getQuickOptions(it);
+        if (opts.length > 0) {
+          return opts[0];
+        }
         if (it.min !== undefined && it.min !== null && it.min !== "") {
           var m = Number(it.min);
           if (m > 0) return m;
@@ -1212,6 +1264,10 @@
         return u <= 5 ? 1 : (u <= 10 ? 10 : 10);
       }
       function stepq(it) {
+        var opts = getQuickOptions(it);
+        if (opts.length > 0) {
+          return opts[0];
+        }
         if (it.pk || unitName(it) === "paket") return 1;
         var u = unit(it);
         return u === 1 ? 1 : (u <= 10 ? u : 10);
@@ -1263,14 +1319,41 @@
       function ctrl(it) {
         var v = q[it.id] || 0,
           el = document.getElementById("x-" + it.id);
+        var uName = unitName(it);
+        var quickOpts = getQuickOptions(it);
+
+        // Buat baris pill opsi kelipatan jika dikonfigurasi di admin
+        var pillsHtml = "";
+        if (quickOpts.length > 0) {
+          pillsHtml = '<div class="opsi-pills">';
+          quickOpts.forEach(function (optVal) {
+            var isActive = v === optVal ? " active" : "";
+            pillsHtml +=
+              '<button type="button" class="opsi-pill' +
+              isActive +
+              '" data-a="set-opt" data-i="' +
+              it.id +
+              '" data-val="' +
+              optVal +
+              '">' +
+              optVal +
+              " " +
+              uName +
+              "</button>";
+          });
+          pillsHtml += "</div>";
+        }
+
         if (!v) {
           el.innerHTML =
             '<button class="add" data-a="add" data-i="' +
             it.id +
-            '">＋ Pilih</button><div class="sub"></div>';
+            '">＋ Pilih</button>' +
+            pillsHtml +
+            '<div class="sub"></div>';
           return;
         }
-        var uName = unitName(it);
+
         var subText = (uName === "paket" && v === 1) ? rp(price(it)) : (v + " " + uName + " = " + rp(price(it)));
         el.innerHTML =
           '<div class="ctl"><button data-a="dec" data-i="' +
@@ -1281,7 +1364,9 @@
           it.id +
           '"><button data-a="inc" data-i="' +
           it.id +
-          '">+</button></div><div class="sub">' +
+          '">+</button></div>' +
+          pillsHtml +
+          '<div class="sub">' +
           subText +
           "</div>";
       }
@@ -1444,6 +1529,13 @@
         if (b.dataset.a === "inc") set(it, v + stepq(it));
         if (b.dataset.a === "dec")
           set(it, v - stepq(it) < minq(it) ? 0 : v - stepq(it));
+        if (b.dataset.a === "set-opt") {
+          var targetVal = parseInt(b.dataset.val, 10);
+          if (!isNaN(targetVal)) {
+            // Jika sudah aktif diklik lagi, toggle/tetap atau set ke targetVal
+            set(it, targetVal);
+          }
+        }
       });
       root.addEventListener("change", function (e) {
         var t = e.target;
