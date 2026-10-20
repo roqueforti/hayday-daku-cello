@@ -586,7 +586,8 @@ export default function AdminPage() {
                     </div>
                   </div>
 
-                  <div className="table-resp">
+                  {/* Desktop View Table */}
+                  <div className="table-resp desktop-only-table">
                     <table>
                       <thead>
                         <tr>
@@ -622,15 +623,11 @@ export default function AdminPage() {
                                           <img key={i} src={ic} alt="item" />
                                         ))}
                                       </div>
-                                    ) : prod.icon && (prod.icon.startsWith('assets/') || prod.icon.startsWith('data:') || prod.icon.startsWith('http')) ? (
-                                      <img src={prod.icon} alt="icon" />
+                                    ) : prod.icon && (prod.icon.startsWith('assets/') || prod.icon.startsWith('data:') || prod.icon.startsWith('http') || prod.icon.startsWith('/')) ? (
+                                      <img src={prod.icon.startsWith('/') ? prod.icon : `/${prod.icon}`} alt="icon" />
                                     ) : (
                                       <span>{prod.icon || '📦'}</span>
                                     )}
-                                  </div>
-                                  <div className="mobile-item-title-col">
-                                    <span className="mobile-item-name">{prod.name}</span>
-                                    <span className="mobile-item-meta">{prod.unit} {prod.unitType} • <span style={{ color: '#277220', fontWeight: 800 }}>Rp{prod.price.toLocaleString('id-ID')}</span></span>
                                   </div>
                                 </div>
                               </td>
@@ -638,23 +635,19 @@ export default function AdminPage() {
                                 <b className="desktop-val">{prod.name}</b>
                               </td>
                               <td className="td-unit">
-                                <span className="mobile-label">Satuan: </span>
                                 <span className="val-text">{prod.unit} {prod.unitType}</span>
                               </td>
                               <td className="td-price">
-                                <span className="mobile-label">Harga: </span>
                                 <b className="val-price" style={{ color: '#277220', fontFamily: 'JetBrains Mono, monospace' }}>
                                   Rp{prod.price.toLocaleString('id-ID')}
                                 </b>
                               </td>
                               <td className="td-desc">
-                                <span className="mobile-label">Catatan: </span>
                                 <span className="val-desc" style={{ fontSize: '12.5px', color: 'var(--text-muted)' }}>
                                   {prod.description || '-'}
                                 </span>
                               </td>
                               <td className="td-color">
-                                <span className="mobile-label">Aksen: </span>
                                 <div style={{
                                   width: '28px',
                                   height: '28px',
@@ -679,9 +672,9 @@ export default function AdminPage() {
                                     type="button"
                                     className="btn-row-del"
                                     onClick={() => promptDeleteItem(sIdx, pIdx)}
-                                    title="Hapus produk"
+                                    title="Hapus item ini"
                                   >
-                                    ✕
+                                    🗑️
                                   </button>
                                 </div>
                               </td>
@@ -690,6 +683,72 @@ export default function AdminPage() {
                         )}
                       </tbody>
                     </table>
+                  </div>
+
+                  {/* Mobile 2-Column Product Cards Grid */}
+                  <div className="mobile-only-cards-grid">
+                    {sec.items.length === 0 ? (
+                      <div className="mobile-empty-alert">
+                        Belum ada produk di kategori ini. Ketuk <b>+ Tambah Item</b> untuk menambah produk.
+                      </div>
+                    ) : (
+                      sec.items.map((prod, pIdx) => (
+                        <div key={prod.id || pIdx} className="admin-prod-card">
+                          <div className="admin-prod-card-top">
+                            <div
+                              className="admin-prod-card-icon"
+                              onClick={() => openEditItemModal(sIdx, pIdx)}
+                              style={{ borderColor: prod.color || '#e2e8f0' }}
+                            >
+                              {prod.icons && prod.icons.length > 1 ? (
+                                <div className="card-bundle-icons">
+                                  {prod.icons.slice(0, 4).map((ic, i) => (
+                                    <img key={i} src={ic.startsWith('/') ? ic : `/${ic}`} alt="item" />
+                                  ))}
+                                </div>
+                              ) : prod.icon && (prod.icon.startsWith('assets/') || prod.icon.startsWith('data:') || prod.icon.startsWith('http') || prod.icon.startsWith('/')) ? (
+                                <img src={prod.icon.startsWith('/') ? prod.icon : `/${prod.icon}`} alt="icon" />
+                              ) : (
+                                <span style={{ fontSize: '32px' }}>{prod.icon || '📦'}</span>
+                              )}
+                            </div>
+                            <div className="admin-prod-card-actions">
+                              <button
+                                type="button"
+                                className="card-btn-edit"
+                                onClick={() => openEditItemModal(sIdx, pIdx)}
+                                title="Edit Item"
+                                aria-label="Edit Item"
+                              >
+                                ✏️
+                              </button>
+                              <button
+                                type="button"
+                                className="card-btn-del"
+                                onClick={() => promptDeleteItem(sIdx, pIdx)}
+                                title="Hapus Item"
+                                aria-label="Hapus Item"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="admin-prod-card-body" onClick={() => openEditItemModal(sIdx, pIdx)}>
+                            <div className="admin-prod-name">{prod.name}</div>
+                            <div className="admin-prod-unit-badge">{prod.unit} {prod.unitType}</div>
+                            <div className="admin-prod-price">
+                              Rp{prod.price.toLocaleString('id-ID')}
+                            </div>
+                            {prod.description && (
+                              <div className="admin-prod-desc-text">
+                                {prod.description}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               );
@@ -1046,6 +1105,25 @@ export default function AdminPage() {
           display: none;
         }
 
+        /* Dual Layout: Desktop Table vs Mobile 2-Column Cards Grid */
+        .desktop-only-table {
+          display: block;
+        }
+        .mobile-only-cards-grid {
+          display: none;
+        }
+
+        .mobile-empty-alert {
+          padding: 24px;
+          text-align: center;
+          font-size: 15px;
+          color: var(--text-muted);
+          background: #fff;
+          border-radius: var(--radius-md);
+          border: 1.5px dashed var(--border-subtle);
+          grid-column: 1 / -1;
+        }
+
         @media (max-width: 860px) {
           .admin-layout {
             grid-template-columns: 1fr;
@@ -1054,7 +1132,7 @@ export default function AdminPage() {
             position: sticky;
             top: 0;
             z-index: 30;
-            padding: 8px 12px;
+            padding: 10px 12px;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(8px);
           }
@@ -1066,9 +1144,9 @@ export default function AdminPage() {
             overflow-x: auto;
             white-space: nowrap;
             max-height: none;
-            gap: 8px;
+            gap: 10px;
             scrollbar-width: none;
-            padding-bottom: 2px;
+            padding-bottom: 4px;
           }
           .cat-nav-list::-webkit-scrollbar {
             display: none;
@@ -1076,125 +1154,217 @@ export default function AdminPage() {
           .cat-nav-item {
             width: auto;
             flex-shrink: 0;
-            padding: 7px 14px;
+            padding: 9px 16px;
             border-radius: 999px;
             border: 1.5px solid var(--border-subtle);
             background: var(--surface-subtle);
-            font-size: 13px;
+            font-size: 15px;
+            font-weight: 700;
           }
           .header-inner {
             height: auto;
-            padding: 10px 14px;
+            padding: 12px 14px;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
           }
           .header-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
           }
           .header-actions .btn {
             justify-content: center;
-            font-size: 12px;
-            padding: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 10px;
           }
           .wrap {
-            padding: 12px 10px 110px;
+            padding: 12px 10px 120px;
           }
         }
 
         @media (max-width: 768px) {
-          .table-resp {
-            overflow-x: visible;
-          }
-          table, thead, tbody, th, td, tr {
-            display: block;
-            width: 100%;
-          }
-          thead {
+          /* Sembunyikan tabel desktop di mobile */
+          .desktop-only-table {
             display: none !important;
           }
-          tbody tr.main-item-row {
-            position: relative;
+
+          /* Tampilkan 2 Kolom Grid Produk (1 Produk = 1 Card) */
+          .mobile-only-cards-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+            padding: 8px 0;
+          }
+
+          .admin-prod-card {
             background: #ffffff;
-            border: 1.5px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            margin-bottom: 12px;
-            padding: 12px 14px;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            box-shadow: 0 2px 6px rgba(110, 74, 37, 0.05);
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
           }
-          tbody td {
-            padding: 0;
-            border: none;
+          .admin-prod-card:active {
+            transform: scale(0.98);
+          }
+
+          .admin-prod-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+          }
+
+          .admin-prod-card-icon {
+            width: 58px;
+            height: 58px;
+            background: #f8fafc;
+            border-radius: 14px;
+            border: 2px solid #e2e8f0;
             display: flex;
             align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
           }
-          .td-name {
-            display: none !important;
+          .admin-prod-card-icon img {
+            max-width: 44px;
+            max-height: 44px;
+            object-fit: contain;
           }
-          .td-ico {
-            width: 100%;
-            border-bottom: 1px dashed var(--border-subtle);
-            padding-bottom: 8px;
-            padding-right: 70px;
-          }
-          .mobile-item-title-col {
-            display: flex;
-            flex-direction: column;
+
+          .card-bundle-icons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 2px;
-            overflow: hidden;
+            width: 44px;
+            height: 44px;
           }
-          .mobile-item-name {
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--text-primary);
-            line-height: 1.25;
+          .card-bundle-icons img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
           }
-          .mobile-item-meta {
-            font-size: 12.5px;
-            color: var(--text-muted);
-            font-weight: 600;
-          }
-          .mobile-label {
-            display: inline-block;
-          }
-          .td-unit, .td-price, .td-desc, .td-color {
-            font-size: 13px;
-            gap: 8px;
-          }
-          .row-act {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: auto !important;
-          }
-          .actions-cell-group {
+
+          .admin-prod-card-actions {
             display: flex;
             gap: 6px;
           }
-          .btn-row-edit, .btn-row-del {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            font-size: 14px;
+
+          .card-btn-edit, .card-btn-del {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e8f0;
+            background: #ffffff;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
           }
+          .card-btn-edit:hover, .card-btn-edit:active {
+            background: #eff6ff;
+            border-color: #3b82f6;
+          }
+          .card-btn-del:hover, .card-btn-del:active {
+            background: #fef2f2;
+            border-color: #ef4444;
+          }
+
+          .admin-prod-card-body {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-grow: 1;
+          }
+
+          /* Teks Lebih Besar Khusus Pengguna HP */
+          .admin-prod-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.25;
+            margin-bottom: 2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .admin-prod-unit-badge {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            align-self: flex-start;
+          }
+
+          .admin-prod-price {
+            font-size: 17px;
+            font-weight: 900;
+            color: #2e7d32;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 4px;
+          }
+
+          .admin-prod-desc-text {
+            font-size: 12.5px;
+            color: #94a3b8;
+            margin-top: 2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+          }
+
+          /* Bottom Bar Lebih Besar & Nyaman di HP */
           .bottom-bar {
-            padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+            padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px));
             flex-direction: column;
             align-items: stretch;
-            gap: 8px;
+            gap: 10px;
           }
           .bottom-bar-status {
             margin-right: 0;
             justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
           }
           .bottom-bar button {
             width: 100%;
             justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            padding: 12px;
+            border-radius: 12px;
+          }
+        }
+
+        /* Support untuk HP layar sangat kecil (di bawah 360px) tetap 2 kolom seimbang */
+        @media (max-width: 360px) {
+          .mobile-only-cards-grid {
+            gap: 8px !important;
+          }
+          .admin-prod-card {
+            padding: 8px;
+          }
+          .admin-prod-name {
+            font-size: 14.5px;
+          }
+          .admin-prod-price {
+            font-size: 15px;
           }
         }
       `}</style>
