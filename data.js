@@ -137,10 +137,11 @@ function cleanItemName(n) {
   // Hanya bersihkan awalan angka bulat murni diikuti spasi (misal "100 Kapak", "1 Tagar BEM", bukan "1 Juta Koin" / "10 Juta Koin")
   var m = trimmed.match(/^(\d+)\s+(.+)$/);
   if (m) {
-    var firstWord = m[2].trim().toLowerCase();
-    if (firstWord !== "juta" && firstWord !== "k" && firstWord !== "m") {
-      return m[2].trim();
+    var firstWord = m[2].trim().split(/\s+/)[0].toLowerCase();
+    if (firstWord === "juta" || firstWord === "k" || firstWord === "m" || firstWord === "coin" || firstWord === "koin") {
+      return trimmed;
     }
+    return m[2].trim();
   }
   return trimmed;
 }
