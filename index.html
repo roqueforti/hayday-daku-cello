@@ -577,40 +577,6 @@
         display: inline-block;
         letter-spacing: 0.2px;
       }
-      .opsi-pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: center;
-        margin-top: 6px;
-      }
-      .opsi-pill {
-        border: 2px solid var(--line);
-        background: #fff;
-        color: #4a2c12;
-        border-radius: 10px;
-        padding: 3px 8px;
-        font-size: 12px;
-        font-weight: 800;
-        font-family: "Nunito", sans-serif;
-        cursor: pointer;
-        transition: 0.15s;
-        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
-      }
-      .opsi-pill:hover {
-        background: #fdf5e6;
-        border-color: var(--wood);
-        transform: translateY(-1px);
-      }
-      .opsi-pill:active {
-        transform: translateY(1px);
-      }
-      .opsi-pill.active {
-        background: var(--wood);
-        color: #fff;
-        border-color: var(--wood2);
-        box-shadow: 0 1px 0 var(--wood2);
-      }
       .desc {
         font-size: 12px;
         color: #634325;
@@ -1339,48 +1305,6 @@
         var v = q[it.id] || 0,
           el = document.getElementById("x-" + it.id);
         var uName = unitName(it);
-        var variations = (it.vars && Array.isArray(it.vars) && it.vars.length > 0) ? it.vars : null;
-        var quickOpts = getQuickOptions(it);
-
-        // Buat baris pill opsi variasi jika dikonfigurasi di admin
-        var pillsHtml = "";
-        if (variations && variations.length > 0) {
-          pillsHtml = '<div class="opsi-pills">';
-          variations.forEach(function (vObj) {
-            var optVal = Number(vObj.u);
-            var optPrice = Number(vObj.p);
-            var isActive = v === optVal ? " active" : "";
-            pillsHtml +=
-              '<button type="button" class="opsi-pill' +
-              isActive +
-              '" data-a="set-opt" data-i="' +
-              it.id +
-              '" data-val="' +
-              optVal +
-              '" title="Pilih variasi: ' + optVal + ' ' + uName + ' seharga ' + rp(optPrice) + '">' +
-              optVal + " " + uName + " (" + rp(optPrice) + ")" +
-              "</button>";
-          });
-          pillsHtml += "</div>";
-        } else if (quickOpts.length > 0) {
-          pillsHtml = '<div class="opsi-pills">';
-          quickOpts.forEach(function (optVal) {
-            var isActive = v === optVal ? " active" : "";
-            pillsHtml +=
-              '<button type="button" class="opsi-pill' +
-              isActive +
-              '" data-a="set-opt" data-i="' +
-              it.id +
-              '" data-val="' +
-              optVal +
-              '">' +
-              optVal +
-              " " +
-              uName +
-              "</button>";
-          });
-          pillsHtml += "</div>";
-        }
 
         updateCardVisual(it);
 
@@ -1388,8 +1312,7 @@
           el.innerHTML =
             '<button class="add" data-a="add" data-i="' +
             it.id +
-            '">＋ Pilih</button>' +
-            pillsHtml;
+            '">＋ Pilih</button>';
           return;
         }
 
@@ -1404,7 +1327,6 @@
           '"><button data-a="inc" data-i="' +
           it.id +
           '">+</button></div>' +
-          pillsHtml +
           '<div class="sub">' +
           subText +
           "</div>";
@@ -1592,15 +1514,9 @@
             var subtotal = price(it);
             total += subtotal;
             var uName = unitName(it);
-            var rincian = "";
-            var isVar = it.vars && Array.isArray(it.vars) && it.vars.length > 0;
-            if (isVar) {
-              rincian = "• *" + (it.n || label(it)) + "*: " + qty + " " + uName + " = *" + rp(subtotal) + "*";
-            } else if (uName === "paket" && unit(it) === 1) {
-              rincian = "• *" + (it.n || label(it)) + "*: " + qty + " paket x " + rp(it.p) + " = *" + rp(subtotal) + "*";
-            } else {
-              rincian = "• *" + (it.n || label(it)) + "*: " + qty + " " + uName + " (harga " + rp(it.p) + " / " + unitLabel(it) + ") = *" + rp(subtotal) + "*";
-            }
+            var rincian = (uName === "paket" && unit(it) === 1)
+              ? "• *" + (it.n || label(it)) + "*: " + qty + " paket x " + rp(it.p) + " = *" + rp(subtotal) + "*"
+              : "• *" + (it.n || label(it)) + "*: " + qty + " " + uName + " (harga " + rp(it.p) + " / " + unitLabel(it) + ") = *" + rp(subtotal) + "*";
             lines.push(rincian);
           }
         });

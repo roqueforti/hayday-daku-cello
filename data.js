@@ -74,18 +74,7 @@ function getUnitLabel(it) {
   return u === 1 ? name : u + " " + name;
 }
 
-function getVariations(it) {
-  if (it.vars && Array.isArray(it.vars) && it.vars.length > 0) {
-    return it.vars;
-  }
-  return [];
-}
-
 function parseQuickOptions(it) {
-  var vars = getVariations(it);
-  if (vars.length > 0) {
-    return vars.map(function(v) { return Number(v.u); });
-  }
   if (it.opsi && String(it.opsi).trim()) {
     var arr = String(it.opsi)
       .split(/[,;\s]+/)
@@ -101,24 +90,16 @@ function parseQuickOptions(it) {
 }
 
 function getMinQty(it) {
-  var vars = getVariations(it);
-  if (vars.length > 0) return Number(vars[0].u) || 1;
-  var opts = parseQuickOptions(it);
-  if (opts.length > 0) return opts[0];
   if (it.min !== undefined && it.min !== null && it.min !== "") {
     var m = Number(it.min);
     if (m > 0) return m;
   }
   if (it.pk || getUnitName(it) === "paket") return 1;
   var u = getUnitVal(it);
-  return u <= 5 ? 1 : (u <= 10 ? 10 : 10);
+  return u <= 5 ? 1 : 10;
 }
 
 function getStepQty(it) {
-  var vars = getVariations(it);
-  if (vars.length > 0) return Number(vars[0].u) || 1;
-  var opts = parseQuickOptions(it);
-  if (opts.length > 0) return opts[0];
   if (it.pk || getUnitName(it) === "paket") return 1;
   var u = getUnitVal(it);
   return u === 1 ? 1 : (u <= 10 ? u : 10);
@@ -126,21 +107,6 @@ function getStepQty(it) {
 
 function calcPrice(it, qty) {
   if (!qty || qty <= 0) return 0;
-  var vars = getVariations(it);
-  if (vars.length > 0) {
-    // Cari variasi yang jumlahnya tepat sama dengan qty
-    for (var i = 0; i < vars.length; i++) {
-      if (Number(vars[i].u) === Number(qty)) {
-        return Number(vars[i].p) || 0;
-      }
-    }
-    // Jika qty tidak persis sama dengan variasi, cari rate unit per variasi terdekat atau interpolasi
-    // atau jika qty kelipatan variasi pertama
-    var baseV = vars[0];
-    if (baseV && baseV.u > 0) {
-      return (Number(baseV.p) / Number(baseV.u)) * qty;
-    }
-  }
   return (it.p / getUnitVal(it)) * qty;
 }
 
