@@ -340,28 +340,31 @@
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-        gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+        gap: 16px;
       }
+      /* Kotak Peti Toko Hay Day (Roadside Shop Crate Box) */
       .card {
         position: relative;
-        background: var(--card);
-        border: 3px solid var(--line);
+        background: #fdf6e7;
+        border: 4px solid #9e6427;
         border-radius: 20px;
-        padding: 14px 12px 12px;
+        padding: 10px 10px 12px;
         text-align: center;
         box-shadow:
-          0 5px 0 var(--line),
+          0 5px 0 #734515,
           0 10px 18px var(--shadow);
-        transition: 0.2s;
+        transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
       }
       .card:hover {
-        transform: translateY(-4px) rotate(-0.6deg);
+        transform: translateY(-5px) scale(1.02);
       }
       .card.on {
-        border-color: var(--green);
+        border-color: #2da323;
         box-shadow:
-          0 5px 0 #2f8a28,
+          0 5px 0 #1b6d14,
           0 10px 18px var(--shadow);
       }
       .card.on::after {
@@ -369,50 +372,132 @@
         position: absolute;
         top: -10px;
         right: -8px;
-        background: var(--green);
+        background: #2da323;
         color: #fff;
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        font-size: 16px;
-        box-shadow: 0 3px 0 #2f8a28;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        font-size: 17px;
+        box-shadow: 0 3px 0 #1b6d14;
+        z-index: 5;
       }
-      .ico {
-        font-size: 50px;
-        line-height: 1.1;
-        filter: drop-shadow(0 4px 3px #0003);
-        transition: 0.2s;
-        height: 60px;
+
+      /* Wadah Peti Kayu Bagian Dalam (Wood Box Tray) */
+      .crate-box {
+        position: relative;
+        background: linear-gradient(180deg, #ecc37e 0%, #deb065 100%);
+        border: 4px solid #caa157;
+        box-shadow: 
+          inset 0 4px 6px rgba(90, 50, 10, 0.35),
+          inset 0 -3px 4px rgba(255, 255, 255, 0.3);
+        border-radius: 16px;
+        padding: 12px 8px 18px;
+        margin-bottom: 8px;
+        min-height: 115px;
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: visible;
+      }
+      /* Garis Papan Kayu Vertikal (Wood Planks Effect) */
+      .crate-box::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 32px,
+          rgba(138, 83, 28, 0.15) 32px,
+          rgba(138, 83, 28, 0.15) 34px
+        );
+        border-radius: 12px;
+        pointer-events: none;
+      }
+
+      /* Badge Jumlah di Kiri Atas Peti (10x / 100x / 1x) khas Hay Day */
+      .crate-qty {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        font-family: "Lilita One", Impact, sans-serif;
+        font-size: 26px;
+        color: #ffffff;
+        -webkit-text-stroke: 1.6px #2b1402;
+        text-shadow: 2px 2px 0 #2b1402, 0 3px 4px rgba(0, 0, 0, 0.4);
+        line-height: 1;
+        letter-spacing: 0.5px;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .ico {
+        font-size: 54px;
+        line-height: 1.1;
+        filter: drop-shadow(0 6px 4px rgba(60, 30, 5, 0.45));
+        transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
       }
       .ico img {
-        max-width: 58px;
-        max-height: 58px;
+        max-width: 66px;
+        max-height: 66px;
         object-fit: contain;
         display: block;
       }
       .card:hover .ico {
-        transform: scale(1.18) rotate(8deg);
+        transform: scale(1.15) rotate(5deg);
       }
+
+      /* Kertas Nota Harga Miring Khas Roadside Shop Hay Day */
+      .price-tag-wrap {
+        position: absolute;
+        bottom: -12px;
+        right: 4px;
+        z-index: 3;
+        transform: rotate(-4deg);
+        filter: drop-shadow(0 3px 4px rgba(60, 30, 5, 0.35));
+        transition: 0.2s;
+      }
+      .card:hover .price-tag-wrap {
+        transform: rotate(-2deg) scale(1.05);
+      }
+      .price-tag {
+        background: #ffffec;
+        border: 2px solid #57310f;
+        border-radius: 8px;
+        padding: 3px 8px 3px 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: inset 0 -2px 0 #e6dbb3;
+      }
+      .price-tag .price-num {
+        font-family: "Lilita One", Impact, sans-serif;
+        font-size: 19px;
+        color: #2b1402;
+        letter-spacing: 0.5px;
+        line-height: 1;
+      }
+      .price-tag .coin-icon {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        display: block;
+        filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
+      }
+
       .nm {
         font-family: "Lilita One", sans-serif;
-        font-size: 19px;
-        margin: 4px 0 6px;
+        font-size: 17px;
+        margin: 10px 0 2px;
+        color: #3d2008;
         letter-spacing: 0.3px;
-      }
-      .pr {
-        display: inline-block;
-        color: #fff;
-        font-family: "Lilita One", sans-serif;
-        font-size: 19px;
-        padding: 3px 18px;
-        border-radius: 30px;
-        box-shadow:
-          inset 0 -4px 0 #0003,
-          0 3px 0 #0002;
+        line-height: 1.2;
       }
       .ctl {
         display: flex;
@@ -960,27 +1045,44 @@
           gap: 10px;
         }
         .card {
-          padding: 12px 8px 10px;
+          padding: 8px 8px 10px;
           border-radius: 16px;
         }
+        .crate-box {
+          min-height: 95px;
+          padding: 8px 6px 14px;
+          border-radius: 14px;
+        }
+        .crate-qty {
+          font-size: 22px;
+          top: 4px;
+          left: 6px;
+        }
         .ico {
-          font-size: 42px;
-          height: 48px;
+          font-size: 44px;
+          height: 52px;
         }
         .ico img {
-          max-width: 44px;
-          max-height: 44px;
+          max-width: 48px;
+          max-height: 48px;
+        }
+        .price-tag-wrap {
+          bottom: -10px;
+          right: 2px;
+        }
+        .price-tag {
+          padding: 2px 6px 2px 8px;
+        }
+        .price-tag .price-num {
+          font-size: 15px;
+        }
+        .price-tag .coin-icon {
+          width: 18px;
+          height: 18px;
         }
         .nm {
-          font-size: 16px;
-          margin: 3px 0 4px;
-        }
-        .pr {
           font-size: 15px;
-          padding: 2px 10px;
-        }
-        .min {
-          font-size: 10px;
+          margin: 6px 0 2px;
         }
         .ctl input {
           width: 48px;
@@ -1173,25 +1275,26 @@
           
           var descText = it.d && it.d.trim() ? it.d.trim() : (it.pk ? "Per paket" : "Min. beli " + minq(it) + " • harga per " + unitLabel(it));
 
+          var baseUnitQty = getUnitVal(it);
+          var qtyBadge = baseUnitQty + "x";
+
           h +=
             '<div class="card" id="c-' +
             it.id +
-            '" data-name="' + (it.n || '').toLowerCase() + '" data-desc="' + (it.d || '').toLowerCase() + '" data-id="' + it.id + '"><div class="ico">' +
-            iconHtml +
-            '</div><div class="nm">' +
-            (it.n || '') +
-            "</div>" +
-            '<span class="pr" style="background:' +
-            it.c +
-            '">' +
-            rp(it.p) +
-            "</span>" +
-            '<div class="desc">' +
-            descText.replace(/</g, "&lt;").replace(/>/g, "&gt;") +
-            "</div>" +
-            '<div id="x-' +
-            it.id +
-            '"></div></div>';
+            '" data-name="' + (it.n || '').toLowerCase() + '" data-desc="' + (it.d || '').toLowerCase() + '" data-id="' + it.id + '">' +
+            '<div class="crate-box">' +
+            '<div class="crate-qty">' + qtyBadge + '</div>' +
+            '<div class="ico">' + iconHtml + '</div>' +
+            '<div class="price-tag-wrap">' +
+            '<div class="price-tag">' +
+            '<span class="price-num">' + rp(it.p) + '</span>' +
+            '<img src="assets/icons/Coins.png" class="coin-icon" alt="Koin" />' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="nm">' + (it.n || '') + '</div>' +
+            '<div class="desc">' + descText.replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</div>' +
+            '<div id="x-' + it.id + '"></div></div>';
         });
         root.insertAdjacentHTML("beforeend", h + "</div>");
       });
