@@ -13,7 +13,8 @@
     />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌾</text></svg>"
+      type="image/jpeg"
+      href="logo-daku-cello.jpeg"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800&display=swap"
@@ -110,18 +111,30 @@
         display: inline-block;
         background: linear-gradient(var(--wood), var(--wood2));
         border: 5px solid #6b3c12;
-        border-radius: 22px;
-        padding: 10px 28px 12px;
+        border-radius: 26px;
+        padding: 12px 28px 14px;
         box-shadow:
           0 8px 0 #5a3010,
           0 14px 24px var(--shadow);
         transform: rotate(-1.5deg);
       }
+      .logo-img {
+        width: clamp(140px, 32vw, 210px);
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+        transition: 0.25s;
+        border-radius: 20px;
+      }
+      .logo-img:hover {
+        transform: scale(1.05) rotate(2deg);
+      }
       .sign h1 {
-        margin: 0;
+        margin: 8px 0 0;
         font-family: "Lilita One", Impact, sans-serif;
         font-weight: 400;
-        font-size: clamp(38px, 9vw, 64px);
+        font-size: clamp(34px, 8vw, 54px);
         line-height: 1;
         color: #7dde3b;
         -webkit-text-stroke: 2px #1f5a10;
@@ -132,7 +145,7 @@
         margin: 2px 0 0;
         font-family: "Lilita One", Impact, sans-serif;
         font-weight: 400;
-        font-size: clamp(26px, 6.5vw, 42px);
+        font-size: clamp(22px, 5.5vw, 36px);
         color: #ffe14a;
         -webkit-text-stroke: 1.5px #8a4a00;
         text-shadow: 0 3px 0 #8a4a00;
@@ -653,12 +666,122 @@
         font-family: "Lilita One", sans-serif;
         font-size: 20px;
       }
-      .cart-actions {
+      /* Live Selected Items Box on Main Page */
+      .selected-tray {
+        background: var(--card);
+        border: 4px solid var(--wood);
+        border-radius: 20px;
+        padding: 16px 18px;
+        margin: 20px 0 10px;
+        box-shadow: 0 6px 0 var(--wood2), 0 10px 20px var(--shadow);
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .selected-tray-header {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px dashed var(--line);
+        padding-bottom: 10px;
+        margin-bottom: 12px;
+      }
+      .selected-tray-title {
+        font-family: "Lilita One", sans-serif;
+        font-size: 20px;
+        color: var(--wood2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .selected-chips-list {
+        display: flex;
+        flex-wrap: wrap;
         gap: 10px;
       }
-      .cart-actions button {
-        flex: 1;
+      .selected-chip {
+        background: #fff;
+        border: 2px solid var(--line);
+        border-radius: 14px;
+        padding: 6px 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 0 var(--line);
+        transition: 0.15s;
+      }
+      .selected-chip:hover {
+        border-color: var(--wood);
+      }
+      .selected-chip-ico {
+        font-size: 22px;
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .selected-chip-ico img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
+      .selected-chip-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+      }
+      .selected-chip-name {
+        font-family: "Lilita One", sans-serif;
+        font-size: 15px;
+        color: var(--ink);
+      }
+      .selected-chip-qty {
+        font-size: 12px;
+        color: var(--wood2);
+        font-weight: 800;
+      }
+      .selected-chip-del {
+        background: none;
+        border: none;
+        color: var(--red);
+        cursor: pointer;
+        font-size: 16px;
+        padding: 0 2px 0 4px;
+        opacity: 0.65;
+        transition: 0.15s;
+      }
+      .selected-chip-del:hover {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+
+      /* Bar mini chips peek */
+      .bar-chips-peek {
+        width: 100%;
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 4px 0 6px;
+        scrollbar-width: none;
+      }
+      .bar-chips-peek::-webkit-scrollbar {
+        display: none;
+      }
+      .bar-peek-chip {
+        background: rgba(255, 255, 255, 0.92);
+        color: var(--wood2);
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
       /* Responsive Mobile Optimization */
@@ -749,6 +872,7 @@
     <div class="wrap">
       <header>
         <div class="sign">
+          <img src="logo-daku-cello.jpeg" alt="Hay Day Daku Cello" class="logo-img" />
           <h1>HAY DAY</h1>
           <h2>Daku Cello</h2>
         </div>
@@ -765,6 +889,21 @@
           <small>💵 Perkiraan Harga</small><b id="sSum">Rp0</b>
         </div>
       </div>
+
+      <!-- Live On-Page Tray: Langsung Terlihat Tanpa Klik Keranjang -->
+      <div class="selected-tray" id="selectedTray" style="display:none;">
+        <div class="selected-tray-header">
+          <div class="selected-tray-title">
+            <span>🛒 Item yang Sedang Dipilih</span>
+            <span id="trayCountBadge" style="font-size:14px; background:#46b23c; color:#fff; border-radius:12px; padding:2px 8px;">0</span>
+          </div>
+          <button id="trayResetBtn" class="b rs" style="padding:4px 10px; font-size:13px;">🔄 Kosongkan</button>
+        </div>
+        <div class="selected-chips-list" id="selectedChipsList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
       <div id="root"></div>
       <div class="pay">
         <h3>💳 Metode Pembayaran</h3>
@@ -787,12 +926,14 @@
     <!-- Bottom Floating Bar -->
     <div class="bar">
       <div class="in">
+        <!-- Mini Peek Bar: Langsung muncul di atas tombol bar saat ada item dipilih -->
+        <div class="bar-chips-peek" id="barChipsPeek" style="display:none;"></div>
         <div class="tot">
           <small id="bCnt">Belum ada item dipilih</small
           ><span id="bSum">Rp0</span>
         </div>
         <button class="b cart-btn" id="openCart">
-          🛒 Keranjang <span class="badge" id="cartBadge" style="display:none;">0</span>
+          🛒 Rincian <span class="badge" id="cartBadge" style="display:none;">0</span>
         </button>
         <button class="b cp" id="cp">📋 Salin</button>
         <button class="b rs" id="rs">🔄 Reset</button>
@@ -830,57 +971,57 @@
         {
           t: "🧰 Alat & Bahan",
           items: [
-            { id: "sekop", e: "⛏️", n: "Sekop", p: 1000, c: "#7a2fe0" },
-            { id: "kapak", e: "🪓", n: "Kapak", p: 1000, c: "#e8359b" },
-            { id: "gergaji", e: "🪚", n: "Gergaji", p: 1500, c: "#e0232f" },
+            { id: "sekop", e: "assets/icons/sekop.png", n: "Sekop", p: 1000, c: "#7a2fe0" },
+            { id: "kapak", e: "assets/icons/kapak.png", n: "Kapak", p: 1000, c: "#e8359b" },
+            { id: "gergaji", e: "assets/icons/gergaji.png", n: "Gergaji", p: 1500, c: "#e0232f" },
           ],
         },
         {
           t: "🥛 Dapur & Peternakan",
           items: [
-            { id: "krim", e: "🥣", n: "Krim", p: 1000, c: "#f57c1f" },
+            { id: "krim", e: "assets/icons/krim.png", n: "Krim", p: 1000, c: "#f57c1f" },
             {
               id: "gulaputih",
-              e: "🧂",
+              e: "assets/icons/gulaputih.png",
               n: "Gula Putih",
               p: 1500,
               c: "#e9b200",
             },
             {
               id: "gulamerah",
-              e: "🍫",
+              e: "assets/icons/gulamerah.png",
               n: "Gula Merah",
               p: 1000,
               c: "#27b83a",
             },
-            { id: "babi", e: "🥩", n: "Daging Babi", p: 1200, c: "#13a9a0" },
-            { id: "telor", e: "🥚", n: "Telor", p: 1000, c: "#2d73e6" },
-            { id: "mentega", e: "🧈", n: "Mentega", p: 1000, c: "#7a2fe0" },
-            { id: "keju", e: "🧀", n: "Keju", p: 1500, c: "#e8359b" },
-            { id: "madu", e: "🍯", n: "Madu", p: 2000, c: "#e0232f" },
+            { id: "babi", e: "assets/icons/babi.png", n: "Daging Babi", p: 1200, c: "#13a9a0" },
+            { id: "telor", e: "assets/icons/telor.png", n: "Telor", p: 1000, c: "#2d73e6" },
+            { id: "mentega", e: "assets/icons/mentega.png", n: "Mentega", p: 1000, c: "#7a2fe0" },
+            { id: "keju", e: "assets/icons/keju.png", n: "Keju", p: 1500, c: "#e8359b" },
+            { id: "madu", e: "assets/icons/madu.png", n: "Madu", p: 2000, c: "#e0232f" },
           ],
         },
         {
           t: "🌊 Laut",
           items: [
-            { id: "ikan", e: "🐟", n: "Ikan", p: 1500, c: "#7a2fe0" },
-            { id: "lopster", e: "🦞", n: "Lopster", p: 2500, c: "#13a9a0" },
+            { id: "ikan", e: "assets/icons/ikan.png", n: "Ikan", p: 1500, c: "#7a2fe0" },
+            { id: "lopster", e: "assets/icons/lopster.png", n: "Lopster", p: 2500, c: "#13a9a0" },
           ],
         },
         {
           t: "🏡 Tagar BEM (per paket)",
           pk: 1,
           items: [
-            { id: "bem1", e: "🏡", n: "1 Tagar BEM", p: 1500, c: "#2e9a3a" },
-            { id: "bem30", e: "🏘️", n: "30 Tagar BEM", p: 28500, c: "#2d73e6" },
+            { id: "bem1", e: "assets/icons/bem.png", n: "1 Tagar BEM", p: 1500, c: "#2e9a3a" },
+            { id: "bem30", e: "assets/icons/bem.png", n: "30 Tagar BEM", p: 28500, c: "#2d73e6" },
           ],
         },
         {
           t: "🪙 Koin LV 40++ (Lumbung kosong 250)",
           pk: 1,
           items: [
-            { id: "k1", e: "🪙", n: "1 Juta Koin", p: 8000, c: "#7a2fe0" },
-            { id: "k10", e: "💰", n: "10 Juta Koin", p: 70000, c: "#e8359b" },
+            { id: "k1", e: "assets/icons/koin.png", n: "1 Juta Koin", p: 8000, c: "#7a2fe0" },
+            { id: "k10", e: "assets/icons/koin.png", n: "10 Juta Koin", p: 70000, c: "#e8359b" },
           ],
         },
       ];
@@ -936,7 +1077,7 @@
           it.pk = s.pk || 0;
           ALL.push(it);
           var iconHtml =
-            it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0)
+            it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
               ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
               : (it.e || '📦');
           h +=
@@ -1021,7 +1162,7 @@
           total += subtotal;
 
           var iconHtml =
-            it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0)
+            it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
               ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
               : (it.e || '📦');
 
@@ -1062,12 +1203,15 @@
       function upd() {
         var n = 0,
           sum = 0;
+        var selectedList = [];
+
         ALL.forEach(function (it) {
           var on = (q[it.id] || 0) > 0;
           document.getElementById("c-" + it.id).classList.toggle("on", on);
           if (on) {
             n++;
             sum += price(it);
+            selectedList.push(it);
           }
         });
         document.getElementById("sAll").textContent = ALL.length;
@@ -1082,6 +1226,79 @@
         if (badge) {
           badge.textContent = n;
           badge.style.display = n > 0 ? "inline-block" : "none";
+        }
+
+        // 1. Update On-Page Live Selected Tray (Langsung terlihat tanpa buka modal)
+        var trayEl = document.getElementById("selectedTray");
+        var trayListEl = document.getElementById("selectedChipsList");
+        var trayCountBadge = document.getElementById("trayCountBadge");
+
+        if (trayEl && trayListEl) {
+          if (selectedList.length > 0) {
+            trayEl.style.display = "block";
+            trayCountBadge.textContent = n + " item";
+            var trayHtml = "";
+            selectedList.forEach(function (it) {
+              var qty = q[it.id];
+              var iconHtml =
+                it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
+                  ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
+                  : (it.e || '📦');
+              var qtyText = it.pk ? qty + " paket" : qty + " pcs";
+              trayHtml +=
+                '<div class="selected-chip">' +
+                '<div class="selected-chip-ico">' +
+                iconHtml +
+                '</div>' +
+                '<div class="selected-chip-info">' +
+                '<span class="selected-chip-name">' +
+                (it.pk ? it.n : "100 " + it.n) +
+                '</span>' +
+                '<span class="selected-chip-qty">' +
+                qtyText +
+                ' = ' +
+                rp(price(it)) +
+                '</span>' +
+                '</div>' +
+                '<button class="selected-chip-del" onclick="set(get(\'' +
+                it.id +
+                '\'), 0)" title="Hapus">✕</button>' +
+                '</div>';
+            });
+            trayListEl.innerHTML = trayHtml;
+          } else {
+            trayEl.style.display = "none";
+            trayListEl.innerHTML = "";
+          }
+        }
+
+        // 2. Update Mini Peek Bar di atas tombol bar bawah
+        var barPeekEl = document.getElementById("barChipsPeek");
+        if (barPeekEl) {
+          if (selectedList.length > 0) {
+            barPeekEl.style.display = "flex";
+            var peekHtml = "";
+            selectedList.forEach(function (it) {
+              var qty = q[it.id];
+              var iconHtml =
+                it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
+                  ? '<img src="' + it.e + '" style="width:16px; height:16px; object-fit:contain;" />'
+                  : (it.e || '📦');
+              var qtyText = it.pk ? qty + " pkt" : qty + " pcs";
+              peekHtml +=
+                '<span class="bar-peek-chip">' +
+                iconHtml +
+                ' ' +
+                it.n +
+                ': <b>' +
+                qtyText +
+                '</b></span>';
+            });
+            barPeekEl.innerHTML = peekHtml;
+          } else {
+            barPeekEl.style.display = "none";
+            barPeekEl.innerHTML = "";
+          }
         }
 
         renderCartItems();
@@ -1185,12 +1402,16 @@
       document.getElementById("wa").onclick = orderViaWa;
       document.getElementById("modalWa").onclick = orderViaWa;
 
-      document.getElementById("rs").onclick = function () {
+      function resetAll() {
         q = {};
         ALL.forEach(ctrl);
         upd();
         toast("Pesanan direset 🔄");
-      };
+      }
+
+      document.getElementById("rs").onclick = resetAll;
+      var trayReset = document.getElementById("trayResetBtn");
+      if (trayReset) trayReset.onclick = resetAll;
 
       // Modal Cart Open/Close
       var cartModal = document.getElementById("cartModal");
