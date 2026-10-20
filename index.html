@@ -155,9 +155,187 @@
       }
       .wrap {
         position: relative;
-        max-width: 980px;
+        max-width: 1360px;
         margin: 0 auto;
-        padding: 18px 14px 150px;
+        padding: 18px 20px 140px;
+      }
+
+      /* Modern Hay Day Barn 2-Column Desktop Grid Layout */
+      .store-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 26px;
+        align-items: start;
+        margin-top: 14px;
+      }
+      .catalog-col {
+        min-width: 0;
+      }
+      .sidebar-col {
+        position: sticky;
+        top: 80px;
+      }
+
+      /* Sticky Horizontal Category Navigation Bar */
+      .cat-nav-sticky {
+        position: sticky;
+        top: 12px;
+        z-index: 20;
+        background: rgba(255, 250, 240, 0.95);
+        backdrop-filter: blur(10px);
+        border: 3px solid var(--line);
+        border-radius: 20px;
+        padding: 8px 12px;
+        margin: 16px 0 20px;
+        box-shadow: 0 6px 0 var(--line), 0 10px 22px rgba(60, 30, 5, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+      .cat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        border: 2px solid var(--line);
+        border-radius: 999px;
+        padding: 7px 16px;
+        font-family: "Fredoka", "Nunito", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #4a2709;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        box-shadow: 0 2px 0 var(--line);
+        flex-shrink: 0;
+      }
+      .cat-pill:hover {
+        background: #fdf5e2;
+        transform: translateY(-2px);
+      }
+      .cat-pill.active {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #ffffff;
+        border-color: #047857;
+        box-shadow: 0 3px 0 #047857;
+      }
+
+      /* Desktop Sticky Barn Receipt Panel (Nota Belanja Kasir) */
+      .barn-receipt {
+        background: #ffffff;
+        border: 4px solid var(--line);
+        border-radius: 24px;
+        box-shadow: 0 8px 0 var(--line), 0 16px 30px var(--shadow);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .barn-receipt-header {
+        background: linear-gradient(135deg, #8a4a15, #633209);
+        color: #ffffff;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .barn-receipt-title {
+        font-family: "Lilita One", sans-serif;
+        font-size: 18px;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .barn-receipt-body {
+        padding: 14px 18px;
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+      }
+      .barn-receipt-empty {
+        text-align: center;
+        padding: 32px 14px;
+        color: #64748b;
+        font-size: 13.5px;
+      }
+      .barn-receipt-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px dashed #e2e8f0;
+        gap: 10px;
+      }
+      .barn-receipt-item-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+      .barn-receipt-item-ico {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .barn-receipt-item-ico img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
+      .barn-receipt-item-name {
+        font-family: "Fredoka", "Nunito", sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .barn-receipt-item-qty {
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 600;
+      }
+      .barn-receipt-item-right {
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .barn-receipt-item-price {
+        font-family: "Fredoka", "Nunito", sans-serif;
+        font-weight: 700;
+        font-size: 14.5px;
+        color: #059669;
+      }
+      .barn-receipt-footer {
+        background: #f8fafc;
+        border-top: 2px solid #e2e8f0;
+        padding: 16px 18px;
+      }
+      .barn-receipt-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+        font-family: "Fredoka", "Nunito", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        color: #1e293b;
+      }
+      .barn-receipt-total span:last-child {
+        font-size: 20px;
+        color: #059669;
+      }
+      .barn-receipt-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
       }
       header {
         text-align: center;
@@ -1187,7 +1365,6 @@
           font-size: 15px;
           text-align: center;
           justify-content: center;
-        }
         .b.wa {
           grid-column: 1 / -1;
           font-size: 18px;
@@ -1216,6 +1393,28 @@
         .cart-actions button {
           width: 100%;
           padding: 12px;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .store-layout {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .sidebar-col {
+          display: none;
+        }
+        .bar {
+          display: block;
+        }
+      }
+
+      @media (min-width: 993px) {
+        .bar {
+          display: none;
+        }
+        .selected-tray {
+          display: none !important;
         }
       }
 
@@ -1297,21 +1496,50 @@
         <p style="margin:4px 0 0; color:var(--muted); font-size:14px;">Coba gunakan kata kunci lain seperti nama bahan, alat, atau koin.</p>
       </div>
 
-      <!-- Live On-Page Tray: Langsung Terlihat Tanpa Klik Keranjang -->
-      <div class="selected-tray" id="selectedTray" style="display:none;">
-        <div class="selected-tray-header">
-          <div class="selected-tray-title">
-            <span>🛒 Item yang Sedang Dipilih</span>
-            <span id="trayCountBadge" style="font-size:14px; background:#46b23c; color:#fff; border-radius:12px; padding:2px 8px;">0</span>
-          </div>
-          <button id="trayResetBtn" class="b rs" style="padding:4px 10px; font-size:13px;">🔄 Kosongkan</button>
-        </div>
-        <div class="selected-chips-list" id="selectedChipsList">
-          <!-- Populated by JS -->
-        </div>
-      </div>
+      <!-- Sticky Horizontal Category Pills Navigation Bar -->
+      <nav class="cat-nav-sticky" id="catNavPills" aria-label="Kategori Produk">
+        <!-- Populated by JS -->
+      </nav>
 
-      <div id="root"></div>
+      <!-- Main 2-Column Store Layout: Left Catalog, Right Sticky Barn Receipt -->
+      <div class="store-layout">
+        <!-- Left: Product Catalog by Sections -->
+        <div class="catalog-col">
+          <div id="root"></div>
+        </div>
+
+        <!-- Right: Sticky Desktop Barn Receipt Panel (Kasir Nota) -->
+        <aside class="sidebar-col">
+          <div class="barn-receipt">
+            <div class="barn-receipt-header">
+              <div class="barn-receipt-title">
+                <span>📋 Nota Pesanan</span>
+              </div>
+              <span id="sideCartCountBadge" style="font-family:'Fredoka',sans-serif; font-size:12px; background:rgba(255,255,255,0.25); color:#fff; border-radius:999px; padding:3px 10px; font-weight:700;">0 item</span>
+            </div>
+            <div class="barn-receipt-body" id="sideCartItemsContainer">
+              <div class="barn-receipt-empty">
+                🌾 Belum ada item yang dipilih.<br><span style="font-size:12px; opacity:0.8;">Pilih produk di katalog untuk mengisi keranjang belanja.</span>
+              </div>
+            </div>
+            <div class="barn-receipt-footer">
+              <div class="barn-receipt-total">
+                <span>Total:</span>
+                <span id="sideCartTotal">Rp0</span>
+              </div>
+              <div class="barn-receipt-actions">
+                <button class="b wa" id="sideWaBtn" style="width:100%; font-size:15px; padding:11px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                  💬 Lanjut Pesan ke WA
+                </button>
+                <div style="display:flex; gap:8px;">
+                  <button class="b cp" id="sideCpBtn" style="flex:1; padding:9px; font-size:13px;">📋 Salin List</button>
+                  <button class="b rs" id="sideRsBtn" style="padding:9px 12px; font-size:13px;">🔄 Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
       <div class="pay">
         <h3>💳 Metode Pembayaran</h3>
         <div class="chips">
@@ -1393,9 +1621,42 @@
         return it.n || "";
       }
       var root = document.getElementById("root");
+      var catNavPills = document.getElementById("catNavPills");
+
+      // Inisialisasi Tombol Pills Kategori Sticky
+      if (catNavPills) {
+        var pillsHtml = '<button type="button" class="cat-pill active" data-cat="all">🌾 Semua Kategori</button>';
+        SECTIONS.forEach(function (s, sIdx) {
+          pillsHtml += '<button type="button" class="cat-pill" data-cat="' + sIdx + '">' + (s.t || ('Kategori ' + (sIdx + 1))) + '</button>';
+        });
+        catNavPills.innerHTML = pillsHtml;
+
+        catNavPills.addEventListener("click", function (e) {
+          var btn = e.target.closest(".cat-pill");
+          if (!btn) return;
+          var targetCat = btn.dataset.cat;
+          catNavPills.querySelectorAll(".cat-pill").forEach(function (p) {
+            p.classList.toggle("active", p === btn);
+          });
+
+          if (targetCat === "all") {
+            document.querySelectorAll(".sec, .grid").forEach(function (el) {
+              el.style.display = "";
+            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } else {
+            var targetSec = document.querySelector('.sec[data-sec="' + targetCat + '"]');
+            if (targetSec) {
+              var offset = targetSec.getBoundingClientRect().top + window.pageYOffset - 90;
+              window.scrollTo({ top: offset, behavior: "smooth" });
+            }
+          }
+        });
+      }
+
       SECTIONS.forEach(function (s, sIdx) {
         var h =
-          '<div class="sec" data-sec="' + sIdx + '"><span>' +
+          '<div class="sec" data-sec="' + sIdx + '" id="sec-anchor-' + sIdx + '"><span>' +
           s.t +
           '</span><i></i></div><div class="grid" data-sec="' + sIdx + '">';
         s.items.forEach(function (it) {
@@ -1576,47 +1837,45 @@
           badge.style.display = n > 0 ? "inline-block" : "none";
         }
 
-        // 1. Update On-Page Live Selected Tray (Langsung terlihat tanpa buka modal)
-        var trayEl = document.getElementById("selectedTray");
-        var trayListEl = document.getElementById("selectedChipsList");
-        var trayCountBadge = document.getElementById("trayCountBadge");
+        // 1. Update Sticky Desktop Barn Receipt Panel
+        var sideCartContainer = document.getElementById("sideCartItemsContainer");
+        var sideCartCount = document.getElementById("sideCartCountBadge");
+        var sideCartTotal = document.getElementById("sideCartTotal");
 
-        if (trayEl && trayListEl) {
+        if (sideCartContainer && sideCartCount && sideCartTotal) {
+          sideCartCount.textContent = n + " item";
+          sideCartTotal.textContent = rp(sum);
+
           if (selectedList.length > 0) {
-            trayEl.style.display = "block";
-            trayCountBadge.textContent = n + " item";
-            var trayHtml = "";
+            var sideHtml = "";
             selectedList.forEach(function (it) {
               var qty = q[it.id];
+              var subtotal = price(it);
               var iconHtml =
                 it.e && (it.e.indexOf("data:image") === 0 || it.e.indexOf("http") === 0 || it.e.indexOf(".png") !== -1 || it.e.indexOf(".jpg") !== -1 || it.e.indexOf("assets/") === 0)
                   ? '<img src="' + it.e + '" alt="' + (it.n || '') + '" />'
                   : (it.e || '📦');
               var qtyText = qty + " " + unitName(it);
-              trayHtml +=
-                '<div class="selected-chip">' +
-                '<div class="selected-chip-ico">' +
-                iconHtml +
+
+              sideHtml +=
+                '<div class="barn-receipt-item">' +
+                '<div class="barn-receipt-item-info">' +
+                '<div class="barn-receipt-item-ico">' + iconHtml + '</div>' +
+                '<div style="min-width:0;">' +
+                '<div class="barn-receipt-item-name">' + (it.n || label(it)) + '</div>' +
+                '<div class="barn-receipt-item-qty">' + qtyText + '</div>' +
                 '</div>' +
-                '<div class="selected-chip-info">' +
-                '<span class="selected-chip-name">' +
-                (it.n || label(it)) +
-                '</span>' +
-                '<span class="selected-chip-qty">' +
-                qtyText +
-                ' = ' +
-                rp(price(it)) +
-                '</span>' +
                 '</div>' +
-                '<button class="selected-chip-del" onclick="set(get(\'' +
-                it.id +
-                '\'), 0)" title="Hapus">✕</button>' +
+                '<div class="barn-receipt-item-right">' +
+                '<div class="barn-receipt-item-price">' + rp(subtotal) + '</div>' +
+                '<button type="button" onclick="set(get(\'' + it.id + '\'), 0)" title="Hapus" style="background:none; border:none; color:#ef4444; font-size:11px; cursor:pointer; font-weight:700; padding:2px 0;">✕ Hapus</button>' +
+                '</div>' +
                 '</div>';
             });
-            trayListEl.innerHTML = trayHtml;
+            sideCartContainer.innerHTML = sideHtml;
           } else {
-            trayEl.style.display = "none";
-            trayListEl.innerHTML = "";
+            sideCartContainer.innerHTML =
+              '<div class="barn-receipt-empty">🌾 Belum ada item yang dipilih.<br><span style="font-size:12px; opacity:0.8;">Pilih produk di katalog untuk mengisi keranjang belanja.</span></div>';
           }
         }
 
@@ -1725,9 +1984,13 @@
       document.getElementById("cp").onclick = copyOrder;
       var modalCp = document.getElementById("modalCp");
       if (modalCp) modalCp.onclick = copyOrder;
+      var sideCp = document.getElementById("sideCpBtn");
+      if (sideCp) sideCp.onclick = copyOrder;
 
-      // Klik Pesan via WA di bar bawah akan memunculkan modal konfirmasi dulu
+      // Klik Pesan via WA di bar bawah atau di side panel kasir akan memunculkan modal konfirmasi
       document.getElementById("wa").onclick = openConfirmModal;
+      var sideWa = document.getElementById("sideWaBtn");
+      if (sideWa) sideWa.onclick = openConfirmModal;
 
       // Tombol di dalam modal konfirmasi yang benar-benar meneruskan ke WhatsApp
       var confirmBtn = document.getElementById("confirmWaBtn");
@@ -1749,6 +2012,8 @@
       document.getElementById("rs").onclick = resetAll;
       var trayReset = document.getElementById("trayResetBtn");
       if (trayReset) trayReset.onclick = resetAll;
+      var sideRs = document.getElementById("sideRsBtn");
+      if (sideRs) sideRs.onclick = resetAll;
 
       // Modal Close Listeners
       var cartModal = document.getElementById("cartModal");
