@@ -28,36 +28,45 @@
         --bg1: #bfe8ff;
         --bg2: #e8f7c8;
         --card: #fffaf0;
-        --ink: #4a2c12;
-        --muted: #8a6a45;
-        --line: #e7cf9f;
+        --ink: #381e09;
+        --muted: #6e4a25;
+        --line: #dfc28d;
         --wood: #b8742f;
         --wood2: #8a531c;
         --green: #46b23c;
         --red: #e0442f;
         --shadow: rgba(90, 50, 10, 0.25);
+        --chip-bg: #ffffff;
+        --chip-text: #2c1605;
+        --chip-sub: #543313;
       }
       @media (prefers-color-scheme: dark) {
         :root:not([data-theme="light"]) {
           color-scheme: dark;
           --bg1: #14304a;
           --bg2: #1d3a1f;
-          --card: #2b2216;
-          --ink: #fbeccd;
-          --muted: #cfae7c;
-          --line: #5b4524;
-          --shadow: rgba(0, 0, 0, 0.5);
+          --card: #271c10;
+          --ink: #ffffff;
+          --muted: #f3d4a3;
+          --line: #6b4d24;
+          --shadow: rgba(0, 0, 0, 0.6);
+          --chip-bg: #1c1309;
+          --chip-text: #ffffff;
+          --chip-sub: #ecd0a4;
         }
       }
       :root[data-theme="dark"] {
         color-scheme: dark;
         --bg1: #14304a;
         --bg2: #1d3a1f;
-        --card: #2b2216;
-        --ink: #fbeccd;
-        --muted: #cfae7c;
-        --line: #5b4524;
-        --shadow: rgba(0, 0, 0, 0.5);
+        --card: #271c10;
+        --ink: #ffffff;
+        --muted: #f3d4a3;
+        --line: #6b4d24;
+        --shadow: rgba(0, 0, 0, 0.6);
+        --chip-bg: #1c1309;
+        --chip-text: #ffffff;
+        --chip-sub: #ecd0a4;
       }
       html {
         scroll-padding-top: env(safe-area-inset-top, 0px);
@@ -229,14 +238,14 @@
         border: none;
         outline: none;
         font-family: "Nunito", sans-serif;
-        font-weight: 700;
+        font-weight: 800;
         font-size: 16px;
-        color: var(--ink);
+        color: #2c1605 !important;
         background: transparent;
       }
       .search-input::placeholder {
-        color: var(--muted);
-        opacity: 0.8;
+        color: #8c6239;
+        opacity: 0.85;
       }
       .search-clear {
         background: var(--line);
@@ -641,10 +650,18 @@
       .selected-tray-title {
         font-family: "Lilita One", sans-serif;
         font-size: 16px;
-        color: var(--wood2);
+        color: #8a531c;
         display: flex;
         align-items: center;
         gap: 8px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .selected-tray-title {
+          color: #ffcf70;
+        }
+      }
+      :root[data-theme="dark"] .selected-tray-title {
+        color: #ffcf70;
       }
       .selected-chips-list {
         display: flex;
@@ -690,12 +707,13 @@
       .selected-chip-name {
         font-family: "Lilita One", sans-serif;
         font-size: 14px;
-        color: var(--ink);
+        color: #2c1605 !important;
+        letter-spacing: 0.2px;
       }
       .selected-chip-qty {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 800;
-        color: var(--muted);
+        color: #5c3917 !important;
       }
       .selected-chip-del {
         background: #edd8b4;
