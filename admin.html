@@ -1107,18 +1107,21 @@
           font-size: 12px;
         }
 
-        /* Position Delete Button at top-right of mobile card */
+        /* Position Action Buttons at top-right of mobile card */
         .row-act {
           position: absolute;
           top: 12px;
           right: 12px;
           width: auto !important;
         }
-        .btn-row-del {
-          width: 36px;
-          height: 36px;
+        .actions-cell-group {
+          gap: 6px;
+        }
+        .btn-row-del, .btn-row-edit {
+          width: 34px;
+          height: 34px;
           border-radius: var(--radius-md);
-          font-size: 16px;
+          font-size: 15px;
         }
 
         /* 2. Product Name input */
@@ -1279,6 +1282,129 @@
           margin: 12px;
         }
       }
+
+      /* Modal Form Styling (Tambah/Edit Item & Kategori) */
+      .modal-card-lg {
+        max-width: 600px;
+        width: 100%;
+      }
+      .modal-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .modal-form-grid .full {
+        grid-column: 1 / -1;
+      }
+      .modal-icon-select-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--surface-subtle);
+        border: 1.5px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 10px 14px;
+      }
+      .modal-icon-select-preview {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--radius-md);
+        background: #ffffff;
+        border: 1.5px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        cursor: pointer;
+        flex-shrink: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .modal-icon-select-preview img {
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+      }
+      .modal-icon-select-preview .ico-bundle-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: 100%;
+        height: 100%;
+      }
+      .modal-icon-select-preview .ico-bundle-preview img {
+        width: 22px;
+        height: 22px;
+      }
+      .modal-actions-bar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 14px;
+        border-top: 1.5px dashed var(--border-subtle);
+      }
+      .color-picker-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .color-picker-group input[type="color"] {
+        width: 44px;
+        height: 38px;
+        padding: 2px;
+        border-radius: var(--radius-md);
+        border: 1.5px solid var(--border-subtle);
+        background: #fff;
+        cursor: pointer;
+      }
+      .btn-row-edit {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-subtle);
+        background: #fff;
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .btn-row-edit:hover {
+        background: #eff6ff;
+        border-color: #3b82f6;
+        color: #1d4ed8;
+        transform: scale(1.08);
+      }
+      .actions-cell-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      @media (max-width: 600px) {
+        .modal-form-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .modal-actions-bar {
+          flex-direction: column-reverse;
+          gap: 8px;
+        }
+        .modal-actions-bar button {
+          width: 100%;
+          justify-content: center;
+        }
+        .btn-row-edit {
+          width: 36px;
+          height: 36px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1410,6 +1536,129 @@
           </div>
         </div>
       </main>
+    </div>
+
+    <!-- Modal Form Tambah / Edit Item Produk -->
+    <div class="modal-bg" id="itemModal">
+      <div class="modal-card modal-card-lg">
+        <div class="modal-title">
+          <span id="itemModalTitle">✨ Tambah Item Produk</span>
+          <button class="modal-close" onclick="closeItemModal()">✕</button>
+        </div>
+        <p style="margin:0 0 14px; font-size:13px; color:var(--text-muted);">
+          Kelola detail produk, ikon, satuan, harga, dan catatan dengan rapi.
+        </p>
+        <form id="itemForm" onsubmit="handleItemFormSubmit(event)">
+          <input type="hidden" id="modalItemSIdx" value="" />
+          <input type="hidden" id="modalItemIIdx" value="" />
+
+          <!-- Icon Preview & Selector -->
+          <div class="fgroup" style="margin-bottom:12px;">
+            <label>Icon Produk</label>
+            <div class="modal-icon-select-row">
+              <div class="modal-icon-select-preview" id="modalItemIconPreview" title="Klik untuk pilih ikon" onclick="openIconPickerForModal()">
+                📦
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button type="button" class="btn btn-default btn-sm" onclick="openIconPickerForModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px; height:13px;"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 10 10 0 0 0 0-20"></path></svg>
+                    Pilih Icon Resmi
+                  </button>
+                  <button type="button" class="btn btn-default btn-sm" onclick="triggerUploadForModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px; height:13px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    Upload Gambar Sendiri
+                  </button>
+                </div>
+                <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;" id="modalItemIconSubtext">
+                  Bisa pilih 1 ikon satuan atau kombinasi paket (maksimal 4).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-form-grid">
+            <!-- Nama Item -->
+            <div class="fgroup full">
+              <label for="modalItemName">Nama Item / Produk *</label>
+              <input type="text" id="modalItemName" placeholder="Contoh: Kapak, Sekop, Tagar BEM..." required />
+            </div>
+
+            <!-- Satuan Dasar -->
+            <div class="fgroup">
+              <label for="modalItemUnit">Jumlah Satuan Dasar *</label>
+              <input type="number" id="modalItemUnit" placeholder="100" min="1" step="1" required />
+            </div>
+
+            <!-- Tipe Satuan -->
+            <div class="fgroup">
+              <label for="modalItemUnitType">Jenis Satuan *</label>
+              <select id="modalItemUnitType">
+                <option value="pcs">pcs</option>
+                <option value="paket">paket</option>
+                <option value="koin">koin</option>
+                <option value="biji">biji</option>
+                <option value="box">box</option>
+                <option value="kg">kg</option>
+              </select>
+            </div>
+
+            <!-- Harga (Rp) -->
+            <div class="fgroup">
+              <label for="modalItemPrice">Harga Jual (Rp) *</label>
+              <input type="number" id="modalItemPrice" placeholder="1000" min="0" step="100" required />
+            </div>
+
+            <!-- Warna Aksen Label -->
+            <div class="fgroup">
+              <label for="modalItemColor">Warna Aksen Label</label>
+              <div class="color-picker-group">
+                <input type="color" id="modalItemColor" value="#46b23c" />
+                <span id="modalItemColorHex" style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-muted);">#46b23c</span>
+              </div>
+            </div>
+
+            <!-- Deskripsi -->
+            <div class="fgroup full">
+              <label for="modalItemDesc">Deskripsi / Catatan Tambahan</label>
+              <input type="text" id="modalItemDesc" placeholder="Contoh: Min. beli 10 • harga per 100 pcs" />
+            </div>
+          </div>
+
+          <div class="modal-actions-bar">
+            <button type="button" class="btn btn-default" onclick="closeItemModal()">Batal</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitItemModal">
+              ✓ Simpan Item
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Form Tambah / Edit Kategori -->
+    <div class="modal-bg" id="sectionModal">
+      <div class="modal-card">
+        <div class="modal-title">
+          <span id="sectionModalTitle">📁 Kategori Baru</span>
+          <button class="modal-close" onclick="closeSectionModal()">✕</button>
+        </div>
+        <p style="margin:0 0 14px; font-size:13px; color:var(--text-muted);">
+          Buat kelompok baru untuk produk Anda agar toko pelanggan tertata rapi.
+        </p>
+        <form id="sectionForm" onsubmit="handleSectionFormSubmit(event)">
+          <input type="hidden" id="modalSectionIdx" value="" />
+          <div class="fgroup" style="margin-bottom:14px;">
+            <label for="modalSectionTitle">Nama Kategori *</label>
+            <input type="text" id="modalSectionTitle" placeholder="Contoh: 🌾 Hasil Tani, 🥛 Olahan Susu..." required />
+          </div>
+          <div class="modal-actions-bar">
+            <button type="button" class="btn btn-default" onclick="closeSectionModal()">Batal</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitSectionModal">
+              ✓ Simpan Kategori
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- Modal Icon Picker -->
@@ -1734,9 +1983,13 @@
             <div class="sec-header">
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <input type="text" class="sec-title-input" value="${(sec.t || '').replace(/"/g, '&quot;')}" placeholder="Nama Kategori..." data-sidx="${sIdx}" />
+                <button type="button" class="btn btn-default btn-sm" onclick="openSectionModal(${sIdx})" title="Edit nama kategori via Modal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit
+                </button>
               </div>
               <div style="display:flex; gap:8px; align-items:center;">
-                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addItem(${sIdx})">
+                <button type="button" class="btn btn-outline-primary btn-sm" onclick="openItemModal(${sIdx}, -1)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                   Tambah Item
                 </button>
@@ -1756,7 +2009,7 @@
                     <th style="width:130px;">Harga (Rp)</th>
                     <th>Deskripsi Produk</th>
                     <th style="width:45px;">Warna</th>
-                    <th style="width:45px; text-align:center;">Aksi</th>
+                    <th style="width:80px; text-align:center;">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1805,7 +2058,12 @@
                 <td><input type="text" class="row-d" value="${descVal.replace(/"/g, '&quot;')}" placeholder="Ketik deskripsi / catatan..." data-s="${sIdx}" data-i="${iIdx}" data-f="d" /></td>
                 <td><input type="color" class="row-c" value="${it.c || '#7a2fe0'}" data-s="${sIdx}" data-i="${iIdx}" data-f="c" title="Warna aksen produk" /></td>
                 <td class="row-act">
-                  <button type="button" class="btn-row-del" onclick="deleteItem(${sIdx}, ${iIdx})" title="Hapus produk ini">✕</button>
+                  <div class="actions-cell-group">
+                    <button type="button" class="btn-row-edit" onclick="openItemModal(${sIdx}, ${iIdx})" title="Edit Item via Form Modal">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px; height:14px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button type="button" class="btn-row-del" onclick="deleteItem(${sIdx}, ${iIdx})" title="Hapus produk ini">✕</button>
+                  </div>
                 </td>
               </tr>
             `;
@@ -2019,8 +2277,248 @@
         document.getElementById("iconModal").classList.add("active");
       };
 
+      var isPickerForModal = false;
+      var modalDraftItem = {
+        e: "🌾",
+        icons: []
+      };
+
+      function updateModalItemIconPreviewUI() {
+        var prevEl = document.getElementById("modalItemIconPreview");
+        var subtext = document.getElementById("modalItemIconSubtext");
+        if (!prevEl) return;
+        
+        var it = modalDraftItem;
+        prevEl.innerHTML = renderIconPreview(it.e, it);
+        
+        if (subtext) {
+          if (it.icons && Array.isArray(it.icons) && it.icons.length > 0) {
+            subtext.textContent = it.icons.length + " ikon paket terpilih (bisa diedit di 'Pilih Icon Resmi')";
+          } else {
+            subtext.textContent = "1 ikon aktif terpilih.";
+          }
+        }
+      }
+
+      window.openItemModal = function(sIdx, iIdx) {
+        var titleEl = document.getElementById("itemModalTitle");
+        var sIdxEl = document.getElementById("modalItemSIdx");
+        var iIdxEl = document.getElementById("modalItemIIdx");
+        var nameEl = document.getElementById("modalItemName");
+        var unitEl = document.getElementById("modalItemUnit");
+        var unitTypeEl = document.getElementById("modalItemUnitType");
+        var priceEl = document.getElementById("modalItemPrice");
+        var colorEl = document.getElementById("modalItemColor");
+        var colorHexEl = document.getElementById("modalItemColorHex");
+        var descEl = document.getElementById("modalItemDesc");
+        var btnSubmit = document.getElementById("btnSubmitItemModal");
+
+        sIdxEl.value = sIdx;
+        iIdxEl.value = iIdx;
+
+        var sec = state.sections[sIdx] || {};
+        var isPk = sec.pk ? true : false;
+
+        if (iIdx >= 0 && sec.items && sec.items[iIdx]) {
+          // Mode Edit Item yang sudah ada
+          var it = sec.items[iIdx];
+          if (titleEl) titleEl.textContent = "✏️ Edit Item Produk: " + (it.n || "");
+          if (btnSubmit) btnSubmit.textContent = "✓ Simpan Perubahan";
+          
+          nameEl.value = it.n || "";
+          unitEl.value = (it.u !== undefined && it.u !== null) ? it.u : (isPk ? 1 : 100);
+          unitTypeEl.value = (it.ut !== undefined && it.ut !== null && it.ut !== "") ? it.ut : (isPk ? "paket" : "pcs");
+          priceEl.value = it.p || 0;
+          colorEl.value = it.c || "#46b23c";
+          if (colorHexEl) colorHexEl.textContent = it.c || "#46b23c";
+          descEl.value = it.d || "";
+
+          modalDraftItem = {
+            e: it.e || "🌾",
+            icons: (it.icons && Array.isArray(it.icons)) ? it.icons.slice() : []
+          };
+        } else {
+          // Mode Tambah Item Baru
+          if (titleEl) titleEl.textContent = "✨ Tambah Item Baru ke: " + (sec.t || "Kategori");
+          if (btnSubmit) btnSubmit.textContent = "✓ Tambahkan Item";
+
+          nameEl.value = "";
+          unitEl.value = isPk ? 1 : 100;
+          unitTypeEl.value = isPk ? "paket" : "pcs";
+          priceEl.value = 1000;
+          colorEl.value = "#46b23c";
+          if (colorHexEl) colorHexEl.textContent = "#46b23c";
+          descEl.value = "";
+
+          modalDraftItem = {
+            e: "🌾",
+            icons: []
+          };
+        }
+
+        updateModalItemIconPreviewUI();
+        document.getElementById("itemModal").classList.add("active");
+        setTimeout(function() { nameEl.focus(); }, 150);
+      };
+
+      window.closeItemModal = function() {
+        document.getElementById("itemModal").classList.remove("active");
+      };
+
+      // Color picker sync
+      document.getElementById("modalItemColor").oninput = function(e) {
+        var hexEl = document.getElementById("modalItemColorHex");
+        if (hexEl) hexEl.textContent = e.target.value;
+      };
+
+      // Handle item form submit
+      window.handleItemFormSubmit = function(e) {
+        e.preventDefault();
+        var sIdx = parseInt(document.getElementById("modalItemSIdx").value, 10);
+        var iIdx = parseInt(document.getElementById("modalItemIIdx").value, 10);
+
+        var nameVal = document.getElementById("modalItemName").value.trim();
+        var unitVal = Number(document.getElementById("modalItemUnit").value) || 1;
+        var unitTypeVal = document.getElementById("modalItemUnitType").value;
+        var priceVal = Number(document.getElementById("modalItemPrice").value) || 0;
+        var colorVal = document.getElementById("modalItemColor").value || "#46b23c";
+        var descVal = document.getElementById("modalItemDesc").value.trim();
+
+        if (!nameVal) {
+          alert("Nama produk wajib diisi!");
+          return;
+        }
+
+        if (isNaN(sIdx) || !state.sections[sIdx]) return;
+
+        if (iIdx >= 0 && state.sections[sIdx].items[iIdx]) {
+          // Update item yang sudah ada
+          var target = state.sections[sIdx].items[iIdx];
+          target.n = nameVal;
+          target.u = unitVal;
+          target.ut = unitTypeVal;
+          target.p = priceVal;
+          target.c = colorVal;
+          target.d = descVal;
+          target.e = modalDraftItem.e || "🌾";
+          if (modalDraftItem.icons && modalDraftItem.icons.length > 0) {
+            target.icons = modalDraftItem.icons.slice();
+          } else {
+            delete target.icons;
+          }
+          toast("Item '" + nameVal + "' berhasil diperbarui! ✨");
+        } else {
+          // Tambah item baru
+          var newItem = {
+            id: "item_" + Date.now(),
+            e: modalDraftItem.e || "🌾",
+            n: nameVal,
+            u: unitVal,
+            ut: unitTypeVal,
+            p: priceVal,
+            d: descVal,
+            c: colorVal
+          };
+          if (modalDraftItem.icons && modalDraftItem.icons.length > 0) {
+            newItem.icons = modalDraftItem.icons.slice();
+          }
+          state.sections[sIdx].items.push(newItem);
+          toast("Item '" + nameVal + "' berhasil ditambahkan! ✨");
+        }
+
+        closeItemModal();
+        render();
+        markDirty();
+      };
+
+      // Buka picker icon dari modal item form
+      window.openIconPickerForModal = function() {
+        isPickerForModal = true;
+        activeTarget = null;
+        tempSelectedIcons = (modalDraftItem.icons && modalDraftItem.icons.length > 0) 
+          ? modalDraftItem.icons.slice() 
+          : (modalDraftItem.e ? [modalDraftItem.e] : []);
+
+        buildIconLibrary();
+        updateModalBundleBar();
+        document.getElementById("iconModal").classList.add("active");
+      };
+
+      // Upload gambar kustom untuk modal form
+      window.triggerUploadForModal = function() {
+        isPickerForModal = true;
+        activeTarget = null;
+        document.getElementById("imgUploadInput").value = "";
+        document.getElementById("imgUploadInput").click();
+      };
+
+      // Section / Kategori Modal Handlers
+      window.openSectionModal = function(sIdx) {
+        var sIdxEl = document.getElementById("modalSectionIdx");
+        var titleEl = document.getElementById("modalSectionTitle");
+        var modalHeader = document.getElementById("sectionModalTitle");
+        var submitBtn = document.getElementById("btnSubmitSectionModal");
+
+        if (sIdx !== undefined && sIdx !== null && sIdx >= 0) {
+          sIdxEl.value = sIdx;
+          titleEl.value = state.sections[sIdx].t || "";
+          if (modalHeader) modalHeader.textContent = "✏️ Edit Kategori";
+          if (submitBtn) submitBtn.textContent = "✓ Simpan Kategori";
+        } else {
+          sIdxEl.value = "";
+          titleEl.value = "";
+          if (modalHeader) modalHeader.textContent = "📁 Buat Kategori Baru";
+          if (submitBtn) submitBtn.textContent = "✓ Tambahkan Kategori";
+        }
+
+        document.getElementById("sectionModal").classList.add("active");
+        setTimeout(function() { titleEl.focus(); }, 150);
+      };
+
+      window.closeSectionModal = function() {
+        document.getElementById("sectionModal").classList.remove("active");
+      };
+
+      window.handleSectionFormSubmit = function(e) {
+        e.preventDefault();
+        var sIdxVal = document.getElementById("modalSectionIdx").value;
+        var titleVal = document.getElementById("modalSectionTitle").value.trim();
+
+        if (!titleVal) {
+          alert("Nama kategori tidak boleh kosong!");
+          return;
+        }
+
+        if (sIdxVal !== "") {
+          var sIdx = parseInt(sIdxVal, 10);
+          if (state.sections[sIdx]) {
+            state.sections[sIdx].t = titleVal;
+            toast("Kategori diperbarui: " + titleVal);
+          }
+        } else {
+          var newIdx = state.sections.length;
+          state.sections.push({
+            t: titleVal,
+            items: []
+          });
+          window.activeCategoryFilter = newIdx;
+          toast("Kategori baru dibuat: " + titleVal);
+        }
+
+        closeSectionModal();
+        render();
+        markDirty();
+      };
+
+      // Ganti hook onclick tombol "+ Kategori Baru" ke modal form
+      document.getElementById("btnAddSection").onclick = function() {
+        openSectionModal();
+      };
+
+      // Update icon picker modal handlers
       document.getElementById("btnCloseModal").onclick = function() {
         document.getElementById("iconModal").classList.remove("active");
+        isPickerForModal = false;
         activeTarget = null;
         tempSelectedIcons = [];
       };
@@ -2028,6 +2526,20 @@
       var btnSaveBundleIcons = document.getElementById("btnSaveBundleIcons");
       if (btnSaveBundleIcons) {
         btnSaveBundleIcons.onclick = function() {
+          if (isPickerForModal) {
+            if (tempSelectedIcons.length > 0) {
+              modalDraftItem.icons = tempSelectedIcons.slice();
+              modalDraftItem.e = tempSelectedIcons[0];
+            } else {
+              modalDraftItem.icons = [];
+            }
+            updateModalItemIconPreviewUI();
+            document.getElementById("iconModal").classList.remove("active");
+            isPickerForModal = false;
+            toast("Ikon paket produk berhasil disetel ✨");
+            return;
+          }
+
           if (!activeTarget) return;
           var it = state.sections[activeTarget.sIdx].items[activeTarget.iIdx];
           if (tempSelectedIcons.length > 0) {
@@ -2046,6 +2558,32 @@
       }
 
       window.handleIconClick = function(icon) {
+        if (isPickerForModal) {
+          var unitType = document.getElementById("modalItemUnitType") ? document.getElementById("modalItemUnitType").value : "pcs";
+          var isPkg = unitType === "paket";
+          if (isPkg) {
+            var existIdx = tempSelectedIcons.indexOf(icon);
+            if (existIdx !== -1) {
+              tempSelectedIcons.splice(existIdx, 1);
+            } else {
+              if (tempSelectedIcons.length >= 4) {
+                toast("Maksimal 4 ikon untuk 1 paket produk ya");
+                return;
+              }
+              tempSelectedIcons.push(icon);
+            }
+            updateModalBundleBar();
+          } else {
+            modalDraftItem.e = icon;
+            modalDraftItem.icons = [];
+            updateModalItemIconPreviewUI();
+            document.getElementById("iconModal").classList.remove("active");
+            isPickerForModal = false;
+            toast("Ikon produk dipilih ✨");
+          }
+          return;
+        }
+
         if (!activeTarget) return;
         var sec = state.sections[activeTarget.sIdx];
         var it = sec.items[activeTarget.iIdx];
@@ -2083,6 +2621,7 @@
 
       // Upload Custom Image with canvas compression to keep size minimal
       window.triggerUpload = function(sIdx, iIdx) {
+        isPickerForModal = false;
         activeTarget = { sIdx: sIdx, iIdx: iIdx };
         document.getElementById("imgUploadInput").value = "";
         document.getElementById("imgUploadInput").click();
@@ -2090,13 +2629,12 @@
 
       document.getElementById("imgUploadInput").onchange = function(e) {
         var file = e.target.files[0];
-        if (!file || !activeTarget) return;
+        if (!file) return;
 
         var reader = new FileReader();
         reader.onload = function(evt) {
           var img = new Image();
           img.onload = function() {
-            // Kompres gambar ke ukuran maksimal 128x128 pixel
             var canvas = document.createElement("canvas");
             var maxDim = 128;
             var w = img.width;
@@ -2118,6 +2656,16 @@
             ctx.drawImage(img, 0, 0, w, h);
 
             var compressedDataUrl = canvas.toDataURL("image/webp", 0.85);
+
+            if (isPickerForModal) {
+              modalDraftItem.e = compressedDataUrl;
+              updateModalItemIconPreviewUI();
+              isPickerForModal = false;
+              toast("Gambar berhasil di-upload ke formulir! 📸");
+              return;
+            }
+
+            if (!activeTarget) return;
             var sec = state.sections[activeTarget.sIdx];
             var it = sec.items[activeTarget.iIdx];
             var isPkg = sec.pk || (it.ut === "paket") || (it.u === 1 && it.ut === "paket");
@@ -2146,53 +2694,28 @@
       };
 
       window.addItem = function(sIdx) {
-        var id = "item_" + Date.now();
-        var isPk = state.sections[sIdx] && state.sections[sIdx].pk ? 1 : 0;
-        state.sections[sIdx].items.push({
-          id: id,
-          e: "🌾",
-          n: "Item Baru",
-          u: isPk ? 1 : 100,
-          ut: isPk ? "paket" : "pcs",
-          p: 1000,
-          d: "",
-          c: "#46b23c"
-        });
-        render();
-        markDirty();
-        toast("Item baru ditambahkan ✨");
+        openItemModal(sIdx, -1);
       };
 
       window.deleteItem = function(sIdx, iIdx) {
-        if (!confirm("Hapus item ini?")) return;
+        var it = state.sections[sIdx].items[iIdx];
+        var name = it && it.n ? it.n : "item ini";
+        if (!confirm("Hapus '" + name + "' dari daftar?")) return;
         state.sections[sIdx].items.splice(iIdx, 1);
         render();
         markDirty();
+        toast("Item telah dihapus 🗑️");
       };
 
       window.deleteSection = function(sIdx) {
-        if (!confirm("Hapus kategori ini beserta seluruh isinya?")) return;
+        var sec = state.sections[sIdx];
+        var name = sec && sec.t ? sec.t : "kategori ini";
+        if (!confirm("Hapus kategori '" + name + "' beserta seluruh produk di dalamnya?")) return;
         state.sections.splice(sIdx, 1);
         window.activeCategoryFilter = "all";
         render();
         markDirty();
-      };
-
-      document.getElementById("btnAddSection").onclick = function() {
-        var newIdx = state.sections.length;
-        state.sections.push({
-          t: "✨ Kategori Baru",
-          items: []
-        });
-        window.activeCategoryFilter = newIdx;
-        render();
-        markDirty();
-        toast("Kategori baru ditambahkan 📁");
-        var newInp = document.querySelector("#adminSecBox-" + newIdx + " .sec-title-input");
-        if (newInp) {
-          newInp.focus();
-          newInp.select();
-        }
+        toast("Kategori telah dihapus 🗑️");
       };
 
       function collectCurrentState() {
