@@ -523,32 +523,32 @@ export default function AdminPage() {
               }
 
               return (
-                <div key={sIdx} className="mobile-category-block">
-                  <div className="mobile-category-header">
-                    <div className="cat-title-wrap">
-                      <span className="cat-title-text">{sec.title}</span>
-                      <span className="cat-count-pill">{filteredItems.length} item</span>
+                <div key={sIdx} className="hayday-category-group">
+                  <div className="hayday-category-banner">
+                    <div className="cat-wood-sign">
+                      <span className="cat-wood-title">{sec.title}</span>
+                      <span className="cat-wood-count">{filteredItems.length} item</span>
                     </div>
-                    <div className="cat-actions-wrap">
+                    <div className="cat-banner-actions">
                       <button
                         type="button"
-                        className="cat-pill-btn edit-cat-pill"
+                        className="cat-wood-btn edit-cat-btn"
                         onClick={() => openEditCategoryModal(sIdx)}
                         title="Edit nama kategori"
                       >
-                        Edit
+                        Edit Kategori
                       </button>
                       <button
                         type="button"
-                        className="cat-pill-btn add-item-pill"
+                        className="cat-wood-btn add-item-btn"
                         onClick={() => openAddItemModal(sIdx)}
                         title="Tambah produk"
                       >
-                        + Item
+                        + Tambah Item
                       </button>
                       <button
                         type="button"
-                        className="cat-pill-btn del-pill"
+                        className="cat-wood-btn del-cat-btn"
                         onClick={() => promptDeleteCategory(sIdx)}
                         title="Hapus kategori"
                       >
@@ -557,28 +557,32 @@ export default function AdminPage() {
                     </div>
                   </div>
 
-                  {/* 2-Column Product Cards Grid */}
+                  {/* 2-Column Hay Day Roadside Crate Cards Grid */}
                   <div className="mobile-cards-grid">
                     {filteredItems.length === 0 ? (
                       <div className="empty-category-msg">
                         {adminSearch.trim()
                           ? 'Tidak ada produk yang cocok dengan pencarian.'
-                          : 'Belum ada produk. Ketuk "+ Item" untuk menambah.'}
+                          : 'Belum ada produk di kategori ini. Ketuk "+ Tambah Item" untuk menambah.'}
                       </div>
                     ) : (
                       filteredItems.map((prod, pIdx) => {
-                        // find real index in original items array
                         const originalIdx = sec.items.findIndex(it => it.id === prod.id);
                         const actualIdx = originalIdx >= 0 ? originalIdx : pIdx;
 
                         return (
-                          <div key={prod.id || pIdx} className="app-product-card">
-                            <div className="card-top-row">
-                              <div
-                                className="card-icon-container"
-                                onClick={() => openEditItemModal(sIdx, actualIdx)}
-                                style={{ borderColor: prod.color || '#ebdcc8' }}
-                              >
+                          <div key={prod.id || pIdx} className="hayday-crate-card">
+                            {/* Wooden Tray Display */}
+                            <div
+                              className="hayday-crate-tray"
+                              onClick={() => openEditItemModal(sIdx, actualIdx)}
+                              style={{ borderColor: prod.color || '#9e6427' }}
+                            >
+                              <div className="crate-tray-badge">
+                                {prod.unit}x {prod.unitType}
+                              </div>
+
+                              <div className="crate-tray-icon">
                                 {prod.icons && prod.icons.length > 1 ? (
                                   <div className="bundle-icons-grid">
                                     {prod.icons.slice(0, 4).map((ic, i) => (
@@ -588,43 +592,43 @@ export default function AdminPage() {
                                 ) : prod.icon && (prod.icon.startsWith('assets/') || prod.icon.startsWith('data:') || prod.icon.startsWith('http') || prod.icon.startsWith('/')) ? (
                                   <img src={prod.icon.startsWith('/') ? prod.icon : `/${prod.icon}`} alt="icon" />
                                 ) : (
-                                  <span style={{ fontSize: '32px' }}>{prod.icon || '📦'}</span>
+                                  <span style={{ fontSize: '36px' }}>{prod.icon || '📦'}</span>
                                 )}
-                              </div>
-                              <div className="card-quick-actions">
-                                <button
-                                  type="button"
-                                  className="card-action-btn edit-btn"
-                                  onClick={() => openEditItemModal(sIdx, actualIdx)}
-                                  title="Edit Produk"
-                                  aria-label="Edit Produk"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  type="button"
-                                  className="card-action-btn del-btn"
-                                  onClick={() => promptDeleteItem(sIdx, actualIdx)}
-                                  title="Hapus Produk"
-                                  aria-label="Hapus Produk"
-                                >
-                                  Hapus
-                                </button>
                               </div>
                             </div>
 
+                            {/* Item Info Box */}
                             <div
-                              className="card-content-area"
+                              className="crate-info-box"
                               onClick={() => openEditItemModal(sIdx, actualIdx)}
                             >
-                              <div className="card-item-title">{prod.name}</div>
-                              <div className="card-item-unit">{prod.unit} {prod.unitType}</div>
-                              <div className="card-item-price">
+                              <div className="crate-item-name">{prod.name}</div>
+                              <div className="crate-item-price">
                                 Rp{prod.price.toLocaleString('id-ID')}
                               </div>
                               {prod.description && (
-                                <div className="card-item-note">{prod.description}</div>
+                                <div className="crate-item-desc">{prod.description}</div>
                               )}
+                            </div>
+
+                            {/* Distinct Action Buttons with Clear Labels */}
+                            <div className="crate-actions-row">
+                              <button
+                                type="button"
+                                className="crate-btn crate-btn-edit"
+                                onClick={() => openEditItemModal(sIdx, actualIdx)}
+                                title="Edit Item Produk"
+                              >
+                                Edit Item
+                              </button>
+                              <button
+                                type="button"
+                                className="crate-btn crate-btn-delete"
+                                onClick={() => promptDeleteItem(sIdx, actualIdx)}
+                                title="Hapus Item Produk"
+                              >
+                                Hapus
+                              </button>
                             </div>
                           </div>
                         );
@@ -783,8 +787,10 @@ export default function AdminPage() {
             openAddItemModal(catIdx || 0);
           }}
           title="Tambah Produk Baru"
+          aria-label="Tambah Produk Baru"
         >
           <span className="fab-plus">+</span>
+          <span className="fab-text">Tambah</span>
         </button>
 
         <button
@@ -1041,80 +1047,89 @@ export default function AdminPage() {
           padding: 14px 14px 20px;
         }
 
-        .mobile-category-block {
-          margin-bottom: 22px;
+        /* Hay Day Category Wood Banner */
+        .hayday-category-group {
+          margin-bottom: 24px;
         }
 
-        .mobile-category-header {
+        .hayday-category-banner {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 10px;
-          padding: 0 4px;
+          margin-bottom: 12px;
+          gap: 10px;
+          flex-wrap: wrap;
         }
 
-        .cat-title-wrap {
-          display: flex;
+        .cat-wood-sign {
+          display: inline-flex;
           align-items: center;
           gap: 8px;
+          background: linear-gradient(135deg, #a36125 0%, #753f12 100%);
+          border: 2.5px solid #5a2e0a;
+          border-radius: 14px;
+          padding: 6px 14px;
+          box-shadow: 0 3px 0 #4a2406, 0 5px 10px rgba(74, 36, 6, 0.2);
         }
 
-        .cat-title-text {
-          font-size: 16.5px;
-          font-weight: 800;
-          color: var(--text-primary);
-        }
-
-        .cat-count-pill {
-          font-size: 11px;
+        .cat-wood-title {
+          font-family: 'Fredoka', 'Lilita One', sans-serif;
+          font-size: 16px;
           font-weight: 700;
-          background: #f0e6d6;
-          color: var(--text-secondary);
-          padding: 2px 8px;
+          color: #ffffff;
+          letter-spacing: 0.3px;
+          text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .cat-wood-count {
+          font-size: 11px;
+          font-weight: 800;
+          background: rgba(255, 255, 255, 0.22);
+          color: #fff9ed;
+          padding: 2px 7px;
           border-radius: 999px;
         }
 
-        .cat-actions-wrap {
+        .cat-banner-actions {
           display: flex;
           gap: 6px;
+          flex-wrap: wrap;
         }
 
-        .cat-pill-btn {
-          border: 1.5px solid var(--border-subtle);
-          background: #ffffff;
-          padding: 4px 10px;
-          border-radius: 8px;
+        .cat-wood-btn {
+          border-radius: 9px;
+          font-family: inherit;
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 800;
+          padding: 6px 11px;
           cursor: pointer;
+          border: 2px solid transparent;
+          transition: all 0.12s ease;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.15s;
         }
-        .cat-pill-btn.edit-cat-pill {
-          background: #f8fafc;
-          border-color: #cbd5e1;
-          color: #334155;
+        .cat-wood-btn:active {
+          transform: translateY(1px);
         }
-        .cat-pill-btn.edit-cat-pill:active {
-          background: #e2e8f0;
+
+        .edit-cat-btn {
+          background: #ffffff;
+          color: #6e4a25;
+          border-color: #ebdcc8;
+          box-shadow: 0 2px 0 #d8c2a3;
         }
-        .cat-pill-btn.add-item-pill {
-          background: #eef8eb;
-          border-color: #9cdb93;
-          color: #277220;
+        .add-item-btn {
+          background: linear-gradient(180deg, #52c748 0%, #3ca032 100%);
+          color: #ffffff;
+          border-color: #2b7a23;
+          box-shadow: 0 2px 0 #205c19;
         }
-        .cat-pill-btn.add-item-pill:active {
-          background: #dbf3d4;
-        }
-        .cat-pill-btn.del-pill {
-          background: #fef2f2;
-          border-color: #fecaca;
-          color: #b91c1c;
-        }
-        .cat-pill-btn.del-pill:active {
-          background: #fee2e2;
+        .del-cat-btn {
+          background: #fff5f5;
+          color: #dc2626;
+          border-color: #fca5a5;
+          box-shadow: 0 2px 0 #f87171;
         }
 
         /* 2-Column Mobile Cards Grid */
@@ -1130,138 +1145,157 @@ export default function AdminPage() {
           }
         }
 
-        .app-product-card {
-          background: #ffffff;
-          border-radius: 16px;
-          border: 1.5px solid var(--border-subtle);
-          padding: 12px;
+        /* Hay Day Roadside Shop Wooden Crate Card */
+        .hayday-crate-card {
+          background: #fdf6e7;
+          border: 3.5px solid #9e6427;
+          border-radius: 18px;
+          padding: 10px 10px 10px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 3px 8px rgba(110, 74, 37, 0.05);
+          box-shadow: 0 4px 0 #734515, 0 8px 14px rgba(56, 26, 7, 0.15);
           transition: transform 0.12s, box-shadow 0.12s;
         }
-        .app-product-card:active {
-          transform: scale(0.985);
+        .hayday-crate-card:active {
+          transform: translateY(1px);
         }
 
-        .card-top-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 10px;
-        }
-
-        .card-icon-container {
-          width: 58px;
-          height: 58px;
+        /* Wooden Tray Inside Crate */
+        .hayday-crate-tray {
+          position: relative;
+          background: linear-gradient(180deg, #ecc37e 0%, #deb065 100%);
+          border: 3px solid #caa157;
           border-radius: 14px;
-          background: #fffaee;
-          border: 2px solid var(--border-subtle);
+          padding: 8px 6px 10px;
           display: flex;
           align-items: center;
           justify-content: center;
+          min-height: 90px;
           cursor: pointer;
-          box-shadow: inset 0 2px 4px rgba(110, 74, 37, 0.05);
-          flex-shrink: 0;
+          box-shadow:
+            inset 0 3px 5px rgba(90, 50, 10, 0.3),
+            inset 0 -2px 3px rgba(255, 255, 255, 0.35);
         }
-        .card-icon-container img {
-          max-width: 44px;
-          max-height: 44px;
+
+        .crate-tray-badge {
+          position: absolute;
+          top: -8px;
+          left: 6px;
+          background: #ffffff;
+          border: 2px solid #5a2e0a;
+          border-radius: 7px;
+          padding: 1px 7px;
+          font-size: 11px;
+          font-weight: 800;
+          color: #4a2406;
+          box-shadow: 0 2px 0 #5a2e0a;
+          line-height: 1.2;
+        }
+
+        .crate-tray-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .crate-tray-icon img {
+          max-width: 48px;
+          max-height: 48px;
           object-fit: contain;
+          filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
         }
 
         .bundle-icons-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 2px;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
         }
         .bundle-icons-grid img {
-          width: 20px;
-          height: 20px;
+          width: 22px;
+          height: 22px;
           object-fit: contain;
         }
 
-        .card-quick-actions {
-          display: flex;
-          gap: 5px;
-        }
-
-        .card-action-btn {
-          padding: 4px 8px;
-          border-radius: 7px;
-          font-size: 11.5px;
-          font-weight: 700;
-          cursor: pointer;
-          border: 1.5px solid transparent;
-          transition: all 0.12s;
-        }
-        .card-action-btn.edit-btn {
-          background: #eff6ff;
-          border-color: #bfdbfe;
-          color: #1d4ed8;
-        }
-        .card-action-btn.edit-btn:active {
-          background: #dbeafe;
-        }
-        .card-action-btn.del-btn {
-          background: #fef2f2;
-          border-color: #fecaca;
-          color: #b91c1c;
-        }
-        .card-action-btn.del-btn:active {
-          background: #fee2e2;
-        }
-
-        .card-content-area {
+        /* Crate Product Info Area */
+        .crate-info-box {
           cursor: pointer;
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 3px;
+          margin-top: 8px;
           flex-grow: 1;
         }
 
-        .card-item-title {
-          font-size: 15px;
-          font-weight: 800;
-          color: var(--text-primary);
+        .crate-item-name {
+          font-family: 'Fredoka', 'Nunito', sans-serif;
+          font-size: 14.5px;
+          font-weight: 700;
+          color: #381e09;
           line-height: 1.25;
-          margin-bottom: 2px;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
 
-        .card-item-unit {
-          font-size: 12px;
-          font-weight: 700;
-          color: var(--text-secondary);
-          background: #f5eedf;
-          padding: 2px 7px;
-          border-radius: 6px;
-          display: inline-block;
-          align-self: flex-start;
-        }
-
-        .card-item-price {
-          font-size: 16px;
-          font-weight: 900;
+        .crate-item-price {
+          font-family: 'Lilita One', 'Nunito', sans-serif;
+          font-size: 17px;
+          font-weight: 400;
           color: #277220;
-          font-family: 'JetBrains Mono', monospace;
-          margin-top: 4px;
+          text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+          margin-top: 2px;
         }
 
-        .card-item-note {
-          font-size: 12px;
-          color: var(--text-muted);
+        .crate-item-desc {
+          font-size: 11.5px;
+          color: #8d5d36;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
           line-height: 1.3;
-          margin-top: 2px;
+        }
+
+        /* Clear, High-Contrast Action Buttons */
+        .crate-actions-row {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 6px;
+          margin-top: 9px;
+          padding-top: 8px;
+          border-top: 1.5px dashed #deb065;
+        }
+
+        .crate-btn {
+          font-family: inherit;
+          font-size: 12px;
+          font-weight: 800;
+          padding: 6px 8px;
+          border-radius: 8px;
+          cursor: pointer;
+          border: 1.5px solid transparent;
+          transition: all 0.12s;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .crate-btn:active {
+          transform: translateY(1px);
+        }
+
+        .crate-btn-edit {
+          background: #ffffff;
+          color: #1d4ed8;
+          border-color: #93c5fd;
+          box-shadow: 0 2px 0 #93c5fd;
+        }
+        .crate-btn-delete {
+          background: #fff5f5;
+          color: #b91c1c;
+          border-color: #fca5a5;
+          box-shadow: 0 2px 0 #fca5a5;
         }
 
         .empty-category-msg {
@@ -1269,10 +1303,11 @@ export default function AdminPage() {
           padding: 24px;
           text-align: center;
           background: #ffffff;
-          border: 1.5px dashed var(--border-subtle);
-          border-radius: 12px;
-          color: var(--text-muted);
+          border: 2px dashed #caa157;
+          border-radius: 16px;
+          color: #8d5d36;
           font-size: 14px;
+          font-weight: 600;
         }
 
         /* App Card Panels for Settings & Tools */
@@ -1558,29 +1593,39 @@ export default function AdminPage() {
 
         /* Floating Center Action Button (FAB) */
         .nav-fab-btn {
-          width: 50px;
-          height: 50px;
+          width: 58px;
+          height: 58px;
           border-radius: 50%;
           background: linear-gradient(180deg, #52c748 0%, #3ca032 100%);
-          border: 3px solid #ffffff;
-          box-shadow: 0 4px 12px rgba(43, 122, 35, 0.45);
+          border: 3.5px solid #ffffff;
+          box-shadow: 0 4px 14px rgba(43, 122, 35, 0.45);
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
           color: #ffffff;
           cursor: pointer;
-          margin-top: -22px;
+          margin-top: -24px;
           transition: transform 0.15s;
+          text-decoration: none;
         }
         .nav-fab-btn:active {
           transform: scale(0.92);
         }
 
         .fab-plus {
-          font-size: 28px;
-          font-weight: 700;
+          font-size: 22px;
+          font-weight: 900;
           line-height: 1;
-          margin-top: -2px;
+        }
+
+        .fab-text {
+          font-size: 9.5px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+          line-height: 1;
+          margin-top: 1px;
         }
       `}</style>
     </div>
