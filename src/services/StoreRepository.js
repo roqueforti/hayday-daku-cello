@@ -45,12 +45,6 @@ export class StoreRepository {
 
   // Simpan ke Firebase Firestore Cloud
   async saveToCloud(storeState) {
-    const db = getFirestoreDb();
-    if (!db) {
-      this.saveLocal(storeState);
-      return { success: true, cloud: false };
-    }
-
     const payload = {
       wa: storeState.wa || DEFAULT_WA,
       thx: storeState.thx || DEFAULT_THX,
@@ -58,15 +52,22 @@ export class StoreRepository {
       updatedAt: serverTimestamp()
     };
 
+    // Selalu simpan lokal terlebih dahulu agar offline/fallback selalu up-to-date
+    this.saveLocal(storeState);
+
+    const db = getFirestoreDb();
+    if (!db) {
+      console.warn("Firestore db tidak tersedia, data disimpan ke localStorage saja.");
+      return { success: true, cloud: false };
+    }
+
     try {
-      // Simpan lokal terlebih dahulu
-      this.saveLocal(storeState);
       const storeRef = doc(db, 'settings', 'store');
       await setDoc(storeRef, payload, { merge: true });
       return { success: true, cloud: true };
     } catch (err) {
       console.error("Firestore save error:", err);
-      return { success: true, cloud: false, error: err };
+      throw err;
     }
   }
 

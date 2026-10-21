@@ -97,20 +97,41 @@ export default function AdminPage() {
     });
   };
 
-  const handleSaveItemModal = (catIdx, prodIdx, product) => {
-    const newSections = [...storeData.sections];
-    const category = newSections[catIdx];
-
-    if (prodIdx >= 0) {
-      category.updateProduct(prodIdx, product);
-      showToast(`Item '${product.name}' diperbarui! ✨`);
-    } else {
-      category.addProduct(product);
-      showToast(`Item '${product.name}' ditambahkan! ✨`);
+  // Helper to persist and sync state
+  const persistAndSync = async (updatedData, successMessage) => {
+    setStoreData(updatedData);
+    setIsDirty(false);
+    showToast("Menyimpan ke Cloud... ☁️");
+    try {
+      const res = await storeRepository.saveToCloud(updatedData);
+      if (res.cloud) {
+        showToast(successMessage || "Tersimpan ke Cloud Database! 🚀");
+      } else {
+        showToast("Tersimpan di browser lokal 💾");
+      }
+    } catch (err) {
+      console.error("Gagal sinkronisasi ke cloud:", err);
+      showToast("⚠️ Gagal ke cloud, tersimpan di lokal.");
+      setIsDirty(true);
     }
+  };
 
-    setStoreData({ ...storeData, sections: newSections });
-    setIsDirty(true);
+  const handleSaveItemModal = async (catIdx, prodIdx, product) => {
+    // Clone sections and target category immutably
+    const newSections = storeData.sections.map((sec, idx) => {
+      if (idx !== catIdx) return sec;
+      const cloned = new Category(sec.toLegacy());
+      if (prodIdx >= 0) {
+        cloned.updateProduct(prodIdx, product);
+      } else {
+        cloned.addProduct(product);
+      }
+      return cloned;
+    });
+
+    const updatedData = { ...storeData, sections: newSections };
+    const actionText = prodIdx >= 0 ? `Item '${product.name}' diperbarui! ✨` : `Item '${product.name}' ditambahkan! ✨`;
+    await persistAndSync(updatedData, actionText);
   };
 
   const promptDeleteItem = (catIdx, prodIdx) => {
@@ -120,16 +141,19 @@ export default function AdminPage() {
     setConfirmDialog({
       isOpen: true,
       title: 'Hapus Item Produk?',
-      message: `Apakah Anda yakin ingin menghapus '${name}' dari daftar? Tindakan ini dapat dibatalkan sebelum Anda menekan tombol simpan perubahan.`,
+      message: `Apakah Anda yakin ingin menghapus '${name}' dari daftar?`,
       confirmText: 'Ya, Hapus Item',
       type: 'danger',
-      onConfirm: () => {
-        const newSections = [...storeData.sections];
-        newSections[catIdx].removeProduct(prodIdx);
-        setStoreData({ ...storeData, sections: newSections });
-        setIsDirty(true);
+      onConfirm: async () => {
+        const newSections = storeData.sections.map((sec, idx) => {
+          if (idx !== catIdx) return sec;
+          const cloned = new Category(sec.toLegacy());
+          cloned.removeProduct(prodIdx);
+          return cloned;
+        });
+        const updatedData = { ...storeData, sections: newSections };
         setConfirmDialog({ isOpen: false });
-        showToast(`Item '${name}' telah dihapus.`);
+        await persistAndSync(updatedData, `Item '${name}' telah dihapus.`);
       }
     });
   };
@@ -152,19 +176,23 @@ export default function AdminPage() {
     });
   };
 
-  const handleSaveCategoryModal = (catIdx, newTitle) => {
-    const newSections = [...storeData.sections];
+  const handleSaveCategoryModal = async (catIdx, newTitle) => {
+    let newSections = [];
     if (catIdx >= 0) {
-      newSections[catIdx].title = newTitle;
-      showToast(`Kategori '${newTitle}' diperbarui.`);
+      newSections = storeData.sections.map((sec, idx) => {
+        if (idx !== catIdx) return sec;
+        const cloned = new Category(sec.toLegacy());
+        cloned.title = newTitle;
+        return cloned;
+      });
     } else {
-      const newCat = new Category({ t: newTitle, items: [] });
-      newSections.push(newCat);
+      newSections = [...storeData.sections, new Category({ t: newTitle, items: [] })];
       setActiveCategoryFilter(newSections.length - 1);
-      showToast(`Kategori baru '${newTitle}' dibuat.`);
     }
-    setStoreData({ ...storeData, sections: newSections });
-    setIsDirty(true);
+
+    const updatedData = { ...storeData, sections: newSections };
+    const actionText = catIdx >= 0 ? `Kategori '${newTitle}' diperbarui! ✨` : `Kategori '${newTitle}' dibuat! ✨`;
+    await persistAndSync(updatedData, actionText);
   };
 
   const promptDeleteCategory = (catIdx) => {
@@ -177,31 +205,19 @@ export default function AdminPage() {
       message: `Kategori '${title}' beserta seluruh produk di dalamnya (${sec?.items?.length || 0} item) akan dihapus. Lanjutkan?`,
       confirmText: 'Hapus Kategori',
       type: 'danger',
-      onConfirm: () => {
+      onConfirm: async () => {
         const newSections = storeData.sections.filter((_, idx) => idx !== catIdx);
-        setStoreData({ ...storeData, sections: newSections });
+        const updatedData = { ...storeData, sections: newSections };
         setActiveCategoryFilter('all');
-        setIsDirty(true);
         setConfirmDialog({ isOpen: false });
-        showToast(`Kategori '${title}' telah dihapus.`);
+        await persistAndSync(updatedData, `Kategori '${title}' telah dihapus.`);
       }
     });
   };
 
-  // Save changes
+  // Save changes manual (for settings tab or batch changes)
   const handleSaveAll = async () => {
-    try {
-      showToast("Menyimpan ke Cloud Database... ☁️");
-      const res = await storeRepository.saveToCloud(storeData);
-      setIsDirty(false);
-      if (res.cloud) {
-        showToast("Tersimpan ke Cloud Database & Semua Pembeli! 🚀");
-      } else {
-        showToast("Tersimpan lokal di browser 💾");
-      }
-    } catch (e) {
-      alert("Gagal menyimpan perubahan: " + e.message);
-    }
+    await persistAndSync(storeData, "Semua perubahan tersimpan ke Cloud! 🚀");
   };
 
   // Export ke Excel
@@ -712,6 +728,17 @@ export default function AdminPage() {
                   placeholder="🌻 Terima kasih sudah berbelanja di Hay Day Daku Cello 🌻"
                   className="app-text-input"
                 />
+              </div>
+
+              <div style={{ marginTop: '20px' }}>
+                <button
+                  type="button"
+                  className="save-banner-btn"
+                  style={{ width: '100%', padding: '12px', fontSize: '15px' }}
+                  onClick={handleSaveAll}
+                >
+                  💾 Simpan Pengaturan Toko
+                </button>
               </div>
             </div>
 
