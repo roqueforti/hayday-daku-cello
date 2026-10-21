@@ -426,8 +426,29 @@ export default function AdminPage() {
               <span className="app-badge">Admin Manager</span>
             </div>
           </div>
-          <div className="mobile-header-actions">
-            <Link href="/" className="app-btn-top shop-link" title="Lihat Toko">
+          <div className="mobile-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+            <Link
+              href="/"
+              className="app-btn-top shop-link"
+              title="Lihat Toko"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                height: '34px',
+                padding: '0 10px',
+                borderRadius: '10px',
+                background: '#ffffff',
+                color: '#1d4ed8',
+                border: '2px solid #93c5fd',
+                boxShadow: '0 2px 0 #93c5fd',
+                fontSize: '12px',
+                fontWeight: 800,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                lineHeight: 1
+              }}
+            >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               <span>Lihat Toko</span>
             </Link>
@@ -436,6 +457,23 @@ export default function AdminPage() {
               className="app-btn-top logout-link"
               onClick={handleLogout}
               title="Keluar dari Admin"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                height: '34px',
+                padding: '0 10px',
+                borderRadius: '10px',
+                background: '#fff5f5',
+                color: '#dc2626',
+                border: '2px solid #fca5a5',
+                boxShadow: '0 2px 0 #fca5a5',
+                fontSize: '12px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                lineHeight: 1
+              }}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               <span>Keluar</span>

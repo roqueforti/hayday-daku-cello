@@ -52,7 +52,7 @@ body {
   margin: 0;
   font-family: "Nunito", "Fredoka", system-ui, -apple-system, sans-serif;
   color: var(--text-primary);
-  background: linear-gradient(#bfe8ff, #e8f7c8 60%, #7ccf4a 100%);
+  background: linear-gradient(#bfe8ff, #d7f2a7 50%, #5cb82e 85%, #3d8f1d 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
