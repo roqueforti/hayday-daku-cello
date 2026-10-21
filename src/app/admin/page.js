@@ -26,6 +26,8 @@ export default function AdminPage() {
   const [isDirty, setIsDirty] = useState(false);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
   const [toastMessage, setToastMessage] = useState('');
+  const [mobileTab, setMobileTab] = useState('catalog'); // 'catalog' | 'settings' | 'tools'
+  const [adminSearch, setAdminSearch] = useState('');
 
   // Modals state
   const [itemModalState, setItemModalState] = useState({ isOpen: false, categoryIndex: 0, productIndex: -1, initialProduct: null });
@@ -409,9 +411,6 @@ export default function AdminPage() {
       </div>
     );
   }
-
-  const [mobileTab, setMobileTab] = useState('catalog'); // 'catalog' | 'settings' | 'tools'
-  const [adminSearch, setAdminSearch] = useState('');
 
   const totalProducts = storeData.sections.reduce((acc, s) => acc + s.items.length, 0);
 
