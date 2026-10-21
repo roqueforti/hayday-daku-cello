@@ -92,14 +92,22 @@ export default function StorePage() {
     }).filter(sec => sec.items.length > 0);
   }, [storeData, searchQuery]);
 
-  const handleCheckoutWA = () => {
+  const [isOrderConfirmOpen, setIsOrderConfirmOpen] = useState(false);
+
+  const handleOpenCheckoutModal = () => {
     if (cart.getTotalItemCount() === 0) {
-      alert("Pilih minimal 1 produk terlebih dahulu!");
+      showToast("Pilih minimal 1 produk terlebih dahulu! 🌱");
       return;
     }
+    setIsOrderConfirmOpen(true);
+  };
+
+  const handleSendOrderToWA = () => {
+    if (cart.getTotalItemCount() === 0) return;
     const msg = cart.generateWhatsAppMessage(customerNote);
     const cleanWa = (storeData.wa || '6287719747833').replace(/\D/g, '');
     const waUrl = `https://wa.me/${cleanWa}?text=${encodeURIComponent(msg)}`;
+    setIsOrderConfirmOpen(false);
     window.open(waUrl, '_blank');
   };
 
@@ -398,7 +406,7 @@ export default function StorePage() {
                     type="button"
                     className="b wa"
                     style={{ width: '100%', fontSize: '15px', padding: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                    onClick={handleCheckoutWA}
+                    onClick={handleOpenCheckoutModal}
                   >
                     💬 Lanjut Pesan ke WA
                   </button>
@@ -477,12 +485,104 @@ export default function StorePage() {
           <button
             type="button"
             className="b wa"
-            onClick={handleCheckoutWA}
+            onClick={handleOpenCheckoutModal}
           >
             💬 Pesan via WA
           </button>
         </div>
       </div>
+
+      {/* Modal Konfirmasi Pengecekan Pesanan Sebelum WA */}
+      {isOrderConfirmOpen && (
+        <div className="modal-bg active" onClick={() => setIsOrderConfirmOpen(false)}>
+          <div className="modal-card modal-card-lg" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '520px' }}>
+            <div className="modal-title">
+              <span style={{ fontFamily: 'Fredoka, Nunito, sans-serif', fontSize: '18px', fontWeight: 700, color: '#381e09' }}>
+                📋 Cek Rincian Pesanan
+              </span>
+              <button className="modal-close" onClick={() => setIsOrderConfirmOpen(false)}>✕</button>
+            </div>
+            <p style={{ margin: '0 0 14px', fontSize: '13px', color: '#6e4a25' }}>
+              Pastikan jumlah dan jenis item pesanan Anda sudah sesuai sebelum diteruskan ke WhatsApp admin.
+            </p>
+
+            <div className="receipt-items-list" style={{ maxHeight: '42vh', overflowY: 'auto', background: '#fdfaf4', padding: '8px 12px', borderRadius: '12px', border: '1.5px solid #ebdcc8' }}>
+              {cart.getAllItems().map((item) => (
+                <div key={item.product.id} className="receipt-item-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px dashed #ebdcc8' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#fff', border: '1px solid #ebdcc8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {item.product.icon && (item.product.icon.startsWith('assets/') || item.product.icon.startsWith('http') || item.product.icon.startsWith('data:')) ? (
+                        <img src={item.product.icon} alt="ico" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+                      ) : (
+                        <span style={{ fontSize: '20px' }}>{item.product.icon || '📦'}</span>
+                      )}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#381e09' }}>{item.product.name}</div>
+                      <small style={{ color: '#8d5d36' }}>{item.quantity} {item.product.unitType}</small>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <b style={{ color: '#277220', fontFamily: 'JetBrains Mono, monospace', fontSize: '14px' }}>
+                      Rp{Math.round(item.getSubtotal()).toLocaleString('id-ID')}
+                    </b>
+                    <button
+                      type="button"
+                      onClick={() => updateCartQuantity(item.product, 0)}
+                      style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: '15px', padding: '2px 4px' }}
+                      title="Hapus item"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Input Catatan Tambahan (Opsional) */}
+            <div style={{ marginTop: '12px' }}>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#6e4a25', marginBottom: '4px' }}>
+                Catatan Pesanan / Tagar Hay Day (Opsional):
+              </label>
+              <input
+                type="text"
+                value={customerNote}
+                onChange={(e) => setCustomerNote(e.target.value)}
+                placeholder="Contoh: Tagar #9V8PYCGQ atau catatan waktu online..."
+                style={{ width: '100%', height: '38px', borderRadius: '10px', border: '1.5px solid #ebdcc8', padding: '0 10px', fontSize: '13px', outline: 'none' }}
+              />
+            </div>
+
+            {/* Total Pembayaran & Tombol Lanjut */}
+            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '2px solid #ebdcc8' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#6e4a25' }}>Total Estimasi ({totalCount} jenis produk):</span>
+                <span style={{ fontSize: '20px', fontWeight: 900, color: '#277220', fontFamily: 'JetBrains Mono, monospace' }}>
+                  Rp{Math.round(totalAmount).toLocaleString('id-ID')}
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '8px' }}>
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={() => setIsOrderConfirmOpen(false)}
+                  style={{ justifyContent: 'center', padding: '10px', fontWeight: 700 }}
+                >
+                  Ubah Pesanan
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSendOrderToWA}
+                  style={{ justifyContent: 'center', padding: '10px', fontSize: '14px', fontWeight: 800 }}
+                >
+                  Kirim ke WhatsApp 💬
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Receipt Drawer Modal */}
       {isMobileReceiptOpen && (
@@ -523,7 +623,7 @@ export default function StorePage() {
                 style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: '15px' }}
                 onClick={() => {
                   setIsMobileReceiptOpen(false);
-                  handleCheckoutWA();
+                  handleOpenCheckoutModal();
                 }}
               >
                 Lanjut Kirim ke WhatsApp 💬
