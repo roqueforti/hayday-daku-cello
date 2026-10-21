@@ -106,7 +106,7 @@ export default function StorePage() {
     if (cart.getTotalItemCount() === 0) return;
     const msg = cart.generateWhatsAppMessage(customerNote);
     const cleanWa = (storeData.wa || '6287719747833').replace(/\D/g, '');
-    const waUrl = `https://wa.me/${cleanWa}?text=${encodeURIComponent(msg)}`;
+    const waUrl = `https://api.whatsapp.com/send?phone=${cleanWa}&text=${encodeURIComponent(msg)}`;
     setIsOrderConfirmOpen(false);
     window.open(waUrl, '_blank');
   };
@@ -720,7 +720,7 @@ export default function StorePage() {
         .store-app-wrap {
           width: 100%;
           max-width: 100vw;
-          overflow-x: hidden;
+          overflow-x: clip;
           position: relative;
         }
 

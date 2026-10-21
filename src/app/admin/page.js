@@ -614,7 +614,6 @@ export default function AdminPage() {
                             <div
                               className="hayday-crate-tray"
                               onClick={() => openEditItemModal(sIdx, actualIdx)}
-                              style={{ borderColor: prod.color || '#9e6427' }}
                             >
                               <div className="crate-tray-badge">
                                 {prod.unit}x {prod.unitType}
@@ -1190,12 +1189,12 @@ export default function AdminPage() {
         /* Hay Day Roadside Shop Wooden Crate Card */
         .hayday-crate-card {
           background: #fdf6e7;
-          border: 3.5px solid #9e6427;
-          border-radius: 18px;
-          padding: 10px 10px 10px;
+          border: 4px solid #9e6427;
+          border-radius: 20px;
+          padding: 10px 10px 12px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 4px 0 #734515, 0 8px 14px rgba(56, 26, 7, 0.15);
+          box-shadow: 0 5px 0 #734515, 0 10px 18px rgba(56, 26, 7, 0.28);
           transition: transform 0.12s, box-shadow 0.12s;
         }
         .hayday-crate-card:active {
@@ -1206,17 +1205,32 @@ export default function AdminPage() {
         .hayday-crate-tray {
           position: relative;
           background: linear-gradient(180deg, #ecc37e 0%, #deb065 100%);
-          border: 3px solid #caa157;
-          border-radius: 14px;
-          padding: 8px 6px 10px;
+          border: 4px solid #caa157;
+          border-radius: 16px;
+          padding: 10px 8px 12px;
           display: flex;
           align-items: center;
           justify-content: center;
-          min-height: 90px;
+          min-height: 95px;
           cursor: pointer;
           box-shadow:
-            inset 0 3px 5px rgba(90, 50, 10, 0.3),
-            inset 0 -2px 3px rgba(255, 255, 255, 0.35);
+            inset 0 4px 6px rgba(90, 50, 10, 0.35),
+            inset 0 -3px 4px rgba(255, 255, 255, 0.3);
+          overflow: visible;
+        }
+        .hayday-crate-tray::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 32px,
+            rgba(138, 83, 28, 0.15) 32px,
+            rgba(138, 83, 28, 0.15) 34px
+          );
+          border-radius: 12px;
+          pointer-events: none;
         }
 
         .crate-tray-badge {
@@ -1232,6 +1246,7 @@ export default function AdminPage() {
           color: #4a2406;
           box-shadow: 0 2px 0 #5a2e0a;
           line-height: 1.2;
+          z-index: 2;
         }
 
         .crate-tray-icon {
