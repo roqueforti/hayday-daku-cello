@@ -21,13 +21,22 @@ export default function StorePage() {
   };
 
   useEffect(() => {
-    // 1. Load data lokal langsung
+    // 1. Tampilkan data lokal sebagai instant visual fallback
     const local = storeRepository.loadLocal();
     setStoreData(local);
 
-    // 2. Berlangganan Firestore realtime
+    // 2. Fetch data terbaru langsung dari Firestore (bypass cache lokal)
+    storeRepository.fetchCloud().then((cloudData) => {
+      if (cloudData) {
+        setStoreData(cloudData);
+      }
+    });
+
+    // 3. Berlangganan Firestore realtime (jika ada admin yang edit, langsung auto update di layar hp pembeli)
     const unsubscribe = storeRepository.subscribeCloud((cloudData) => {
-      setStoreData(cloudData);
+      if (cloudData) {
+        setStoreData(cloudData);
+      }
     });
 
     return () => unsubscribe();

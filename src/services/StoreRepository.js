@@ -71,6 +71,28 @@ export class StoreRepository {
     }
   }
 
+  // Ambil langsung dari Firestore secara aktif (bypass cache lokal)
+  async fetchCloud() {
+    const db = getFirestoreDb();
+    if (!db) return null;
+    try {
+      const storeRef = doc(db, 'settings', 'store');
+      const snap = await getDoc(storeRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data && data.sections) {
+          try {
+            localStorage.setItem(this.storageKey, JSON.stringify(data));
+          } catch (e) {}
+          return this.parseStoreData(data);
+        }
+      }
+    } catch (e) {
+      console.warn("fetchCloud error:", e);
+    }
+    return null;
+  }
+
   // Subscribe ke update Firestore secara realtime
   subscribeCloud(onUpdate) {
     const db = getFirestoreDb();

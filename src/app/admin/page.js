@@ -49,8 +49,14 @@ export default function AdminPage() {
     const local = storeRepository.loadLocal();
     setStoreData(local);
 
+    storeRepository.fetchCloud().then((cloud) => {
+      if (cloud && !isDirty) {
+        setStoreData(cloud);
+      }
+    });
+
     const unsub = storeRepository.subscribeCloud((cloud) => {
-      if (!isDirty) {
+      if (cloud && !isDirty) {
         setStoreData(cloud);
       }
     });
