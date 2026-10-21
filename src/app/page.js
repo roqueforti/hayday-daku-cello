@@ -189,25 +189,51 @@ export default function StorePage() {
           </div>
         )}
 
-        {/* Sticky Horizontal Category Pills Navigation Bar */}
+        {/* Sticky Category Navigation: Mobile Custom Dropdown & Desktop Horizontal Pills */}
         <nav className="cat-nav-sticky" aria-label="Kategori Produk">
-          <button
-            type="button"
-            className={`cat-pill ${activeCategory === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('all')}
-          >
-            🌾 Semua Kategori
-          </button>
-          {storeData.sections.map((sec, idx) => (
+          {/* Mobile Category Dropdown Selector */}
+          <div className="cat-dropdown-mobile">
+            <label htmlFor="cat-mobile-select" className="cat-dropdown-label">
+              Pilih Kategori:
+            </label>
+            <div className="cat-select-wrapper">
+              <select
+                id="cat-mobile-select"
+                className="cat-select"
+                value={activeCategory}
+                onChange={(e) => setActiveCategory(e.target.value)}
+              >
+                <option value="all">🌾 Semua Kategori ({storeData.sections.reduce((acc, s) => acc + s.items.length, 0)} produk)</option>
+                {storeData.sections.map((sec, idx) => (
+                  <option key={idx} value={String(idx)}>
+                    {sec.title} ({sec.items.length} produk)
+                  </option>
+                ))}
+              </select>
+              <span className="cat-select-arrow">▼</span>
+            </div>
+          </div>
+
+          {/* Desktop / Tablet Horizontal Category Pills */}
+          <div className="cat-pills-desktop">
             <button
-              key={idx}
               type="button"
-              className={`cat-pill ${String(activeCategory) === String(idx) ? 'active' : ''}`}
-              onClick={() => setActiveCategory(idx)}
+              className={`cat-pill ${activeCategory === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveCategory('all')}
             >
-              {sec.title}
+              🌾 Semua Kategori
             </button>
-          ))}
+            {storeData.sections.map((sec, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`cat-pill ${String(activeCategory) === String(idx) ? 'active' : ''}`}
+                onClick={() => setActiveCategory(String(idx))}
+              >
+                {sec.title}
+              </button>
+            ))}
+          </div>
         </nav>
 
         {/* Main 2-Column Store Layout: Left Catalog, Right Sticky Barn Receipt */}
@@ -774,29 +800,96 @@ export default function StorePage() {
           font-size: 24px;
         }
 
-        /* Category Nav Sticky */
+        /* Sticky Category Navigation */
         .cat-nav-sticky {
           position: sticky;
           top: 12px;
           z-index: 20;
-          background: rgba(255, 250, 240, 0.95);
+          background: rgba(255, 250, 240, 0.96);
           backdrop-filter: blur(10px);
           border: 3px solid var(--line);
-          border-radius: 20px;
+          border-radius: 18px;
           padding: 8px 12px;
           margin: 16px 0 20px;
-          box-shadow: 0 6px 0 var(--line), 0 10px 22px rgba(60, 30, 5, 0.2);
+          box-shadow: 0 5px 0 var(--line), 0 10px 22px rgba(60, 30, 5, 0.2);
+        }
+
+        /* Mobile Dropdown Styling */
+        .cat-dropdown-mobile {
           display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+        }
+
+        .cat-dropdown-label {
+          font-family: 'Fredoka', 'Nunito', sans-serif;
+          font-size: 13.5px;
+          font-weight: 700;
+          color: #4a2709;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        .cat-select-wrapper {
+          position: relative;
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+
+        .cat-select {
+          width: 100%;
+          height: 40px !important;
+          background: #ffffff !important;
+          border: 2px solid #9e6427 !important;
+          border-radius: 12px !important;
+          padding: 0 34px 0 12px !important;
+          font-family: 'Fredoka', 'Nunito', sans-serif !important;
+          font-size: 14px !important;
+          font-weight: 700 !important;
+          color: #381e09 !important;
+          box-shadow: 0 2px 0 #734515 !important;
+          appearance: none;
+          -webkit-appearance: none;
+          cursor: pointer;
+        }
+        .cat-select:focus {
+          border-color: #2da323 !important;
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(45, 163, 35, 0.25) !important;
+        }
+
+        .cat-select-arrow {
+          position: absolute;
+          right: 12px;
+          font-size: 11px;
+          color: #734515;
+          pointer-events: none;
+        }
+
+        /* Desktop Horizontal Pills */
+        .cat-pills-desktop {
+          display: none;
           align-items: center;
           gap: 8px;
           overflow-x: auto;
           white-space: nowrap;
-          -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
         }
-        .cat-nav-sticky::-webkit-scrollbar {
+        .cat-pills-desktop::-webkit-scrollbar {
           display: none;
         }
+
+        @media (min-width: 768px) {
+          .cat-dropdown-mobile {
+            display: none;
+          }
+          .cat-pills-desktop {
+            display: flex;
+          }
+        }
+
         .cat-pill {
           display: inline-flex;
           align-items: center;
