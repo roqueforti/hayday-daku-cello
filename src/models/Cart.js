@@ -89,7 +89,7 @@ export class Cart {
       res += "📝 *Catatan:* " + note.trim() + "\n━━━━━━━━━━━━━━━━━\n";
     }
 
-    res += "Mohon diproses ya kak, terima kasih! 🌻";
+    res += "Mohon diproses ya kak, terima kasih! 🌻\n\nJangan lupa kirim *TAGARMU*";
     return res;
   }
 }
