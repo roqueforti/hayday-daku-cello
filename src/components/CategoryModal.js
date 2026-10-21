@@ -36,7 +36,7 @@ export function CategoryModal({
     }}>
       <div className="modal-card">
         <div className="modal-title">
-          <span>{isEditing ? '✏️ Edit Kategori' : '📁 Buat Kategori Baru'}</span>
+          <span>{isEditing ? 'Edit Kategori' : 'Tambah Kategori Baru'}</span>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <p style={{ margin: '0 0 14px', fontSize: '13px', color: 'var(--text-muted)' }}>
@@ -50,7 +50,7 @@ export function CategoryModal({
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Contoh: 🌾 Hasil Tani, 🥛 Olahan Susu..."
+              placeholder="Contoh: Hasil Tani, Olahan Susu..."
               required
               autoFocus
             />
@@ -61,7 +61,7 @@ export function CategoryModal({
               Batal
             </button>
             <button type="submit" className="btn btn-primary">
-              ✓ {isEditing ? 'Simpan Kategori' : 'Tambahkan Kategori'}
+              {isEditing ? 'Simpan Perubahan' : 'Tambahkan Kategori'}
             </button>
           </div>
         </form>

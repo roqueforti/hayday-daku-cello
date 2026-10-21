@@ -159,10 +159,10 @@ export function ItemModal({
                       className="btn btn-default btn-sm"
                       onClick={() => setIsIconPickerOpen(true)}
                     >
-                      🎨 Pilih Icon Resmi
+                      Pilih Icon
                     </button>
                     <label className="btn btn-default btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
-                      📸 Upload Gambar
+                      Upload Gambar
                       <input
                         type="file"
                         accept="image/*"
@@ -265,7 +265,7 @@ export function ItemModal({
                 Batal
               </button>
               <button type="submit" className="btn btn-primary">
-                ✓ {isEditing ? 'Simpan Perubahan' : 'Tambahkan Item'}
+                {isEditing ? 'Simpan Perubahan' : 'Tambahkan Item'}
               </button>
             </div>
           </form>

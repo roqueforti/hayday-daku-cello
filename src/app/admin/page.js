@@ -427,16 +427,18 @@ export default function AdminPage() {
             </div>
           </div>
           <div className="mobile-header-actions">
-            <Link href="/" className="app-header-icon-btn" title="Lihat Toko">
-              👁️
+            <Link href="/" className="app-header-btn view-shop-btn" title="Lihat Toko">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Lihat Toko</span>
             </Link>
             <button
               type="button"
-              className="app-header-icon-btn"
+              className="app-header-btn logout-btn"
               onClick={handleLogout}
-              title="Keluar"
+              title="Keluar dari Admin"
             >
-              🚪
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <span>Keluar</span>
             </button>
           </div>
         </div>
@@ -530,11 +532,11 @@ export default function AdminPage() {
                     <div className="cat-actions-wrap">
                       <button
                         type="button"
-                        className="cat-pill-btn"
+                        className="cat-pill-btn edit-cat-pill"
                         onClick={() => openEditCategoryModal(sIdx)}
                         title="Edit nama kategori"
                       >
-                        ✏️
+                        Edit
                       </button>
                       <button
                         type="button"
@@ -550,7 +552,7 @@ export default function AdminPage() {
                         onClick={() => promptDeleteCategory(sIdx)}
                         title="Hapus kategori"
                       >
-                        🗑️
+                        Hapus
                       </button>
                     </div>
                   </div>
@@ -575,7 +577,7 @@ export default function AdminPage() {
                               <div
                                 className="card-icon-container"
                                 onClick={() => openEditItemModal(sIdx, actualIdx)}
-                                style={{ borderColor: prod.color || '#e2e8f0' }}
+                                style={{ borderColor: prod.color || '#ebdcc8' }}
                               >
                                 {prod.icons && prod.icons.length > 1 ? (
                                   <div className="bundle-icons-grid">
@@ -592,21 +594,21 @@ export default function AdminPage() {
                               <div className="card-quick-actions">
                                 <button
                                   type="button"
-                                  className="card-action-icon-btn edit-icon"
+                                  className="card-action-btn edit-btn"
                                   onClick={() => openEditItemModal(sIdx, actualIdx)}
                                   title="Edit Produk"
                                   aria-label="Edit Produk"
                                 >
-                                  ✏️
+                                  Edit
                                 </button>
                                 <button
                                   type="button"
-                                  className="card-action-icon-btn del-icon"
+                                  className="card-action-btn del-btn"
                                   onClick={() => promptDeleteItem(sIdx, actualIdx)}
                                   title="Hapus Produk"
                                   aria-label="Hapus Produk"
                                 >
-                                  🗑️
+                                  Hapus
                                 </button>
                               </div>
                             </div>
@@ -639,7 +641,7 @@ export default function AdminPage() {
         {mobileTab === 'settings' && (
           <div className="mobile-settings-view">
             <div className="app-card-panel">
-              <h2 className="section-heading">⚙️ Kontak & Catatan Toko</h2>
+              <h2 className="section-heading">Kontak & Catatan Toko</h2>
               <p className="section-subtext">Nomor WhatsApp tujuan order dan pesan footer di nota pesanan.</p>
 
               <div className="app-input-group">
@@ -673,7 +675,7 @@ export default function AdminPage() {
             </div>
 
             <div className="app-card-panel" style={{ marginTop: '14px' }}>
-              <h2 className="section-heading">📋 Informasi Katalog</h2>
+              <h2 className="section-heading">Informasi Katalog</h2>
               <div className="app-stats-row">
                 <div className="stat-card">
                   <span className="stat-number">{storeData.sections.length}</span>
@@ -692,8 +694,8 @@ export default function AdminPage() {
         {mobileTab === 'tools' && (
           <div className="mobile-tools-view">
             <div className="app-card-panel">
-              <h2 className="section-heading">📊 Backup & Kelola Excel</h2>
-              <p className="section-subtext">Unduh seluruh data produk ke file Excel atau upload data dari komputer.</p>
+              <h2 className="section-heading">Backup & Kelola Data Excel</h2>
+              <p className="section-subtext">Unduh seluruh data produk ke file Excel atau upload data dari file spreadsheet.</p>
 
               <div className="tools-btn-stack">
                 <button
@@ -701,7 +703,9 @@ export default function AdminPage() {
                   className="app-big-tool-btn primary"
                   onClick={handleExportExcel}
                 >
-                  <span className="tool-icon">📊</span>
+                  <div className="tool-indicator primary-indicator">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </div>
                   <div className="tool-info">
                     <span className="tool-title">Export ke Excel (.xlsx)</span>
                     <span className="tool-desc">Download backup seluruh produk dan harga</span>
@@ -709,7 +713,9 @@ export default function AdminPage() {
                 </button>
 
                 <label className="app-big-tool-btn secondary" style={{ cursor: 'pointer' }}>
-                  <span className="tool-icon">📥</span>
+                  <div className="tool-indicator secondary-indicator">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  </div>
                   <div className="tool-info">
                     <span className="tool-title">Import dari Excel</span>
                     <span className="tool-desc">Upload dan perbarui katalog otomatis</span>
@@ -727,7 +733,9 @@ export default function AdminPage() {
                   className="app-big-tool-btn danger"
                   onClick={handleLogout}
                 >
-                  <span className="tool-icon">🚪</span>
+                  <div className="tool-indicator danger-indicator">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  </div>
                   <div className="tool-info">
                     <span className="tool-title">Keluar dari Admin</span>
                     <span className="tool-desc">Kunci kembali akses portal administrator</span>
@@ -751,7 +759,7 @@ export default function AdminPage() {
             className="save-banner-btn"
             onClick={handleSaveAll}
           >
-            💾 Simpan Sekarang
+            Simpan Perubahan
           </button>
         </div>
       )}
@@ -763,7 +771,7 @@ export default function AdminPage() {
           className={`nav-tab-item ${mobileTab === 'catalog' ? 'active' : ''}`}
           onClick={() => setMobileTab('catalog')}
         >
-          <span className="nav-tab-icon">📦</span>
+          <svg className="nav-tab-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
           <span className="nav-tab-label">Katalog</span>
         </button>
 
@@ -784,7 +792,7 @@ export default function AdminPage() {
           className={`nav-tab-item ${mobileTab === 'settings' ? 'active' : ''}`}
           onClick={() => setMobileTab('settings')}
         >
-          <span className="nav-tab-icon">⚙️</span>
+          <svg className="nav-tab-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           <span className="nav-tab-label">Pengaturan</span>
         </button>
 
@@ -793,7 +801,7 @@ export default function AdminPage() {
           className={`nav-tab-item ${mobileTab === 'tools' ? 'active' : ''}`}
           onClick={() => setMobileTab('tools')}
         >
-          <span className="nav-tab-icon">📊</span>
+          <svg className="nav-tab-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           <span className="nav-tab-label">Excel</span>
         </button>
       </nav>
@@ -833,12 +841,12 @@ export default function AdminPage() {
       <div className={`toast ${toastMessage ? 's' : ''}`}>{toastMessage}</div>
 
       <style jsx>{`
-        /* Native Mobile App Style Theme */
+        /* Hay Day Farm Theme for Mobile Admin */
         .admin-app-wrap {
           min-height: 100vh;
-          background: #f8fafc;
+          background: #fdfaf4;
           font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-          color: #1e293b;
+          color: var(--text-primary);
           padding-bottom: 95px; /* space for bottom tab bar */
         }
 
@@ -848,9 +856,9 @@ export default function AdminPage() {
           top: 0;
           z-index: 40;
           background: #ffffff;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-          border-bottom: 1px solid #e2e8f0;
-          padding: 12px 16px 8px;
+          box-shadow: 0 3px 12px rgba(110, 74, 37, 0.08);
+          border-bottom: 2px solid var(--border-subtle);
+          padding: 12px 16px 10px;
         }
 
         .mobile-header-top {
@@ -871,8 +879,8 @@ export default function AdminPage() {
           height: 42px;
           border-radius: 12px;
           object-fit: cover;
-          border: 1.5px solid #e2e8f0;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+          border: 1.5px solid var(--border-subtle);
+          box-shadow: 0 2px 5px rgba(110, 74, 37, 0.12);
         }
 
         .app-title-group {
@@ -883,16 +891,17 @@ export default function AdminPage() {
         .app-name {
           font-size: 16px;
           font-weight: 800;
-          color: #0f172a;
+          color: var(--text-primary);
           line-height: 1.2;
         }
 
         .app-badge {
           font-size: 11px;
           font-weight: 700;
-          color: #166534;
-          background: #dcfce7;
-          padding: 1px 7px;
+          color: #277220;
+          background: #eef8eb;
+          border: 1px solid #c2ebba;
+          padding: 1px 8px;
           border-radius: 999px;
           display: inline-block;
           margin-top: 2px;
@@ -904,23 +913,37 @@ export default function AdminPage() {
           gap: 8px;
         }
 
-        .app-header-icon-btn {
-          width: 38px;
-          height: 38px;
-          border-radius: 10px;
-          background: #f1f5f9;
-          border: 1px solid #e2e8f0;
-          display: flex;
+        .app-header-btn {
+          display: inline-flex;
           align-items: center;
-          justify-content: center;
-          font-size: 17px;
+          gap: 5px;
+          height: 36px;
+          padding: 0 12px;
+          border-radius: 10px;
+          font-size: 12.5px;
+          font-weight: 700;
           cursor: pointer;
           text-decoration: none;
-          color: inherit;
-          transition: background 0.15s;
+          transition: all 0.15s ease;
+          border: 1.5px solid transparent;
         }
-        .app-header-icon-btn:active {
-          background: #e2e8f0;
+
+        .view-shop-btn {
+          background: #eff6ff;
+          color: #1d4ed8;
+          border-color: #bfdbfe;
+        }
+        .view-shop-btn:active {
+          background: #dbeafe;
+        }
+
+        .logout-btn {
+          background: #fef2f2;
+          color: #b91c1c;
+          border-color: #fecaca;
+        }
+        .logout-btn:active {
+          background: #fee2e2;
         }
 
         /* Mobile Search Bar */
@@ -934,28 +957,28 @@ export default function AdminPage() {
         .mobile-search-icon {
           position: absolute;
           left: 12px;
-          font-size: 15px;
-          color: #94a3b8;
+          font-size: 14px;
+          color: var(--text-muted);
           pointer-events: none;
         }
 
         .mobile-search-input {
           width: 100%;
-          height: 42px;
-          background: #f1f5f9;
-          border: 1.5px solid transparent;
+          height: 40px;
+          background: #fbf8f2;
+          border: 1.5px solid var(--border-subtle);
           border-radius: 12px;
           padding: 0 36px 0 36px;
-          font-size: 14.5px;
+          font-size: 14px;
           font-family: inherit;
-          color: #1e293b;
+          color: var(--text-primary);
           outline: none;
           transition: all 0.2s;
         }
         .mobile-search-input:focus {
           background: #ffffff;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(70, 178, 60, 0.18);
         }
 
         .mobile-search-clear {
@@ -964,8 +987,8 @@ export default function AdminPage() {
           width: 22px;
           height: 22px;
           border-radius: 50%;
-          background: #cbd5e1;
-          color: #475569;
+          background: #ebdcc8;
+          color: var(--text-secondary);
           border: none;
           display: flex;
           align-items: center;
@@ -988,27 +1011,26 @@ export default function AdminPage() {
         }
 
         .cat-chip {
-          padding: 7px 14px;
+          padding: 6px 13px;
           border-radius: 999px;
-          border: 1.5px solid #e2e8f0;
-          background: #f8fafc;
-          font-size: 13.5px;
+          border: 1.5px solid var(--border-subtle);
+          background: #ffffff;
+          font-size: 13px;
           font-weight: 700;
-          color: #475569;
+          color: var(--text-secondary);
           cursor: pointer;
           flex-shrink: 0;
           transition: all 0.15s;
         }
         .cat-chip.active {
-          background: #22c55e;
-          border-color: #16a34a;
+          background: linear-gradient(180deg, #52c748 0%, #3ca032 100%);
+          border-color: #2b7a23;
           color: #ffffff;
-          box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+          box-shadow: 0 2px 6px rgba(43, 122, 35, 0.3);
         }
         .cat-chip.add-chip {
-          border-style: dashed;
-          color: #2563eb;
-          border-color: #93c5fd;
+          border: 1.5px dashed #2e7ee6;
+          color: #1d4ed8;
           background: #eff6ff;
         }
 
@@ -1038,16 +1060,16 @@ export default function AdminPage() {
         }
 
         .cat-title-text {
-          font-size: 17px;
+          font-size: 16.5px;
           font-weight: 800;
-          color: #0f172a;
+          color: var(--text-primary);
         }
 
         .cat-count-pill {
-          font-size: 11.5px;
+          font-size: 11px;
           font-weight: 700;
-          background: #e2e8f0;
-          color: #475569;
+          background: #f0e6d6;
+          color: var(--text-secondary);
           padding: 2px 8px;
           border-radius: 999px;
         }
@@ -1058,27 +1080,41 @@ export default function AdminPage() {
         }
 
         .cat-pill-btn {
-          border: 1px solid #e2e8f0;
+          border: 1.5px solid var(--border-subtle);
           background: #ffffff;
           padding: 4px 10px;
           border-radius: 8px;
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 700;
-          color: #475569;
           cursor: pointer;
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          gap: 4px;
+          justify-content: center;
+          transition: all 0.15s;
+        }
+        .cat-pill-btn.edit-cat-pill {
+          background: #f8fafc;
+          border-color: #cbd5e1;
+          color: #334155;
+        }
+        .cat-pill-btn.edit-cat-pill:active {
+          background: #e2e8f0;
         }
         .cat-pill-btn.add-item-pill {
-          background: #f0fdf4;
-          border-color: #bbf7d0;
-          color: #166534;
+          background: #eef8eb;
+          border-color: #9cdb93;
+          color: #277220;
+        }
+        .cat-pill-btn.add-item-pill:active {
+          background: #dbf3d4;
         }
         .cat-pill-btn.del-pill {
           background: #fef2f2;
           border-color: #fecaca;
-          color: #991b1b;
+          color: #b91c1c;
+        }
+        .cat-pill-btn.del-pill:active {
+          background: #fee2e2;
         }
 
         /* 2-Column Mobile Cards Grid */
@@ -1097,15 +1133,15 @@ export default function AdminPage() {
         .app-product-card {
           background: #ffffff;
           border-radius: 16px;
-          border: 1.5px solid #e2e8f0;
+          border: 1.5px solid var(--border-subtle);
           padding: 12px;
           display: flex;
           flex-direction: column;
-          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+          box-shadow: 0 3px 8px rgba(110, 74, 37, 0.05);
           transition: transform 0.12s, box-shadow 0.12s;
         }
         .app-product-card:active {
-          transform: scale(0.98);
+          transform: scale(0.985);
         }
 
         .card-top-row {
@@ -1119,13 +1155,13 @@ export default function AdminPage() {
           width: 58px;
           height: 58px;
           border-radius: 14px;
-          background: #f8fafc;
-          border: 2px solid #e2e8f0;
+          background: #fffaee;
+          border: 2px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+          box-shadow: inset 0 2px 4px rgba(110, 74, 37, 0.05);
           flex-shrink: 0;
         }
         .card-icon-container img {
@@ -1149,29 +1185,33 @@ export default function AdminPage() {
 
         .card-quick-actions {
           display: flex;
-          gap: 6px;
+          gap: 5px;
         }
 
-        .card-action-icon-btn {
-          width: 34px;
-          height: 34px;
-          border-radius: 9px;
-          border: 1px solid #e2e8f0;
-          background: #ffffff;
-          font-size: 15px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        .card-action-btn {
+          padding: 4px 8px;
+          border-radius: 7px;
+          font-size: 11.5px;
+          font-weight: 700;
           cursor: pointer;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+          border: 1.5px solid transparent;
+          transition: all 0.12s;
         }
-        .card-action-icon-btn.edit-icon:active {
+        .card-action-btn.edit-btn {
           background: #eff6ff;
-          border-color: #3b82f6;
+          border-color: #bfdbfe;
+          color: #1d4ed8;
         }
-        .card-action-icon-btn.del-icon:active {
+        .card-action-btn.edit-btn:active {
+          background: #dbeafe;
+        }
+        .card-action-btn.del-btn {
           background: #fef2f2;
-          border-color: #ef4444;
+          border-color: #fecaca;
+          color: #b91c1c;
+        }
+        .card-action-btn.del-btn:active {
+          background: #fee2e2;
         }
 
         .card-content-area {
@@ -1183,9 +1223,9 @@ export default function AdminPage() {
         }
 
         .card-item-title {
-          font-size: 16px;
+          font-size: 15px;
           font-weight: 800;
-          color: #0f172a;
+          color: var(--text-primary);
           line-height: 1.25;
           margin-bottom: 2px;
           display: -webkit-box;
@@ -1195,27 +1235,27 @@ export default function AdminPage() {
         }
 
         .card-item-unit {
-          font-size: 13.5px;
+          font-size: 12px;
           font-weight: 700;
-          color: #64748b;
-          background: #f1f5f9;
-          padding: 3px 8px;
+          color: var(--text-secondary);
+          background: #f5eedf;
+          padding: 2px 7px;
           border-radius: 6px;
           display: inline-block;
           align-self: flex-start;
         }
 
         .card-item-price {
-          font-size: 17px;
+          font-size: 16px;
           font-weight: 900;
-          color: #166534;
+          color: #277220;
           font-family: 'JetBrains Mono', monospace;
           margin-top: 4px;
         }
 
         .card-item-note {
-          font-size: 12.5px;
-          color: #94a3b8;
+          font-size: 12px;
+          color: var(--text-muted);
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
@@ -1229,31 +1269,31 @@ export default function AdminPage() {
           padding: 24px;
           text-align: center;
           background: #ffffff;
-          border: 1.5px dashed #cbd5e1;
+          border: 1.5px dashed var(--border-subtle);
           border-radius: 12px;
-          color: #64748b;
-          font-size: 14.5px;
+          color: var(--text-muted);
+          font-size: 14px;
         }
 
         /* App Card Panels for Settings & Tools */
         .app-card-panel {
           background: #ffffff;
           border-radius: 18px;
-          border: 1.5px solid #e2e8f0;
+          border: 1.5px solid var(--border-subtle);
           padding: 20px 18px;
-          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
+          box-shadow: 0 4px 12px rgba(110, 74, 37, 0.05);
         }
 
         .section-heading {
-          font-size: 18px;
+          font-size: 17px;
           font-weight: 800;
-          color: #0f172a;
+          color: var(--text-primary);
           margin: 0 0 4px;
         }
 
         .section-subtext {
-          font-size: 13.5px;
-          color: #64748b;
+          font-size: 13px;
+          color: var(--text-muted);
           margin: 0 0 16px;
         }
 
@@ -1264,32 +1304,32 @@ export default function AdminPage() {
         }
 
         .app-label {
-          font-size: 14px;
+          font-size: 13.5px;
           font-weight: 700;
-          color: #334155;
+          color: var(--text-secondary);
         }
 
         .app-text-input {
           width: 100%;
-          border: 1.5px solid #cbd5e1;
+          border: 1.5px solid var(--border-subtle);
           border-radius: 12px;
           padding: 10px 14px;
-          font-size: 15px;
+          font-size: 14.5px;
           font-family: inherit;
-          color: #0f172a;
-          background: #f8fafc;
+          color: var(--text-primary);
+          background: #fdfaf4;
           outline: none;
           transition: all 0.2s;
         }
         .app-text-input:focus {
           background: #ffffff;
-          border-color: #22c55e;
-          box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(70, 178, 60, 0.18);
         }
 
         .app-helper-text {
           font-size: 12px;
-          color: #94a3b8;
+          color: var(--text-muted);
         }
 
         .app-stats-row {
@@ -1299,8 +1339,8 @@ export default function AdminPage() {
         }
 
         .stat-card {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          background: #fdfaf4;
+          border: 1.5px solid var(--border-subtle);
           border-radius: 14px;
           padding: 14px;
           display: flex;
@@ -1312,13 +1352,13 @@ export default function AdminPage() {
         .stat-number {
           font-size: 26px;
           font-weight: 900;
-          color: #16a34a;
+          color: #277220;
         }
 
         .stat-label {
-          font-size: 13px;
+          font-size: 12.5px;
           font-weight: 700;
-          color: #64748b;
+          color: var(--text-secondary);
           margin-top: 2px;
         }
 
@@ -1335,20 +1375,40 @@ export default function AdminPage() {
           gap: 14px;
           padding: 14px 16px;
           border-radius: 14px;
-          border: 1.5px solid #e2e8f0;
+          border: 1.5px solid var(--border-subtle);
           background: #ffffff;
           cursor: pointer;
           text-align: left;
           transition: all 0.15s;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+          box-shadow: 0 2px 6px rgba(110, 74, 37, 0.04);
         }
         .app-big-tool-btn:active {
           transform: scale(0.99);
         }
 
-        .app-big-tool-btn .tool-icon {
-          font-size: 28px;
+        .tool-indicator {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           flex-shrink: 0;
+        }
+        .primary-indicator {
+          background: #eef8eb;
+          color: #277220;
+          border: 1.5px solid #c2ebba;
+        }
+        .secondary-indicator {
+          background: #eff6ff;
+          color: #1d4ed8;
+          border: 1.5px solid #bfdbfe;
+        }
+        .danger-indicator {
+          background: #fef2f2;
+          color: #b91c1c;
+          border: 1.5px solid #fecaca;
         }
 
         .app-big-tool-btn .tool-info {
@@ -1357,31 +1417,39 @@ export default function AdminPage() {
         }
 
         .app-big-tool-btn .tool-title {
-          font-size: 15.5px;
+          font-size: 15px;
           font-weight: 800;
-          color: #0f172a;
+          color: var(--text-primary);
         }
 
         .app-big-tool-btn .tool-desc {
-          font-size: 12.5px;
-          color: #64748b;
+          font-size: 12px;
+          color: var(--text-muted);
           margin-top: 2px;
         }
 
         .app-big-tool-btn.primary {
-          border-color: #bbf7d0;
-          background: #f0fdf4;
+          border-color: #c2ebba;
+          background: #fbfdfa;
         }
         .app-big-tool-btn.primary .tool-title {
-          color: #166534;
+          color: #277220;
+        }
+
+        .app-big-tool-btn.secondary {
+          border-color: #bfdbfe;
+          background: #fafdff;
+        }
+        .app-big-tool-btn.secondary .tool-title {
+          color: #1d4ed8;
         }
 
         .app-big-tool-btn.danger {
           border-color: #fecaca;
-          background: #fef2f2;
+          background: #fffbfb;
         }
         .app-big-tool-btn.danger .tool-title {
-          color: #991b1b;
+          color: #b91c1c;
         }
 
         /* Floating Save Banner */
@@ -1392,7 +1460,7 @@ export default function AdminPage() {
           right: 14px;
           max-width: 600px;
           margin: 0 auto;
-          background: #0f172a;
+          background: #381e09;
           color: #ffffff;
           padding: 10px 14px;
           border-radius: 14px;
@@ -1400,7 +1468,7 @@ export default function AdminPage() {
           align-items: center;
           justify-content: space-between;
           z-index: 55;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 8px 24px rgba(56, 30, 9, 0.35);
           animation: slideUp 0.2s ease-out;
         }
 
@@ -1413,7 +1481,7 @@ export default function AdminPage() {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 13.5px;
+          font-size: 13px;
           font-weight: 700;
         }
 
@@ -1426,17 +1494,18 @@ export default function AdminPage() {
         }
 
         .save-banner-btn {
-          background: #22c55e;
+          background: linear-gradient(180deg, #52c748 0%, #3ca032 100%);
           color: #ffffff;
-          border: none;
-          padding: 7px 14px;
+          border: 1.5px solid #2b7a23;
+          padding: 7px 15px;
           border-radius: 9px;
-          font-size: 13.5px;
+          font-size: 13px;
           font-weight: 800;
           cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         .save-banner-btn:active {
-          background: #16a34a;
+          transform: translateY(1px);
         }
 
         /* Mobile Bottom App Navigation Bar */
@@ -1445,15 +1514,15 @@ export default function AdminPage() {
           bottom: 0;
           left: 0;
           right: 0;
-          height: 66px;
+          height: 64px;
           background: #ffffff;
-          border-top: 1.5px solid #e2e8f0;
+          border-top: 1.5px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: space-around;
           padding: 0 16px env(safe-area-inset-bottom, 0px);
           z-index: 50;
-          box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 -4px 14px rgba(110, 74, 37, 0.08);
         }
 
         .nav-tab-item {
@@ -1464,7 +1533,7 @@ export default function AdminPage() {
           justify-content: center;
           background: none;
           border: none;
-          color: #64748b;
+          color: var(--text-muted);
           font-family: inherit;
           cursor: pointer;
           padding: 6px 0;
@@ -1472,32 +1541,35 @@ export default function AdminPage() {
           transition: all 0.15s;
         }
         .nav-tab-item.active {
-          color: #16a34a;
+          color: var(--primary);
         }
 
-        .nav-tab-icon {
-          font-size: 20px;
+        .nav-tab-svg {
+          transition: transform 0.15s;
+        }
+        .nav-tab-item.active .nav-tab-svg {
+          transform: scale(1.1);
         }
 
         .nav-tab-label {
-          font-size: 11.5px;
+          font-size: 11px;
           font-weight: 700;
         }
 
         /* Floating Center Action Button (FAB) */
         .nav-fab-btn {
-          width: 52px;
-          height: 52px;
+          width: 50px;
+          height: 50px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #22c55e, #16a34a);
+          background: linear-gradient(180deg, #52c748 0%, #3ca032 100%);
           border: 3px solid #ffffff;
-          box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4);
+          box-shadow: 0 4px 12px rgba(43, 122, 35, 0.45);
           display: flex;
           align-items: center;
           justify-content: center;
           color: #ffffff;
           cursor: pointer;
-          margin-top: -24px;
+          margin-top: -22px;
           transition: transform 0.15s;
         }
         .nav-fab-btn:active {
@@ -1505,7 +1577,7 @@ export default function AdminPage() {
         }
 
         .fab-plus {
-          font-size: 30px;
+          font-size: 28px;
           font-weight: 700;
           line-height: 1;
           margin-top: -2px;

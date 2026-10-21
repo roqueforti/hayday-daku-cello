@@ -60,7 +60,7 @@ export function IconPickerModal({
     }}>
       <div className="modal-card">
         <div className="modal-title">
-          <span>{isPackage ? '📦 Pilih Icon Paket (Bisa Pilih Beberapa)' : '🎨 Pilih Icon Produk'}</span>
+          <span>{isPackage ? 'Pilih Icon Paket (Maks. 4)' : 'Pilih Icon Produk'}</span>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <p style={{ margin: '0 0 12px', fontSize: '13px', color: 'var(--text-muted)' }}>
@@ -92,7 +92,7 @@ export function IconPickerModal({
               onClick={handleSaveBundle}
               style={{ padding: '6px 14px', fontWeight: 700 }}
             >
-              ✓ Selesai & Simpan Icon
+              Simpan Pilihan Icon
             </button>
           </div>
         )}
