@@ -427,17 +427,17 @@ export default function AdminPage() {
             </div>
           </div>
           <div className="mobile-header-actions">
-            <Link href="/" className="app-header-btn view-shop-btn" title="Lihat Toko">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <Link href="/" className="app-btn-top shop-link" title="Lihat Toko">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               <span>Lihat Toko</span>
             </Link>
             <button
               type="button"
-              className="app-header-btn logout-btn"
+              className="app-btn-top logout-link"
               onClick={handleLogout}
               title="Keluar dari Admin"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               <span>Keluar</span>
             </button>
           </div>
@@ -536,7 +536,7 @@ export default function AdminPage() {
                         onClick={() => openEditCategoryModal(sIdx)}
                         title="Edit nama kategori"
                       >
-                        Edit Kategori
+                        Edit
                       </button>
                       <button
                         type="button"
@@ -544,7 +544,7 @@ export default function AdminPage() {
                         onClick={() => openAddItemModal(sIdx)}
                         title="Tambah produk"
                       >
-                        + Tambah Item
+                        + Item
                       </button>
                       <button
                         type="button"
@@ -916,40 +916,42 @@ export default function AdminPage() {
 
         .mobile-header-actions {
           display: flex;
-          gap: 8px;
+          align-items: center;
+          gap: 6px;
         }
 
-        .app-header-btn {
+        .app-btn-top {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          height: 36px;
-          padding: 0 12px;
+          height: 34px;
+          padding: 0 10px;
           border-radius: 10px;
-          font-size: 12.5px;
-          font-weight: 700;
+          font-family: inherit;
+          font-size: 12px;
+          font-weight: 800;
           cursor: pointer;
-          text-decoration: none;
-          transition: all 0.15s ease;
+          text-decoration: none !important;
+          white-space: nowrap;
+          transition: all 0.12s ease;
           border: 1.5px solid transparent;
+          line-height: 1;
+        }
+        .app-btn-top:active {
+          transform: translateY(1px);
         }
 
-        .view-shop-btn {
-          background: #eff6ff;
-          color: #1d4ed8;
-          border-color: #bfdbfe;
+        .shop-link {
+          background: #ffffff;
+          color: #1d4ed8 !important;
+          border: 2px solid #93c5fd;
+          box-shadow: 0 2px 0 #93c5fd;
         }
-        .view-shop-btn:active {
-          background: #dbeafe;
-        }
-
-        .logout-btn {
-          background: #fef2f2;
-          color: #b91c1c;
-          border-color: #fecaca;
-        }
-        .logout-btn:active {
-          background: #fee2e2;
+        .logout-link {
+          background: #fff5f5;
+          color: #dc2626 !important;
+          border: 2px solid #fca5a5;
+          box-shadow: 0 2px 0 #fca5a5;
         }
 
         /* Mobile Search Bar */
@@ -1054,11 +1056,10 @@ export default function AdminPage() {
 
         .hayday-category-banner {
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          justify-content: space-between;
           margin-bottom: 12px;
-          gap: 10px;
-          flex-wrap: wrap;
+          gap: 8px;
         }
 
         .cat-wood-sign {
@@ -1070,11 +1071,12 @@ export default function AdminPage() {
           border-radius: 14px;
           padding: 6px 14px;
           box-shadow: 0 3px 0 #4a2406, 0 5px 10px rgba(74, 36, 6, 0.2);
+          flex-shrink: 0;
         }
 
         .cat-wood-title {
           font-family: 'Fredoka', 'Lilita One', sans-serif;
-          font-size: 16px;
+          font-size: 15px;
           font-weight: 700;
           color: #ffffff;
           letter-spacing: 0.3px;
@@ -1092,22 +1094,24 @@ export default function AdminPage() {
 
         .cat-banner-actions {
           display: flex;
+          align-items: center;
           gap: 6px;
-          flex-wrap: wrap;
         }
 
         .cat-wood-btn {
+          height: 32px;
           border-radius: 9px;
           font-family: inherit;
           font-size: 12px;
           font-weight: 800;
-          padding: 6px 11px;
+          padding: 0 10px;
           cursor: pointer;
           border: 2px solid transparent;
           transition: all 0.12s ease;
           display: inline-flex;
           align-items: center;
           justify-content: center;
+          white-space: nowrap;
         }
         .cat-wood-btn:active {
           transform: translateY(1px);
@@ -1116,19 +1120,19 @@ export default function AdminPage() {
         .edit-cat-btn {
           background: #ffffff;
           color: #6e4a25;
-          border-color: #ebdcc8;
+          border: 2px solid #ebdcc8;
           box-shadow: 0 2px 0 #d8c2a3;
         }
         .add-item-btn {
           background: linear-gradient(180deg, #52c748 0%, #3ca032 100%);
           color: #ffffff;
-          border-color: #2b7a23;
+          border: 2px solid #2b7a23;
           box-shadow: 0 2px 0 #205c19;
         }
         .del-cat-btn {
           background: #fff5f5;
           color: #dc2626;
-          border-color: #fca5a5;
+          border: 2px solid #fca5a5;
           box-shadow: 0 2px 0 #f87171;
         }
 
@@ -1261,25 +1265,26 @@ export default function AdminPage() {
         /* Clear, High-Contrast Action Buttons */
         .crate-actions-row {
           display: grid;
-          grid-template-columns: 1fr auto;
+          grid-template-columns: 1fr 1fr;
           gap: 6px;
-          margin-top: 9px;
+          margin-top: 10px;
           padding-top: 8px;
           border-top: 1.5px dashed #deb065;
         }
 
         .crate-btn {
           font-family: inherit;
-          font-size: 12px;
+          font-size: 11.5px;
           font-weight: 800;
-          padding: 6px 8px;
+          height: 32px;
+          padding: 0 4px;
           border-radius: 8px;
           cursor: pointer;
-          border: 1.5px solid transparent;
           transition: all 0.12s;
           display: inline-flex;
           align-items: center;
           justify-content: center;
+          white-space: nowrap;
         }
         .crate-btn:active {
           transform: translateY(1px);
@@ -1288,13 +1293,13 @@ export default function AdminPage() {
         .crate-btn-edit {
           background: #ffffff;
           color: #1d4ed8;
-          border-color: #93c5fd;
+          border: 2px solid #93c5fd;
           box-shadow: 0 2px 0 #93c5fd;
         }
         .crate-btn-delete {
           background: #fff5f5;
           color: #b91c1c;
-          border-color: #fca5a5;
+          border: 2px solid #fca5a5;
           box-shadow: 0 2px 0 #fca5a5;
         }
 
