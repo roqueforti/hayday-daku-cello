@@ -717,12 +717,21 @@ export default function StorePage() {
           }
         }
 
+        .store-app-wrap {
+          width: 100%;
+          max-width: 100vw;
+          overflow-x: hidden;
+          position: relative;
+        }
+
         .wrap {
           position: relative;
+          width: 100%;
           max-width: 1360px;
           margin: 0 auto;
           padding: 18px 20px 140px;
           z-index: 1;
+          box-sizing: border-box;
         }
 
         .main-sign-header {

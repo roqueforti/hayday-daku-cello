@@ -48,6 +48,14 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
 body {
   margin: 0;
   font-family: "Nunito", "Fredoka", system-ui, -apple-system, sans-serif;
