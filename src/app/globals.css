@@ -655,39 +655,57 @@ input:focus, select:focus {
 
 /* Responsif Layar HP (Mobile Friendly) */
 @media (max-width: 640px) {
+  .hayday-modal-backdrop {
+    padding: 8px;
+  }
   .hayday-modal-card {
-    padding: 16px 14px;
+    padding: 18px 14px;
     border-radius: 20px;
-    max-height: 92vh;
+    max-height: 94vh;
   }
   .hayday-modal-title {
     font-size: 16.5px;
   }
   .hayday-form-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 14px;
+  }
+  .hayday-hint {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #6e421f;
+    background: #faeed7;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-top: 5px;
+    border-left: 3px solid #b87b40;
   }
   .hayday-accum-grid {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 7px;
   }
   .hayday-accum-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 12px;
+    padding: 9px 12px;
+  }
+  .hayday-accum-card-lbl {
+    font-size: 12px;
   }
   .hayday-accum-card-val {
     margin-top: 0;
-    font-size: 14px;
+    font-size: 15px;
   }
   .hayday-actions-bar {
     flex-direction: column-reverse;
-    gap: 8px;
+    gap: 10px;
+    margin-top: 14px;
   }
   .hayday-actions-bar button {
     width: 100%;
-    height: 44px;
+    height: 46px;
+    font-size: 14.5px;
   }
 }
 
