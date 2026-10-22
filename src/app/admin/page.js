@@ -666,12 +666,27 @@ export default function AdminPage() {
                               <div className="crate-item-name">{prod.name}</div>
                               <div className="crate-item-price">
                                 Rp{prod.price.toLocaleString('id-ID')}
+                                <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)', marginLeft: '4px' }}>
+                                  ({prod.unit} {prod.unitType})
+                                </span>
                               </div>
-                              <div style={{ fontSize: '11px', color: '#16a34a', fontWeight: 'bold', marginTop: '2px' }}>
-                                Min. beli: {prod.getMinQuantity()} {prod.unitType}
-                              </div>
+                              {(() => {
+                                const ppu = prod.unit > 0 ? (prod.price / prod.unit) : prod.price;
+                                const minQ = prod.getMinQuantity();
+                                const minAccumPrice = Math.round(ppu * minQ);
+                                return (
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '3px' }}>
+                                    <div style={{ fontSize: '11.5px', color: '#15803d', fontWeight: 700 }}>
+                                      Rp{Number.isInteger(ppu) ? ppu.toLocaleString('id-ID') : ppu.toFixed(1)} / {prod.unitType}
+                                    </div>
+                                    <div style={{ fontSize: '11px', color: '#6e4a25', fontWeight: 600 }}>
+                                      Min. beli {minQ} {prod.unitType} = Rp{minAccumPrice.toLocaleString('id-ID')}
+                                    </div>
+                                  </div>
+                                );
+                              })()}
                               {prod.description && (
-                                <div className="crate-item-desc">{prod.description}</div>
+                                <div className="crate-item-desc" style={{ marginTop: '3px' }}>{prod.description}</div>
                               )}
                             </div>
 

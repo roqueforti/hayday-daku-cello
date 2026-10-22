@@ -16,7 +16,8 @@ export function ItemModal({
   const [unit, setUnit] = useState(100);
   const [unitType, setUnitType] = useState('pcs');
   const [minQty, setMinQty] = useState('');
-  const [price, setPrice] = useState(1000);
+  const [price, setPrice] = useState(1000); // total harga untuk `unit` dasar
+  const [pricePerUnit, setPricePerUnit] = useState('10'); // harga per 1 pcs / satuan
   const [color, setColor] = useState('#46b23c');
   const [description, setDescription] = useState('');
   const [icon, setIcon] = useState('🌾');
@@ -26,11 +27,15 @@ export function ItemModal({
   useEffect(() => {
     if (isOpen) {
       if (initialProduct) {
+        const u = initialProduct.unit || 100;
+        const p = initialProduct.price || 0;
+        const ppu = u > 0 ? (p / u) : p;
         setName(initialProduct.name || '');
-        setUnit(initialProduct.unit || 100);
+        setUnit(u);
         setUnitType(initialProduct.unitType || 'pcs');
         setMinQty(initialProduct.minQty !== null && initialProduct.minQty !== undefined ? initialProduct.minQty : '');
-        setPrice(initialProduct.price || 0);
+        setPrice(p);
+        setPricePerUnit(Number.isInteger(ppu) ? String(ppu) : ppu.toFixed(2));
         setColor(initialProduct.color || '#46b23c');
         setDescription(initialProduct.description || '');
         setIcon(initialProduct.icon || '🌾');
@@ -41,6 +46,7 @@ export function ItemModal({
         setUnitType('pcs');
         setMinQty('');
         setPrice(1000);
+        setPricePerUnit('10');
         setColor('#46b23c');
         setDescription('');
         setIcon('assets/icons/Wheat.png');
@@ -48,6 +54,38 @@ export function ItemModal({
       }
     }
   }, [isOpen, initialProduct]);
+
+  // Handler saat penjual mengubah Harga Satuan (per pcs / unit)
+  const handlePricePerUnitChange = (val) => {
+    setPricePerUnit(val);
+    const numPpu = parseFloat(val);
+    const numUnit = parseFloat(unit) || 1;
+    if (!isNaN(numPpu) && numPpu >= 0) {
+      const calculatedTotal = Math.round(numPpu * numUnit);
+      setPrice(calculatedTotal);
+    }
+  };
+
+  // Handler saat penjual mengubah Total Harga Satuan Dasar
+  const handleTotalBasePriceChange = (val) => {
+    setPrice(val);
+    const numTotal = parseFloat(val);
+    const numUnit = parseFloat(unit) || 1;
+    if (!isNaN(numTotal) && numTotal >= 0 && numUnit > 0) {
+      const ppu = numTotal / numUnit;
+      setPricePerUnit(Number.isInteger(ppu) ? String(ppu) : ppu.toFixed(2));
+    }
+  };
+
+  // Handler saat penjual mengubah Satuan Dasar (unit)
+  const handleUnitChange = (val) => {
+    setUnit(val);
+    const numUnit = parseFloat(val) || 1;
+    const numPpu = parseFloat(pricePerUnit);
+    if (!isNaN(numPpu) && numPpu >= 0) {
+      setPrice(Math.round(numPpu * numUnit));
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -208,7 +246,7 @@ export function ItemModal({
                   min="1"
                   step="1"
                   value={unit}
-                  onChange={(e) => setUnit(e.target.value)}
+                  onChange={(e) => handleUnitChange(e.target.value)}
                   required
                 />
               </div>
@@ -226,15 +264,32 @@ export function ItemModal({
                 </select>
               </div>
 
-              {/* Harga */}
+              {/* Harga Satuan (per pcs) */}
               <div className="fgroup">
-                <label>Harga Jual (Rp) *</label>
+                <label style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Harga per {unitType || 'pcs'} (Rp) *</span>
+                  <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 'bold' }}>⭐ Prioritas</span>
+                </label>
                 <input
                   type="number"
                   min="0"
-                  step="100"
+                  step="any"
+                  value={pricePerUnit}
+                  onChange={(e) => handlePricePerUnitChange(e.target.value)}
+                  placeholder="Contoh: 15"
+                  required
+                />
+              </div>
+
+              {/* Total Harga Satuan Dasar */}
+              <div className="fgroup">
+                <label>Total Harga {unit} {unitType} (Rp) *</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) => handleTotalBasePriceChange(e.target.value)}
                   required
                 />
               </div>
@@ -248,8 +303,54 @@ export function ItemModal({
                   step="1"
                   value={minQty}
                   onChange={(e) => setMinQty(e.target.value)}
-                  placeholder="Default (1 atau 10)"
+                  placeholder={unitType === 'paket' ? 'Default 1' : ((Number(unit) || 1) <= 5 ? 'Default 1' : 'Default 10')}
                 />
+              </div>
+
+              {/* Box Preview Akumulasi Minimal & Satuan */}
+              <div className="fgroup full" style={{
+                background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+                border: '1.5px solid #86efac',
+                borderRadius: '12px',
+                padding: '12px 14px',
+                marginTop: '2px'
+              }}>
+                <div style={{ fontSize: '12px', fontWeight: 800, color: '#15803d', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>💡 Rangkuman Akumulasi Otomatis</span>
+                </div>
+                {(() => {
+                  const effectiveMin = (minQty !== '' && minQty !== null && !isNaN(Number(minQty)) && Number(minQty) > 0)
+                    ? Number(minQty)
+                    : (unitType === 'paket' ? 1 : ((Number(unit) || 1) <= 5 ? 1 : 10));
+                  const ppu = parseFloat(pricePerUnit) || 0;
+                  const totalMinPrice = Math.round(ppu * effectiveMin);
+                  const totalBasePrice = Math.round(Number(price) || 0);
+
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px', fontSize: '12.5px' }}>
+                      <div style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                        <div style={{ color: '#166534', fontSize: '11px', fontWeight: 600 }}>Harga per {unitType}:</div>
+                        <div style={{ fontWeight: 800, color: '#15803d', fontSize: '14px', marginTop: '2px' }}>
+                          Rp{ppu.toLocaleString('id-ID')}
+                        </div>
+                      </div>
+
+                      <div style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                        <div style={{ color: '#166534', fontSize: '11px', fontWeight: 600 }}>Minimal Order ({effectiveMin} {unitType}):</div>
+                        <div style={{ fontWeight: 800, color: '#16a34a', fontSize: '14px', marginTop: '2px' }}>
+                          Rp{totalMinPrice.toLocaleString('id-ID')}
+                        </div>
+                      </div>
+
+                      <div style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                        <div style={{ color: '#166534', fontSize: '11px', fontWeight 600 }}>Harga Satuan Dasar ({unit} {unitType}):</div>
+                        <div style={{ fontWeight: 800, color: '#15803d', fontSize: '14px', marginTop: '2px' }}>
+                          Rp{totalBasePrice.toLocaleString('id-ID')}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Warna Label */}
