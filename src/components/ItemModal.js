@@ -265,31 +265,15 @@ export function ItemModal({
               </div>
 
               {/* Harga Satuan (per pcs) */}
-              <div className="fgroup">
-                <label style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Harga per {unitType || 'pcs'} (Rp) *</span>
-                  <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 'bold' }}>⭐ Prioritas</span>
-                </label>
+              <div className="fgroup full">
+                <label>Harga per {unitType || 'pcs'} (Rp) *</label>
                 <input
                   type="number"
                   min="0"
                   step="any"
                   value={pricePerUnit}
                   onChange={(e) => handlePricePerUnitChange(e.target.value)}
-                  placeholder="Contoh: 15"
-                  required
-                />
-              </div>
-
-              {/* Total Harga Satuan Dasar */}
-              <div className="fgroup">
-                <label>Total Harga {unit} {unitType} (Rp) *</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  value={price}
-                  onChange={(e) => handleTotalBasePriceChange(e.target.value)}
+                  placeholder="Contoh: 10 atau 15"
                   required
                 />
               </div>
