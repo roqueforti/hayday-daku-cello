@@ -21,6 +21,7 @@ async function sha256(str) {
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [storeData, setStoreData] = useState({ wa: '', thx: '', sections: [] });
   const [isDirty, setIsDirty] = useState(false);
@@ -352,15 +353,26 @@ export default function AdminPage() {
           <h2 className="login-title">LOGIN ADMIN</h2>
           <p className="login-sub">Masukkan password untuk mengelola harga Hay Day Daku Cello</p>
           <form onSubmit={handleLogin}>
-            <input
-              type="password"
-              className="login-inp"
-              placeholder="Ketik password..."
-              value={passwordInput}
-              onChange={(e) => setPasswordInput(e.target.value)}
-              required
-              autoFocus
-            />
+            <div className="login-inp-wrap">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="login-inp"
+                placeholder="Ketik password..."
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                required
+                autoFocus
+              />
+              <button
+                type="button"
+                className="login-toggle-pwd"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Sembunyikan password" : "Lihat password"}
+                tabIndex={-1}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
             <button type="submit" className="btn btn-primary login-btn">
               🔑 Buka Admin
             </button>
@@ -412,18 +424,45 @@ export default function AdminPage() {
             color: var(--text-muted);
             margin: 0 0 20px;
           }
+          .login-inp-wrap {
+            position: relative;
+            width: 100%;
+            margin-bottom: 14px;
+          }
           .login-inp {
             width: 100%;
-            height: 42px !important;
-            text-align: center;
-            letter-spacing: 2px;
-            margin-bottom: 14px;
+            height: 44px !important;
+            padding: 0 46px 0 16px !important;
+            text-align: left;
+            letter-spacing: 1px;
+            font-size: 14px;
+            border-radius: 14px !important;
+          }
+          .login-toggle-pwd {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 6px;
+            border-radius: 8px;
+            line-height: 1;
+            transition: transform 0.12s;
+            user-select: none;
+          }
+          .login-toggle-pwd:hover {
+            transform: translateY(-50%) scale(1.15);
           }
           .login-btn {
             width: 100%;
             justify-content: center;
-            padding: 11px;
-            font-size: 14px;
+            padding: 12px;
+            font-size: 14.5px;
+            height: 44px;
+            border-radius: 14px;
           }
           .login-error {
             color: #dc2626;
