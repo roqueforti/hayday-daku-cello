@@ -15,6 +15,7 @@ export function ItemModal({
   const [name, setName] = useState('');
   const [unit, setUnit] = useState(100);
   const [unitType, setUnitType] = useState('pcs');
+  const [minQty, setMinQty] = useState('');
   const [price, setPrice] = useState(1000);
   const [color, setColor] = useState('#46b23c');
   const [description, setDescription] = useState('');
@@ -28,6 +29,7 @@ export function ItemModal({
         setName(initialProduct.name || '');
         setUnit(initialProduct.unit || 100);
         setUnitType(initialProduct.unitType || 'pcs');
+        setMinQty(initialProduct.minQty !== null && initialProduct.minQty !== undefined ? initialProduct.minQty : '');
         setPrice(initialProduct.price || 0);
         setColor(initialProduct.color || '#46b23c');
         setDescription(initialProduct.description || '');
@@ -37,6 +39,7 @@ export function ItemModal({
         setName('');
         setUnit(100);
         setUnitType('pcs');
+        setMinQty('');
         setPrice(1000);
         setColor('#46b23c');
         setDescription('');
@@ -57,11 +60,14 @@ export function ItemModal({
       return;
     }
 
+    const parsedMinQty = minQty !== '' && minQty !== null && !isNaN(Number(minQty)) ? Number(minQty) : null;
+
     const product = new Product({
       id: initialProduct?.id || ('item_' + Date.now()),
       name: name.trim(),
       u: Number(unit) || 1,
       ut: unitType,
+      min: parsedMinQty,
       p: Number(price) || 0,
       c: color,
       d: description.trim(),
@@ -230,6 +236,19 @@ export function ItemModal({
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   required
+                />
+              </div>
+
+              {/* Minimal Beli */}
+              <div className="fgroup">
+                <label>Minimal Beli (Opsional)</label>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={minQty}
+                  onChange={(e) => setMinQty(e.target.value)}
+                  placeholder="Default (1 atau 10)"
                 />
               </div>
 

@@ -51,13 +51,17 @@ export default function StorePage() {
     }
 
     const min = product.getMinQuantity();
-    const finalQty = Number(newQty);
+    const parsed = Number(newQty);
 
-    if (finalQty <= 0) {
+    if (isNaN(parsed) || parsed <= 0) {
       newCart.removeItem(product.id);
       showToast(`Dihapus: ${product.name}`);
+    } else if (parsed < min) {
+      // Jika diisi kurang dari batas minimum, otomatis setel ke minimum
+      newCart.setItem(product, min);
+      showToast(`Min. pembelian untuk ${product.name} adalah ${min} ${product.unitType}`);
     } else {
-      newCart.setItem(product, finalQty);
+      newCart.setItem(product, parsed);
     }
     setCart(newCart);
   };
@@ -323,6 +327,7 @@ export default function StorePage() {
                                   <input
                                     type="number"
                                     inputMode="numeric"
+                                    min={prod.getMinQuantity()}
                                     value={qty}
                                     onChange={(e) => updateCartQuantity(prod, e.target.value)}
                                   />

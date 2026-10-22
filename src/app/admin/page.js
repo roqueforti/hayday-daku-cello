@@ -237,6 +237,7 @@ export default function AdminPage() {
           "Nama Produk": it.name,
           "Satuan Dasar": it.unit,
           "Jenis Satuan": it.unitType,
+          "Minimal Beli": it.minQty !== null && it.minQty !== undefined ? it.minQty : '',
           "Harga (Rp)": it.price,
           "Deskripsi / Catatan": it.description,
           "Warna Label": it.color,
@@ -255,7 +256,7 @@ export default function AdminPage() {
     const wsProducts = XLSX.utils.json_to_sheet(productsData);
     wsProducts["!cols"] = [
       { wch: 22 }, { wch: 18 }, { wch: 24 }, { wch: 14 },
-      { wch: 14 }, { wch: 14 }, { wch: 32 }, { wch: 14 },
+      { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 32 }, { wch: 14 },
       { wch: 26 }, { wch: 18 }
     ];
     XLSX.utils.book_append_sheet(wb, wsProducts, "Daftar Produk");
@@ -322,6 +323,7 @@ export default function AdminPage() {
             name: (row["Nama Produk"] || "").toString().trim(),
             u: row["Satuan Dasar"] !== undefined ? Number(row["Satuan Dasar"]) : 100,
             ut: (row["Jenis Satuan"] || "pcs").toString().trim(),
+            min: row["Minimal Beli"] !== undefined && row["Minimal Beli"] !== '' ? Number(row["Minimal Beli"]) : null,
             p: Number(row["Harga (Rp)"]) || 0,
             d: (row["Deskripsi / Catatan"] || "").toString().trim(),
             c: (row["Warna Label"] || "#46b23c").toString().trim(),
@@ -664,6 +666,9 @@ export default function AdminPage() {
                               <div className="crate-item-name">{prod.name}</div>
                               <div className="crate-item-price">
                                 Rp{prod.price.toLocaleString('id-ID')}
+                              </div>
+                              <div style={{ fontSize: '11px', color: '#16a34a', fontWeight: 'bold', marginTop: '2px' }}>
+                                Min. beli: {prod.getMinQuantity()} {prod.unitType}
                               </div>
                               {prod.description && (
                                 <div className="crate-item-desc">{prod.description}</div>
