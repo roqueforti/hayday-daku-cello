@@ -343,7 +343,7 @@ export function ItemModal({
                       </div>
 
                       <div style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-                        <div style={{ color: '#166534', fontSize: '11px', fontWeight 600 }}>Harga Satuan Dasar ({unit} {unitType}):</div>
+                        <div style={{ color: '#166534', fontSize: '11px', fontWeight: 600 }}>Harga Satuan Dasar ({unit} {unitType}):</div>
                         <div style={{ fontWeight: 800, color: '#15803d', fontSize: '14px', marginTop: '2px' }}>
                           Rp{totalBasePrice.toLocaleString('id-ID')}
                         </div>
