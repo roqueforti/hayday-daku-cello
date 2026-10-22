@@ -234,24 +234,24 @@ export function ItemModal({
             <div className="modal-form-grid hayday-form-grid">
               {/* Nama Item */}
               <div className="fgroup full">
-                <label className="hayday-label">🏷️ Nama Produk *</label>
+                <label className="hayday-label">🏷️ Nama Barang *</label>
                 <input
                   type="text"
                   className="hayday-input"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Tulis nama barang, misal: Kapak, Gandum, Sekop..."
+                  placeholder="Ketik nama barang di sini (contoh: Kapak)"
                   required
                   autoFocus
                 />
                 <div className="hayday-hint">
-                  💡 <b>Tips:</b> Tulis nama barang yang dijual agar pembeli langsung tahu barang apa ini.
+                  👉 <b>Ketik di sini</b> nama barang yang mau kamu jual (contoh: Kapak, Sekop, Gandum).
                 </div>
               </div>
 
               {/* Satuan Dasar */}
               <div className="fgroup">
-                <label className="hayday-label">📦 Jumlah Satuan Dasar *</label>
+                <label className="hayday-label">📦 Isi Paket Normal *</label>
                 <input
                   type="number"
                   className="hayday-input"
@@ -259,26 +259,27 @@ export function ItemModal({
                   step="1"
                   value={unit}
                   onChange={(e) => handleUnitChange(e.target.value)}
+                  placeholder="Ketik angka di sini (biasanya 100)"
                   required
                 />
                 <div className="hayday-hint">
-                  💡 Jumlah standar di tokomu (biasanya <b>100</b> untuk alat/bahan, atau <b>1</b> untuk paket).
+                  👉 <b>Ketik di sini</b> kamu biasanya jual per berapa biji? Kalau alat biasanya <b>100</b>, kalau paket tulis <b>1</b>.
                 </div>
               </div>
 
               {/* Tipe Satuan */}
               <div className="fgroup">
-                <label className="hayday-label">🧺 Jenis Satuan *</label>
+                <label className="hayday-label">🧺 Sebutan Barang *</label>
                 <select className="hayday-input" value={unitType} onChange={(e) => setUnitType(e.target.value)}>
                   <option value="pcs">pcs (biji / buah)</option>
-                  <option value="paket">paket (gabungan barang)</option>
+                  <option value="paket">paket (campuran barang)</option>
                   <option value="koin">koin</option>
                   <option value="biji">biji</option>
                   <option value="box">box</option>
                   <option value="kg">kg</option>
                 </select>
                 <div className="hayday-hint">
-                  💡 Pilih sebutan satuan barangnya, paling sering pakai <b>pcs</b>.
+                  👉 <b>Klik di sini</b> untuk pilih sebutannya. Biasanya pilih <b>pcs</b>.
                 </div>
               </div>
 
@@ -286,9 +287,9 @@ export function ItemModal({
               <div className="fgroup full">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <label className="hayday-label" style={{ marginBottom: 0 }}>
-                    💰 Harga Jual per 1 {unitType || 'pcs'} (Rp) *
+                    💰 Harga Jual per 1 {unitType || 'biji'} (Rp) *
                   </label>
-                  <span className="hayday-pill-tag">⭐ CUKUP ISI INI SAJA</span>
+                  <span className="hayday-pill-tag">⭐ KETIK DI SINI</span>
                 </div>
                 <input
                   type="number"
@@ -297,17 +298,17 @@ export function ItemModal({
                   step="any"
                   value={pricePerUnit}
                   onChange={(e) => handlePricePerUnitChange(e.target.value)}
-                  placeholder="Berapa harga untuk 1 biji? Misal: 10 atau 15"
+                  placeholder="Ketik harga 1 biji di sini (contoh: 15)"
                   required
                 />
                 <div className="hayday-hint" style={{ color: '#15803d', fontWeight: 700 }}>
-                  🌟 <b>Tulis harga 1 bijinya:</b> Misalnya kamu jual Rp15 per pcs, cukup ketik <b>15</b> di sini. Totalnya nanti dihitungin otomatis oleh sistem!
+                  👉 <b>Ketik di sini harga 1 bijinya saja!</b> Contoh: mau jual Rp15 per biji, tinggal ketik <b>15</b>. Nanti komputer yang hitungin total uangnya otomatis!
                 </div>
               </div>
 
               {/* Minimal Beli */}
               <div className="fgroup">
-                <label className="hayday-label">🛒 Paling Sedikit Beli Berapa? (Opsional)</label>
+                <label className="hayday-label">🛒 Paling Sedikit Beli Berapa?</label>
                 <input
                   type="number"
                   className="hayday-input"
@@ -315,16 +316,16 @@ export function ItemModal({
                   step="1"
                   value={minQty}
                   onChange={(e) => setMinQty(e.target.value)}
-                  placeholder={unitType === 'paket' ? 'Minimal 1 paket' : ((Number(unit) || 1) <= 5 ? 'Minimal 1' : 'Bebas, default 10')}
+                  placeholder="Ketik di sini (contoh: 10)"
                 />
                 <div className="hayday-hint">
-                  💡 Pembeli wajib beli paling sedikit berapa biji? Kalau dikosongkan, otomatis minimal 10 pcs.
+                  👉 <b>Ketik di sini</b> kalau pembeli nggak boleh beli cuma 1. Misal minimal harus beli <b>10</b> biji. Kalau kosong, otomatis 10.
                 </div>
               </div>
 
               {/* Warna Label */}
               <div className="fgroup">
-                <label className="hayday-label">🎨 Warna Kartu Item</label>
+                <label className="hayday-label">🎨 Warna Kartu</label>
                 <div className="color-picker-group">
                   <input
                     type="color"
@@ -337,14 +338,14 @@ export function ItemModal({
                   </span>
                 </div>
                 <div className="hayday-hint">
-                  💡 Warna pemanis label di etalase toko.
+                  👉 <b>Klik kotak warna</b> kalau mau ganti warna kartunya biar cantik!
                 </div>
               </div>
 
               {/* Box Preview Akumulasi Minimal & Satuan */}
               <div className="fgroup full hayday-accum-box">
                 <div className="hayday-accum-header">
-                  <span>🚜 Rangkuman Otomatis (Hasil Perhitungan)</span>
+                  <span>🚜 Hasil Hitungan Otomatis Komputer:</span>
                 </div>
                 {(() => {
                   const effectiveMin = (minQty !== '' && minQty !== null && !isNaN(Number(minQty)) && Number(minQty) > 0)
@@ -365,21 +366,21 @@ export function ItemModal({
                         </div>
 
                         <div className="hayday-accum-card">
-                          <div className="hayday-accum-card-lbl">Kalo beli min. {effectiveMin} {unitType}:</div>
+                          <div className="hayday-accum-card-lbl">Kalo beli {effectiveMin} {unitType}:</div>
                           <div className="hayday-accum-card-val" style={{ color: '#c2410c' }}>
                             Rp{totalMinPrice.toLocaleString('id-ID')}
                           </div>
                         </div>
 
                         <div className="hayday-accum-card">
-                          <div className="hayday-accum-card-lbl">Total 1 bundel ({unit} {unitType}):</div>
+                          <div className="hayday-accum-card-lbl">Kalo beli {unit} {unitType}:</div>
                           <div className="hayday-accum-card-val" style={{ color: '#277220' }}>
                             Rp{totalBasePrice.toLocaleString('id-ID')}
                           </div>
                         </div>
                       </div>
-                      <div style={{ fontSize: '11px', color: '#166534', fontWeight: 600, marginTop: '8px', textAlign: 'center' }}>
-                        ✨ Kotak di atas menunjukkan berapa uang yang harus dibayar pembeli secara otomatis.
+                      <div style={{ fontSize: '11px', color: '#166534', fontWeight: 700, marginTop: '8px', textAlign: 'center' }}>
+                        🎉 Keren! Kamu nggak perlu hitung pakai kalkulator, sistem sudah hitungin semuanya!
                       </div>
                     </>
                   );
@@ -388,16 +389,16 @@ export function ItemModal({
 
               {/* Deskripsi */}
               <div className="fgroup full">
-                <label className="hayday-label">📝 Catatan Buat Pembeli (Opsional)</label>
+                <label className="hayday-label">📝 Pesan Tambahan untuk Pembeli</label>
                 <input
                   type="text"
                   className="hayday-input"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Contoh: Stok selalu ready, fast respon!"
+                  placeholder="Ketik pesan di sini (contoh: Barang ready banyak ya!)"
                 />
                 <div className="hayday-hint">
-                  💡 Boleh dikosongkan. Kalau kosong, sistem otomatis nulis: <i>Min. beli {minQty || 10} • harga per {unit} {unitType}</i>.
+                  👉 <b>Ketik di sini</b> kalau mau kasih pesan ke pembeli. Kalau bingung, <b>kosongkan saja nggak apa-apa!</b>
                 </div>
               </div>
             </div>
