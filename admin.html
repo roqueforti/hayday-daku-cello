@@ -1603,10 +1603,46 @@
               </select>
             </div>
 
-            <!-- Harga (Rp) -->
+            <!-- Harga Satuan (per pcs) -->
             <div class="fgroup">
-              <label for="modalItemPrice">Harga Jual (Rp) *</label>
-              <input type="number" id="modalItemPrice" placeholder="1000" min="0" step="100" required />
+              <label for="modalItemPricePerUnit" style="display:flex; justify-content:space-between;">
+                <span>Harga per Satuan (Rp) *</span>
+                <span style="font-size:11px; color:#16a34a; font-weight:bold;">⭐ Prioritas</span>
+              </label>
+              <input type="number" id="modalItemPricePerUnit" placeholder="10" min="0" step="any" required />
+            </div>
+
+            <!-- Total Harga Satuan Dasar -->
+            <div class="fgroup">
+              <label for="modalItemPrice" id="modalItemPriceLabel">Total Harga Dasar (Rp) *</label>
+              <input type="number" id="modalItemPrice" placeholder="1000" min="0" step="1" required />
+            </div>
+
+            <!-- Minimal Beli -->
+            <div class="fgroup">
+              <label for="modalItemMinQty">Minimal Beli (Opsional)</label>
+              <input type="number" id="modalItemMinQty" placeholder="Default (1 atau 10)" min="1" step="1" />
+            </div>
+
+            <!-- Box Preview Akumulasi Minimal & Satuan -->
+            <div class="fgroup full" style="background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #86efac; border-radius:12px; padding:12px 14px; margin-top:2px;">
+              <div style="font-size:12px; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+                <span>💡 Rangkuman Akumulasi Otomatis</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; font-size:12px;" id="modalPriceAccumPreview">
+                <div style="background:#ffffff; padding:8px 10px; border-radius:8px; border:1px solid #bbf7d0;">
+                  <div style="color:#166534; font-size:11px; font-weight:600;">Harga per satuan:</div>
+                  <div style="font-weight:800; color:#15803d; font-size:13.5px; margin-top:2px;" id="previewPpu">Rp0</div>
+                </div>
+                <div style="background:#ffffff; padding:8px 10px; border-radius:8px; border:1px solid #bbf7d0;">
+                  <div style="color:#166534; font-size:11px; font-weight:600;" id="previewMinTitle">Minimal order:</div>
+                  <div style="font-weight:800; color:#16a34a; font-size:13.5px; margin-top:2px;" id="previewMinAccum">Rp0</div>
+                </div>
+                <div style="background:#ffffff; padding:8px 10px; border-radius:8px; border:1px solid #bbf7d0;">
+                  <div style="color:#166534; font-size:11px; font-weight:600;" id="previewBaseTitle">Harga satuan dasar:</div>
+                  <div style="font-weight:800; color:#15803d; font-size:13.5px; margin-top:2px;" id="previewBaseAccum">Rp0</div>
+                </div>
+              </div>
             </div>
 
             <!-- Warna Aksen Label -->
@@ -2318,6 +2354,69 @@
 
         var sec = state.sections[sIdx] || {};
         var isPk = sec.pk ? true : false;
+        var ppuEl = document.getElementById("modalItemPricePerUnit");
+        var minQtyEl = document.getElementById("modalItemMinQty");
+
+        function updateModalAccumPreview() {
+          var u = parseFloat(unitEl.value) || 1;
+          var ut = unitTypeEl.value || "pcs";
+          var ppu = parseFloat(ppuEl.value) || 0;
+          var tot = parseFloat(priceEl.value) || 0;
+          var minVal = (minQtyEl.value !== "" && !isNaN(Number(minQtyEl.value)) && Number(minQtyEl.value) > 0)
+            ? Number(minQtyEl.value)
+            : (ut === "paket" ? 1 : (u <= 5 ? 1 : 10));
+
+          var minAccum = Math.round(ppu * minVal);
+
+          var lbl = document.getElementById("modalItemPriceLabel");
+          if (lbl) lbl.textContent = "Total Harga " + u + " " + ut + " (Rp) *";
+
+          var previewPpu = document.getElementById("previewPpu");
+          if (previewPpu) previewPpu.textContent = "Rp" + (Number.isInteger(ppu) ? ppu.toLocaleString("id-ID") : ppu.toFixed(2)) + " / " + ut;
+
+          var previewMinTitle = document.getElementById("previewMinTitle");
+          if (previewMinTitle) previewMinTitle.textContent = "Minimal order (" + minVal + " " + ut + "):";
+
+          var previewMinAccum = document.getElementById("previewMinAccum");
+          if (previewMinAccum) previewMinAccum.textContent = "Rp" + minAccum.toLocaleString("id-ID");
+
+          var previewBaseTitle = document.getElementById("previewBaseTitle");
+          if (previewBaseTitle) previewBaseTitle.textContent = "Harga satuan dasar (" + u + " " + ut + "):";
+
+          var previewBaseAccum = document.getElementById("previewBaseAccum");
+          if (previewBaseAccum) previewBaseAccum.textContent = "Rp" + Math.round(tot).toLocaleString("id-ID");
+        }
+
+        ppuEl.oninput = function() {
+          var ppu = parseFloat(ppuEl.value);
+          var u = parseFloat(unitEl.value) || 1;
+          if (!isNaN(ppu) && ppu >= 0) {
+            priceEl.value = Math.round(ppu * u);
+          }
+          updateModalAccumPreview();
+        };
+
+        priceEl.oninput = function() {
+          var tot = parseFloat(priceEl.value);
+          var u = parseFloat(unitEl.value) || 1;
+          if (!isNaN(tot) && tot >= 0 && u > 0) {
+            var ppu = tot / u;
+            ppuEl.value = Number.isInteger(ppu) ? ppu : ppu.toFixed(2);
+          }
+          updateModalAccumPreview();
+        };
+
+        unitEl.oninput = function() {
+          var ppu = parseFloat(ppuEl.value);
+          var u = parseFloat(unitEl.value) || 1;
+          if (!isNaN(ppu) && ppu >= 0) {
+            priceEl.value = Math.round(ppu * u);
+          }
+          updateModalAccumPreview();
+        };
+
+        unitTypeEl.onchange = updateModalAccumPreview;
+        minQtyEl.oninput = updateModalAccumPreview;
 
         if (iIdx >= 0 && sec.items && sec.items[iIdx]) {
           // Mode Edit Item yang sudah ada
@@ -2326,9 +2425,15 @@
           if (btnSubmit) btnSubmit.textContent = "✓ Simpan Perubahan";
           
           nameEl.value = it.n || "";
-          unitEl.value = (it.u !== undefined && it.u !== null) ? it.u : (isPk ? 1 : 100);
+          var curUnit = (it.u !== undefined && it.u !== null) ? it.u : (isPk ? 1 : 100);
+          unitEl.value = curUnit;
           unitTypeEl.value = (it.ut !== undefined && it.ut !== null && it.ut !== "") ? it.ut : (isPk ? "paket" : "pcs");
-          priceEl.value = it.p || 0;
+          var curPrice = it.p || 0;
+          priceEl.value = curPrice;
+          var calcPpu = curUnit > 0 ? (curPrice / curUnit) : curPrice;
+          ppuEl.value = Number.isInteger(calcPpu) ? calcPpu : calcPpu.toFixed(2);
+          minQtyEl.value = (it.min !== undefined && it.min !== null) ? it.min : "";
+
           colorEl.value = it.c || "#46b23c";
           if (colorHexEl) colorHexEl.textContent = it.c || "#46b23c";
           descEl.value = it.d || "";
@@ -2343,9 +2448,15 @@
           if (btnSubmit) btnSubmit.textContent = "✓ Tambahkan Item";
 
           nameEl.value = "";
-          unitEl.value = isPk ? 1 : 100;
+          var defUnit = isPk ? 1 : 100;
+          unitEl.value = defUnit;
           unitTypeEl.value = isPk ? "paket" : "pcs";
-          priceEl.value = 1000;
+          var defPrice = 1000;
+          priceEl.value = defPrice;
+          var defPpu = defUnit > 0 ? (defPrice / defUnit) : defPrice;
+          ppuEl.value = Number.isInteger(defPpu) ? defPpu : defPpu.toFixed(2);
+          minQtyEl.value = "";
+
           colorEl.value = "#46b23c";
           if (colorHexEl) colorHexEl.textContent = "#46b23c";
           descEl.value = "";
@@ -2356,6 +2467,7 @@
           };
         }
 
+        updateModalAccumPreview();
         updateModalItemIconPreviewUI();
         document.getElementById("itemModal").classList.add("active");
         setTimeout(function() { nameEl.focus(); }, 150);
@@ -2381,6 +2493,8 @@
         var unitVal = Number(document.getElementById("modalItemUnit").value) || 1;
         var unitTypeVal = document.getElementById("modalItemUnitType").value;
         var priceVal = Number(document.getElementById("modalItemPrice").value) || 0;
+        var minQtyRaw = document.getElementById("modalItemMinQty").value.trim();
+        var minQtyVal = (minQtyRaw !== "" && !isNaN(Number(minQtyRaw))) ? Number(minQtyRaw) : null;
         var colorVal = document.getElementById("modalItemColor").value || "#46b23c";
         var descVal = document.getElementById("modalItemDesc").value.trim();
 
@@ -2398,6 +2512,7 @@
           target.u = unitVal;
           target.ut = unitTypeVal;
           target.p = priceVal;
+          if (minQtyVal !== null) target.min = minQtyVal; else delete target.min;
           target.c = colorVal;
           target.d = descVal;
           target.e = modalDraftItem.e || "🌾";
@@ -2419,6 +2534,7 @@
             d: descVal,
             c: colorVal
           };
+          if (minQtyVal !== null) newItem.min = minQtyVal;
           if (modalDraftItem.icons && modalDraftItem.icons.length > 0) {
             newItem.icons = modalDraftItem.icons.slice();
           }
