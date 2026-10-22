@@ -160,39 +160,46 @@ export function ItemModal({
 
   return (
     <>
-      <div className="modal-bg active" role="dialog" aria-modal="true" onClick={(e) => {
+      <div className="modal-bg active hayday-modal-backdrop" role="dialog" aria-modal="true" onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}>
-        <div className="modal-card modal-card-lg">
-          <div className="modal-title">
-            <span>{isEditing ? `✏️ Edit Item Produk: ${name}` : `✨ Tambah Item ke: ${categoryTitle}`}</span>
-            <button className="modal-close" onClick={onClose}>✕</button>
+        <div className="modal-card modal-card-lg hayday-modal-card">
+          {/* Header Kartu Kayu Lucu Hayday */}
+          <div className="hayday-modal-header">
+            <div className="hayday-modal-title-wrap">
+              <span className="hayday-badge-star">🌾</span>
+              <span className="hayday-modal-title">
+                {isEditing ? `Edit Item: ${name}` : `Tambah Item: ${categoryTitle}`}
+              </span>
+            </div>
+            <button className="hayday-modal-close" onClick={onClose} title="Tutup">✕</button>
           </div>
-          <p style={{ margin: '0 0 14px', fontSize: '13px', color: 'var(--text-muted)' }}>
-            Kelola detail produk, ikon resmi, satuan, harga, dan catatan dengan rapi.
+
+          <p className="hayday-modal-sub">
+            Atur nama, icon lucu, satuan, serta harga per pcs dengan kalkulasi otomatis.
           </p>
 
           <form onSubmit={handleSubmit}>
-            {/* Icon Row */}
-            <div className="fgroup" style={{ marginBottom: '14px' }}>
-              <label>Icon Produk</label>
-              <div className="modal-icon-select-row">
+            {/* Icon Picker Row */}
+            <div className="hayday-field-group">
+              <label className="hayday-label">Ikon Produk Hay Day</label>
+              <div className="modal-icon-select-row hayday-icon-selector">
                 <div
-                  className="modal-icon-select-preview"
+                  className="modal-icon-select-preview hayday-icon-preview-box"
                   title="Klik untuk memilih ikon"
                   onClick={() => setIsIconPickerOpen(true)}
                 >
                   {icons && icons.length > 0 ? (
                     <div className="ico-bundle-preview">
                       {icons.slice(0, 4).map((ic, i) => (
-                        <img key={i} src={ic} alt="item" style={{ width: 18, height: 18, objectFit: 'contain' }} />
+                        <img key={i} src={ic} alt="item" style={{ width: 22, height: 22, objectFit: 'contain' }} />
                       ))}
                     </div>
                   ) : (
                     icon.startsWith('assets/') || icon.startsWith('data:') ? (
-                      <img src={icon} alt="item" style={{ width: 34, height: 34, objectFit: 'contain' }} />
+                      <img src={icon} alt="item" style={{ width: 38, height: 38, objectFit: 'contain' }} />
                     ) : (
-                      <span>{icon}</span>
+                      <span style={{ fontSize: '28px' }}>{icon}</span>
                     )
                   )}
                 </div>
@@ -200,13 +207,13 @@ export function ItemModal({
                   <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                     <button
                       type="button"
-                      className="btn btn-default btn-sm"
+                      className="btn hayday-btn-wood btn-sm"
                       onClick={() => setIsIconPickerOpen(true)}
                     >
-                      Pilih Icon
+                      🎨 Pilih Ikon
                     </button>
-                    <label className="btn btn-default btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
-                      Upload Gambar
+                    <label className="btn hayday-btn-wood btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
+                      📸 Upload Gambar
                       <input
                         type="file"
                         accept="image/*"
@@ -215,21 +222,22 @@ export function ItemModal({
                       />
                     </label>
                   </div>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                  <div style={{ fontSize: '11.5px', color: '#8d5d36', marginTop: '6px', fontWeight: 600 }}>
                     {icons.length > 0
-                      ? `${icons.length} ikon paket dipilih.`
-                      : 'Bisa pilih icon satuan atau multi-icon paket (maksimal 4).'}
+                      ? `✨ ${icons.length} ikon bundle dipilih.`
+                      : 'Pilih ikon resmi Hay Day atau upload gambar produkmu.'}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="modal-form-grid">
+            <div className="modal-form-grid hayday-form-grid">
               {/* Nama Item */}
               <div className="fgroup full">
-                <label>Nama Item / Produk *</label>
+                <label className="hayday-label">Nama Produk *</label>
                 <input
                   type="text"
+                  className="hayday-input"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Contoh: Kapak, Sekop, Tagar BEM..."
@@ -240,9 +248,10 @@ export function ItemModal({
 
               {/* Satuan Dasar */}
               <div className="fgroup">
-                <label>Jumlah Satuan Dasar *</label>
+                <label className="hayday-label">Jumlah Satuan Dasar *</label>
                 <input
                   type="number"
+                  className="hayday-input"
                   min="1"
                   step="1"
                   value={unit}
@@ -253,8 +262,8 @@ export function ItemModal({
 
               {/* Tipe Satuan */}
               <div className="fgroup">
-                <label>Jenis Satuan *</label>
-                <select value={unitType} onChange={(e) => setUnitType(e.target.value)}>
+                <label className="hayday-label">Jenis Satuan *</label>
+                <select className="hayday-input" value={unitType} onChange={(e) => setUnitType(e.target.value)}>
                   <option value="pcs">pcs</option>
                   <option value="paket">paket</option>
                   <option value="koin">koin</option>
@@ -266,9 +275,15 @@ export function ItemModal({
 
               {/* Harga Satuan (per pcs) */}
               <div className="fgroup full">
-                <label>Harga per {unitType || 'pcs'} (Rp) *</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label className="hayday-label" style={{ marginBottom: 0 }}>
+                    Harga per {unitType || 'pcs'} (Rp) *
+                  </label>
+                  <span className="hayday-pill-tag">🌾 Harga Pcs</span>
+                </div>
                 <input
                   type="number"
+                  className="hayday-input hayday-input-highlight"
                   min="0"
                   step="any"
                   value={pricePerUnit}
@@ -280,9 +295,10 @@ export function ItemModal({
 
               {/* Minimal Beli */}
               <div className="fgroup">
-                <label>Minimal Beli (Opsional)</label>
+                <label className="hayday-label">Minimal Beli (Opsional)</label>
                 <input
                   type="number"
+                  className="hayday-input"
                   min="1"
                   step="1"
                   value={minQty}
@@ -291,16 +307,26 @@ export function ItemModal({
                 />
               </div>
 
+              {/* Warna Label */}
+              <div className="fgroup">
+                <label className="hayday-label">Warna Aksen Label</label>
+                <div className="color-picker-group">
+                  <input
+                    type="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    style={{ borderRadius: '10px', height: '42px', width: '50px' }}
+                  />
+                  <span style={{ fontFamily: 'Lilita One, JetBrains Mono, monospace', fontSize: '13px', color: '#6e4a25' }}>
+                    {color}
+                  </span>
+                </div>
+              </div>
+
               {/* Box Preview Akumulasi Minimal & Satuan */}
-              <div className="fgroup full" style={{
-                background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
-                border: '1.5px solid #86efac',
-                borderRadius: '12px',
-                padding: '12px 14px',
-                marginTop: '2px'
-              }}>
-                <div style={{ fontSize: '12px', fontWeight: 800, color: '#15803d', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>💡 Rangkuman Akumulasi Otomatis</span>
+              <div className="fgroup full hayday-accum-box">
+                <div className="hayday-accum-header">
+                  <span>🚜 Rangkuman Akumulasi Harga</span>
                 </div>
                 {(() => {
                   const effectiveMin = (minQty !== '' && minQty !== null && !isNaN(Number(minQty)) && Number(minQty) > 0)
@@ -311,24 +337,24 @@ export function ItemModal({
                   const totalBasePrice = Math.round(Number(price) || 0);
 
                   return (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px', fontSize: '12.5px' }}>
-                      <div style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-                        <div style={{ color: '#166534', fontSize: '11px', fontWeight: 600 }}>Harga per {unitType}:</div>
-                        <div style={{ fontWeight: 800, color: '#15803d', fontSize: '14px', marginTop: '2px' }}>
+                    <div className="hayday-accum-grid">
+                      <div className="hayday-accum-card">
+                        <div className="hayday-accum-card-lbl">Harga per {unitType}:</div>
+                        <div className="hayday-accum-card-val" style={{ color: '#277220' }}>
                           Rp{ppu.toLocaleString('id-ID')}
                         </div>
                       </div>
 
-                      <div style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-                        <div style={{ color: '#166534', fontSize: '11px', fontWeight: 600 }}>Minimal Order ({effectiveMin} {unitType}):</div>
-                        <div style={{ fontWeight: 800, color: '#16a34a', fontSize: '14px', marginTop: '2px' }}>
+                      <div className="hayday-accum-card">
+                        <div className="hayday-accum-card-lbl">Min. Order ({effectiveMin} {unitType}):</div>
+                        <div className="hayday-accum-card-val" style={{ color: '#c2410c' }}>
                           Rp{totalMinPrice.toLocaleString('id-ID')}
                         </div>
                       </div>
 
-                      <div style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
-                        <div style={{ color: '#166534', fontSize: '11px', fontWeight: 600 }}>Harga Satuan Dasar ({unit} {unitType}):</div>
-                        <div style={{ fontWeight: 800, color: '#15803d', fontSize: '14px', marginTop: '2px' }}>
+                      <div className="hayday-accum-card">
+                        <div className="hayday-accum-card-lbl">Satuan ({unit} {unitType}):</div>
+                        <div className="hayday-accum-card-val" style={{ color: '#277220' }}>
                           Rp{totalBasePrice.toLocaleString('id-ID')}
                         </div>
                       </div>
@@ -337,26 +363,12 @@ export function ItemModal({
                 })()}
               </div>
 
-              {/* Warna Label */}
-              <div className="fgroup">
-                <label>Warna Aksen Label</label>
-                <div className="color-picker-group">
-                  <input
-                    type="color"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                  />
-                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: 'var(--text-muted)' }}>
-                    {color}
-                  </span>
-                </div>
-              </div>
-
               {/* Deskripsi */}
               <div className="fgroup full">
-                <label>Deskripsi / Catatan Tambahan</label>
+                <label className="hayday-label">Deskripsi / Catatan Tambahan</label>
                 <input
                   type="text"
+                  className="hayday-input"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Contoh: Min. beli 10 • harga per 100 pcs"
@@ -364,12 +376,12 @@ export function ItemModal({
               </div>
             </div>
 
-            <div className="modal-actions-bar">
-              <button type="button" className="btn btn-default" onClick={onClose}>
+            <div className="modal-actions-bar hayday-actions-bar">
+              <button type="button" className="btn hayday-btn-cancel" onClick={onClose}>
                 Batal
               </button>
-              <button type="submit" className="btn btn-primary">
-                {isEditing ? 'Simpan Perubahan' : 'Tambahkan Item'}
+              <button type="submit" className="btn hayday-btn-save">
+                {isEditing ? '✓ Simpan Perubahan' : '🌾 Tambahkan Item'}
               </button>
             </div>
           </form>

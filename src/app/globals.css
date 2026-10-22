@@ -406,3 +406,277 @@ input:focus, select:focus {
     justify-content: center;
   }
 }
+
+/* ============================================================
+   TEMA HAY DAY LUCU & RAMAH MOBILE (FARM AESTHETIC)
+   ============================================================ */
+.hayday-modal-backdrop {
+  background: rgba(43, 20, 6, 0.65);
+  backdrop-filter: blur(5px);
+  padding: 12px;
+}
+
+.hayday-modal-card {
+  background: #fffbf2;
+  border: 3.5px solid #8f531d;
+  border-radius: 24px;
+  box-shadow: 0 12px 0 #5c320d, 0 20px 35px rgba(45, 18, 4, 0.4);
+  padding: 22px;
+  max-height: 90vh;
+  position: relative;
+}
+
+.hayday-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px dashed #e8cead;
+  padding-bottom: 12px;
+  margin-bottom: 8px;
+}
+
+.hayday-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hayday-badge-star {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #fef08a;
+  border: 2px solid #ca8a04;
+  box-shadow: 0 2px 0 #ca8a04;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.hayday-modal-title {
+  font-family: 'Lilita One', 'Fredoka', cursive, sans-serif;
+  font-size: 19px;
+  color: #5c320d;
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.hayday-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #b45309;
+  background: #fff;
+  color: #b45309;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 2px 0 #b45309;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+.hayday-modal-close:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+  transform: scale(1.05);
+}
+
+.hayday-modal-sub {
+  margin: 0 0 14px;
+  font-size: 12.5px;
+  color: #8d5d36;
+  font-weight: 600;
+}
+
+.hayday-label {
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6e421f;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.hayday-pill-tag {
+  background: #fef08a;
+  border: 1.5px solid #ca8a04;
+  color: #854d0e;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.hayday-input {
+  height: 42px !important;
+  background: #ffffff !important;
+  border: 2px solid #d4b58e !important;
+  border-radius: 14px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #45240c !important;
+  box-shadow: inset 0 2px 4px rgba(60, 30, 10, 0.05);
+  transition: all 0.18s ease;
+}
+.hayday-input:focus {
+  border-color: #48b83e !important;
+  box-shadow: 0 0 0 3px rgba(72, 184, 62, 0.25), inset 0 1px 2px rgba(0,0,0,0.05) !important;
+}
+
+.hayday-input-highlight {
+  border-color: #48b83e !important;
+  background: #f0fdf4 !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #166534 !important;
+}
+
+.hayday-icon-selector {
+  background: #faeed7;
+  border: 2px solid #dec39b;
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+
+.hayday-icon-preview-box {
+  background: #ffffff;
+  border: 2px solid #b87b40;
+  border-radius: 14px;
+  box-shadow: 0 3px 0 #b87b40;
+}
+
+.hayday-btn-wood {
+  background: #fff8eb;
+  border: 2px solid #b87b40;
+  color: #6e421f;
+  border-radius: 10px;
+  box-shadow: 0 2px 0 #b87b40;
+  font-weight: 700;
+}
+.hayday-btn-wood:hover {
+  background: #fef08a;
+  border-color: #92531a;
+}
+
+/* Kotak Akumulasi Hayday */
+.hayday-accum-box {
+  background: linear-gradient(180deg, #f0fdf4 0%, #e2fbe8 100%);
+  border: 2px solid #86efac;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 3px 0 #86efac;
+}
+
+.hayday-accum-header {
+  font-family: 'Lilita One', 'Fredoka', cursive, sans-serif;
+  font-size: 13.5px;
+  color: #15803d;
+  letter-spacing: 0.3px;
+  margin-bottom: 8px;
+}
+
+.hayday-accum-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.hayday-accum-card {
+  background: #ffffff;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 8px 10px;
+  box-shadow: 0 2px 0 #bbf7d0;
+}
+
+.hayday-accum-card-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: #166534;
+}
+
+.hayday-accum-card-val {
+  font-family: 'Lilita One', sans-serif;
+  font-size: 15px;
+  margin-top: 2px;
+}
+
+/* Tombol Aksi Bawah Hayday */
+.hayday-actions-bar {
+  border-top: 2px dashed #dec39b;
+  margin-top: 18px;
+  padding-top: 14px;
+}
+
+.hayday-btn-cancel {
+  background: #ffffff;
+  color: #78350f;
+  border: 2px solid #d4b58e;
+  border-radius: 14px;
+  box-shadow: 0 3px 0 #d4b58e;
+  padding: 10px 20px;
+  font-weight: 800;
+  height: 44px;
+}
+
+.hayday-btn-save {
+  background: linear-gradient(180deg, #5dd453 0%, #3ca032 100%);
+  color: #ffffff !important;
+  border: 2px solid #23681a;
+  border-radius: 14px;
+  box-shadow: 0 3px 0 #23681a, 0 4px 10px rgba(35, 104, 26, 0.3);
+  padding: 10px 24px;
+  font-weight: 800;
+  font-size: 14px;
+  height: 44px;
+}
+.hayday-btn-save:hover {
+  background: linear-gradient(180deg, #6ee264 0%, #44b539 100%);
+}
+
+/* Responsif Layar HP (Mobile Friendly) */
+@media (max-width: 640px) {
+  .hayday-modal-card {
+    padding: 16px 14px;
+    border-radius: 20px;
+    max-height: 92vh;
+  }
+  .hayday-modal-title {
+    font-size: 16.5px;
+  }
+  .hayday-form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .hayday-accum-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .hayday-accum-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+  }
+  .hayday-accum-card-val {
+    margin-top: 0;
+    font-size: 14px;
+  }
+  .hayday-actions-bar {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .hayday-actions-bar button {
+    width: 100%;
+    height: 44px;
+  }
+}
+
