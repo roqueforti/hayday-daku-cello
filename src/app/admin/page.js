@@ -348,16 +348,33 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <div className="login-screen">
-        <div className="login-box">
-          <div className="login-icon">🔒</div>
-          <h2 className="login-title">LOGIN ADMIN</h2>
-          <p className="login-sub">Masukkan password untuk mengelola harga Hay Day Daku Cello</p>
-          <form onSubmit={handleLogin}>
-            <div className="login-inp-wrap">
+        {/* Papan Kayu Hay Day */}
+        <div className="hayday-login-board">
+          {/* Hiasan Gantungan Kayu / Tali Farm */}
+          <div className="hayday-board-hangers">
+            <span className="hanger-bolt"></span>
+            <span className="hanger-bolt"></span>
+          </div>
+
+          {/* Avatar Logo & Lencana Pertanian */}
+          <div className="hayday-avatar-wrap">
+            <img src="/logo-daku-cello.jpeg" alt="Logo Hay Day" className="hayday-logo-img" />
+            <span className="hayday-avatar-star">⭐</span>
+          </div>
+
+          <h2 className="hayday-login-title">HAY DAY ADMIN</h2>
+          <p className="hayday-login-sub">Toko Pertanian Daku Cello</p>
+
+          <div className="hayday-wood-sign">
+            <span>🔒 MASUKKAN KUNCI GUDANG</span>
+          </div>
+
+          <form onSubmit={handleLogin} style={{ width: '100%' }}>
+            <div className="hayday-inp-wrap">
               <input
                 type={showPassword ? "text" : "password"}
-                className="login-inp"
-                placeholder="Ketik password..."
+                className="hayday-login-inp"
+                placeholder="Ketik password di sini..."
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 required
@@ -365,7 +382,7 @@ export default function AdminPage() {
               />
               <button
                 type="button"
-                className="login-toggle-pwd"
+                className="hayday-eye-btn"
                 onClick={() => setShowPassword(!showPassword)}
                 title={showPassword ? "Sembunyikan password" : "Lihat password"}
                 tabIndex={-1}
@@ -373,14 +390,21 @@ export default function AdminPage() {
                 {showPassword ? "🙈" : "👁️"}
               </button>
             </div>
-            <button type="submit" className="btn btn-primary login-btn">
-              🔑 Buka Admin
+
+            <button type="submit" className="hayday-btn-enter">
+              <span className="hayday-btn-key">🔑</span> Buka Pintu Gudang
             </button>
-            {loginError && <div className="login-error">{loginError}</div>}
+
+            {loginError && (
+              <div className="hayday-login-error">
+                <span>⚠️ {loginError}</span>
+              </div>
+            )}
           </form>
-          <div style={{ marginTop: '16px' }}>
-            <Link href="/" style={{ fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none' }}>
-              ⬅ Kembali ke Toko
+
+          <div style={{ marginTop: '22px' }}>
+            <Link href="/" className="hayday-back-link">
+              🚜 Kembali Belanja di Toko
             </Link>
           </div>
         </div>
@@ -391,84 +415,225 @@ export default function AdminPage() {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            padding: 20px 16px;
+            background: linear-gradient(180deg, #7ad3ff 0%, #b3ea85 45%, #4caf2a 80%, #2e7716 100%);
+            background-attachment: fixed;
+            position: relative;
+            overflow: hidden;
           }
-          .login-box {
-            background: #ffffff;
-            border: 2px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 36px 32px;
-            max-width: 400px;
+
+          /* Papan Papan Kayu / Farm Barn Gate */
+          .hayday-login-board {
+            background: #fff8eb;
+            border: 4.5px solid #7a4312;
+            border-radius: 28px;
+            padding: 38px 28px 30px;
+            max-width: 410px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 10px 18px rgba(110, 74, 37, 0.1);
+            box-shadow: 
+              0 14px 0 #522c09, 
+              0 22px 40px rgba(45, 18, 4, 0.45);
+            position: relative;
+            z-index: 2;
           }
-          .login-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: #eef8eb;
+
+          /* Baut Gantungan Kayu */
+          .hayday-board-hangers {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            margin: 0 auto 16px;
+            justify-content: space-between;
+            padding: 0 24px;
+            pointer-events: none;
           }
-          .login-title {
-            margin: 0 0 6px;
+          .hanger-bolt {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #d4a359;
+            border: 2px solid #522c09;
+            box-shadow: inset 0 2px 2px rgba(255,255,255,0.7), 0 2px 0 #3a1e06;
+          }
+
+          /* Avatar Logo Bulat */
+          .hayday-avatar-wrap {
+            position: relative;
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 12px;
+          }
+          .hayday-logo-img {
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3.5px solid #854d0e;
+            box-shadow: 0 5px 0 #522c09, 0 6px 12px rgba(0,0,0,0.2);
+            background: #fff;
+          }
+          .hayday-avatar-star {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
             font-size: 20px;
-            font-weight: 800;
+            filter: drop-shadow(0 2px 0 #854d0e);
           }
-          .login-sub {
+
+          .hayday-login-title {
+            font-family: 'Lilita One', 'Fredoka', cursive, sans-serif;
+            font-size: 26px;
+            color: #5c320d;
+            letter-spacing: 0.8px;
+            margin: 0 0 2px;
+            text-shadow: 0 2px 0 rgba(255,255,255,0.9), 0 3px 6px rgba(82, 44, 9, 0.2);
+          }
+          .hayday-login-sub {
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+            font-size: 13.5px;
+            color: #8d5d36;
+            font-weight: 700;
+            margin: 0 0 16px;
+          }
+
+          /* Plank Kayu Label Pintu */
+          .hayday-wood-sign {
+            display: inline-block;
+            background: linear-gradient(180deg, #bb7c3d 0%, #92541a 100%);
+            border: 2px solid #5a2e0a;
+            border-radius: 12px;
+            padding: 6px 16px;
+            color: #ffffff;
+            font-family: 'Lilita One', 'Fredoka', cursive, sans-serif;
             font-size: 13px;
-            color: var(--text-muted);
-            margin: 0 0 20px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 0 #421e04;
+            margin-bottom: 20px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
           }
-          .login-inp-wrap {
+
+          .hayday-inp-wrap {
             position: relative;
             width: 100%;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
           }
-          .login-inp {
+
+          .hayday-login-inp {
             width: 100%;
-            height: 44px !important;
-            padding: 0 46px 0 16px !important;
-            text-align: left;
-            letter-spacing: 1px;
-            font-size: 14px;
-            border-radius: 14px !important;
+            height: 48px !important;
+            padding: 0 50px 0 18px !important;
+            background: #ffffff !important;
+            border: 2.5px solid #d4b58e !important;
+            border-radius: 16px !important;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+            font-size: 14.5px !important;
+            font-weight: 700 !important;
+            color: #45240c !important;
+            box-shadow: inset 0 3px 5px rgba(60, 30, 10, 0.08) !important;
+            transition: all 0.18s ease;
           }
-          .login-toggle-pwd {
+          .hayday-login-inp:focus {
+            border-color: #48b83e !important;
+            box-shadow: 0 0 0 4px rgba(72, 184, 62, 0.28), inset 0 1px 2px rgba(0,0,0,0.05) !important;
+          }
+
+          .hayday-eye-btn {
             position: absolute;
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: none;
-            border: none;
+            background: #fdfaf4;
+            border: 1.5px solid #d4b58e;
             cursor: pointer;
             font-size: 18px;
-            padding: 6px;
-            border-radius: 8px;
-            line-height: 1;
-            transition: transform 0.12s;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 0 #d4b58e;
+            transition: all 0.12s;
             user-select: none;
           }
-          .login-toggle-pwd:hover {
-            transform: translateY(-50%) scale(1.15);
+          .hayday-eye-btn:hover {
+            transform: translateY(-50%) scale(1.08);
+            background: #fef08a;
+            border-color: #ca8a04;
           }
-          .login-btn {
+          .hayday-eye-btn:active {
+            transform: translateY(-50%) translateY(1px);
+            box-shadow: none;
+          }
+
+          /* Tombol Masuk Hijau 3D Hayday */
+          .hayday-btn-enter {
             width: 100%;
+            height: 48px;
+            background: linear-gradient(180deg, #5dd453 0%, #3ca032 100%);
+            color: #ffffff;
+            border: 2.5px solid #23681a;
+            border-radius: 16px;
+            font-family: 'Lilita One', 'Fredoka', cursive, sans-serif;
+            font-size: 16.5px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1b5314, 0 6px 14px rgba(27, 83, 20, 0.35);
+            display: flex;
+            align-items: center;
             justify-content: center;
-            padding: 12px;
-            font-size: 14.5px;
-            height: 44px;
-            border-radius: 14px;
+            gap: 8px;
+            transition: all 0.14s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
           }
-          .login-error {
-            color: #dc2626;
-            font-size: 12.5px;
-            font-weight: 600;
+          .hayday-btn-enter:hover {
+            background: linear-gradient(180deg, #6ee264 0%, #44b539 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 0 #1b5314, 0 8px 18px rgba(27, 83, 20, 0.4);
+          }
+          .hayday-btn-enter:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #1b5314;
+          }
+
+          .hayday-btn-key {
+            font-size: 18px;
+          }
+
+          .hayday-login-error {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #b91c1c;
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 700;
             margin-top: 12px;
+            box-shadow: 0 2px 0 #ef4444;
+          }
+
+          .hayday-back-link {
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #7a4312;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 12px;
+            background: #faeed7;
+            border: 1.5px solid #d4b58e;
+            box-shadow: 0 2px 0 #d4b58e;
+            transition: all 0.15s;
+          }
+          .hayday-back-link:hover {
+            background: #fef08a;
+            border-color: #ca8a04;
+            transform: translateY(-1px);
           }
         `}</style>
       </div>
