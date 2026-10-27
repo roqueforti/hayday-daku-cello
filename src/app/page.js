@@ -1335,13 +1335,14 @@ export default function StorePage() {
           background: var(--wood);
           box-shadow: 0 4px 0 var(--wood2);
           cursor: pointer;
+          flex-shrink: 0;
         }
         .ctl button:active {
           transform: translateY(3px);
           box-shadow: 0 1px 0 var(--wood2);
         }
         .ctl input {
-          width: 64px;
+          width: 76px;
           height: 36px;
           text-align: center;
           border: 3px solid var(--line);
@@ -1349,6 +1350,15 @@ export default function StorePage() {
           font: 800 16px "Nunito", sans-serif;
           background: #fff;
           color: #4a2c12;
+          padding: 0 4px;
+          box-sizing: border-box;
+          -moz-appearance: textfield;
+          appearance: textfield;
+        }
+        .ctl input::-webkit-outer-spin-button,
+        .ctl input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
         }
         .sub {
           font-family: "Fredoka", "Nunito", sans-serif;
@@ -1645,13 +1655,21 @@ export default function StorePage() {
             font-size: 15px;
             margin: 6px 0 2px;
           }
+          .ctl {
+            gap: 4px;
+          }
           .ctl input {
-            width: 48px;
+            width: 68px;
+            height: 34px;
             font-size: 15px;
+            border-width: 2.5px;
+            padding: 0 2px;
+            box-sizing: border-box;
           }
           .ctl button {
             width: 32px;
             height: 32px;
+            flex-shrink: 0;
           }
           .bar .in {
             display: grid;
