@@ -78,8 +78,8 @@ export class Cart {
     if (lines.length === 0) return '';
 
     let res = "Halo Daku Cello, saya ingin memesan item Hay Day:\n\n" +
-      "📋 *RINCIAN PESANAN:*\n" +
-      lines.join("\n") +
+      "📋 *RINCIAN PESANAN:*\n\n" +
+      lines.join("\n\n") +
       "\n\n━━━━━━━━━━━━━━━━━\n" +
       "📦 *Total Item:* " + count + " jenis produk\n" +
       "💰 *TOTAL PEMBAYARAN:* *Rp" + Math.round(total).toLocaleString('id-ID') + "*\n" +
