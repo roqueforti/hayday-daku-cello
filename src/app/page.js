@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { storeRepository } from '../services/StoreRepository';
 import { Cart } from '../models/Cart';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { LoadingScreen } from '../components/LoadingScreen';
 
 export default function StorePage() {
-  const [storeData, setStoreData] = useState({ wa: '6287719747833', thx: '', sections: [] });
+  const [storeData, setStoreData] = useState(() => storeRepository.createDefaultStoreState());
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [cart, setCart] = useState(new Cart());
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
@@ -23,7 +25,9 @@ export default function StorePage() {
   useEffect(() => {
     // 1. Tampilkan data lokal sebagai instant visual fallback
     const local = storeRepository.loadLocal();
-    setStoreData(local);
+    if (local && local.sections && local.sections.length > 0) {
+      setStoreData(local);
+    }
 
     // 2. Fetch data terbaru langsung dari Firestore (bypass cache lokal)
     storeRepository.fetchCloud().then((cloudData) => {
@@ -39,7 +43,24 @@ export default function StorePage() {
       }
     });
 
-    return () => unsubscribe();
+    // Tunggu font & konten stabil sebelum membuka loading screen (durasi halus 700ms)
+    // agar animasi rapi dan tampilan di balik layar sudah 100% matang tanpa FOUC
+    const timer = setTimeout(() => {
+      if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          setIsPageLoading(false);
+        }).catch(() => {
+          setIsPageLoading(false);
+        });
+      } else {
+        setIsPageLoading(false);
+      }
+    }, 700);
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timer);
+    };
   }, []);
 
   // Update item cart
@@ -129,6 +150,9 @@ export default function StorePage() {
 
   return (
     <div className="store-app-wrap">
+      {/* Animasi Loading Hay Day yang Rapi & Halus */}
+      <LoadingScreen isLoading={isPageLoading} text="Menyiapkan toko & produk segar..." />
+
       {/* Beautiful Fluffy Animated Vector Clouds */}
       <div className="sky-clouds" aria-hidden="true">
         <div className="cloud cloud-1">

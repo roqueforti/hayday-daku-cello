@@ -8,6 +8,7 @@ import { Category } from '../../models/Category';
 import { ItemModal } from '../../components/ItemModal';
 import { CategoryModal } from '../../components/CategoryModal';
 import { ConfirmModal } from '../../components/ConfirmModal';
+import { LoadingScreen } from '../../components/LoadingScreen';
 
 const ADMIN_HASH = "12222e06fa6847a3b4a8f6fe79ea75d8ce39bfdbef5f054ea4a902cb0a48ef3d";
 const AUTH_KEY = "hayday_admin_auth_v2";
@@ -20,6 +21,7 @@ async function sha256(str) {
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
@@ -61,7 +63,15 @@ export default function AdminPage() {
         setStoreData(cloud);
       }
     });
-    return () => unsub();
+
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 600);
+
+    return () => {
+      unsub();
+      clearTimeout(timer);
+    };
   }, [isDirty]);
 
   const handleLogin = async (e) => {
@@ -348,6 +358,7 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <div className="login-screen">
+        <LoadingScreen isLoading={isInitialLoading} text="Menyiapkan Kunci Gudang..." />
         {/* Papan Kayu Hay Day */}
         <div className="hayday-login-board">
           {/* Hiasan Gantungan Kayu / Tali Farm */}
@@ -644,6 +655,7 @@ export default function AdminPage() {
 
   return (
     <div className="admin-app-wrap">
+      <LoadingScreen isLoading={isInitialLoading} text="Menyiapkan Data Gudang..." />
       {/* Mobile App Bar */}
       <header className="mobile-app-header">
         <div className="mobile-header-top">

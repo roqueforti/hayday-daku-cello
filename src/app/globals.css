@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lilita+One&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
 :root {
   color-scheme: light;
@@ -708,4 +707,335 @@ input:focus, select:focus {
     font-size: 14.5px;
   }
 }
+
+/* =========================================================
+   HAY DAY THEMED INITIAL LOADING SCREEN (ANTI-FLICKER / FOUC)
+   ========================================================= */
+.hayday-loading-screen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 30%, #e6f6ff 0%, #bfe8ff 55%, #88d451 100%);
+  background-attachment: fixed;
+  padding: 16px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s;
+  box-sizing: border-box;
+  overflow: hidden;
+  user-select: none;
+}
+
+.hayday-loading-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.03);
+  pointer-events: none;
+}
+
+/* Background floating clouds */
+.loading-clouds-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.loading-cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50px;
+  filter: blur(1px);
+}
+.loading-cloud::before,
+.loading-cloud::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+
+.lcloud-1 {
+  width: 180px;
+  height: 48px;
+  top: 15%;
+  left: 8%;
+  animation: floatCloudLeft 22s linear infinite;
+}
+.lcloud-1::before {
+  width: 70px;
+  height: 70px;
+  top: -30px;
+  left: 30px;
+}
+.lcloud-1::after {
+  width: 90px;
+  height: 90px;
+  top: -45px;
+  left: 75px;
+}
+
+.lcloud-2 {
+  width: 220px;
+  height: 56px;
+  bottom: 22%;
+  right: 6%;
+  animation: floatCloudRight 26s linear infinite;
+}
+.lcloud-2::before {
+  width: 80px;
+  height: 80px;
+  top: -36px;
+  left: 40px;
+}
+.lcloud-2::after {
+  width: 105px;
+  height: 105px;
+  top: -52px;
+  left: 95px;
+}
+
+.lcloud-3 {
+  width: 140px;
+  height: 40px;
+  top: 48%;
+  left: 82%;
+  opacity: 0.5;
+  animation: floatCloudLeft 30s linear infinite;
+}
+
+@keyframes floatCloudLeft {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(40px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes floatCloudRight {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-40px); }
+  100% { transform: translateX(0); }
+}
+
+/* Central Hay Day Board */
+.loading-board {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  background: #fffdf8;
+  border: 4px solid #7a4312;
+  border-radius: 26px;
+  padding: 34px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 48px rgba(56, 26, 7, 0.35), 0 4px 0 #4a2405, inset 0 2px 0 rgba(255, 255, 255, 0.9);
+  animation: bouncePopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bouncePopIn {
+  0% { opacity: 0; transform: scale(0.85) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Board Hangers */
+.loading-board-hangers {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 48px;
+  pointer-events: none;
+}
+.loading-board-hangers .hanger-bolt {
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle at 35% 35%, #ffd276, #9b5c16 80%);
+  border: 2px solid #5a300c;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+/* Logo avatar */
+.loading-avatar-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 14px;
+}
+
+.loading-logo-glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.45) 0%, rgba(255, 179, 0, 0) 70%);
+  animation: pulseGlow 2.2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(0.96); opacity: 0.6; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+.loading-logo-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #b97a38;
+  box-shadow: 0 6px 16px rgba(56, 26, 7, 0.28), 0 2px 0 #7a4312;
+  background: #fff;
+  animation: floatLogo 3s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.loading-avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #ffd54f;
+  border: 2px solid #7a4312;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Typography */
+.loading-title {
+  margin: 0;
+  font-family: "Lilita One", "Fredoka", cursive, sans-serif;
+  font-size: 23px;
+  letter-spacing: 0.8px;
+  color: #fff;
+  text-shadow: 0 2px 0 #7a4312, 0 4px 8px rgba(74, 36, 5, 0.45), -1.5px -1.5px 0 #7a4312, 1.5px -1.5px 0 #7a4312, -1.5px 1.5px 0 #7a4312, 1.5px 1.5px 0 #7a4312;
+}
+
+.loading-sub {
+  margin: 6px 0 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #7b4f26;
+  font-family: "Nunito", "Fredoka", sans-serif;
+}
+
+/* Progress bar */
+.loading-progress-track {
+  width: 100%;
+  max-width: 320px;
+  height: 18px;
+  background: #4a2408;
+  border: 2.5px solid #2e1404;
+  border-radius: 999px;
+  padding: 2.5px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), 0 2px 0 rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.loading-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #44b539 0%, #8ae434 50%, #fbd53c 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-progress-shine {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.25),
+    rgba(255, 255, 255, 0.25) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  animation: shineStripes 1.2s linear infinite;
+}
+
+@keyframes shineStripes {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(28px); }
+}
+
+/* Rotating status badge */
+.loading-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  background: #fdf3df;
+  border: 1.5px solid #e2c9a4;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #633c19;
+  min-height: 32px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  animation: fadeInText 0.3s ease;
+}
+
+@keyframes fadeInText {
+  0% { opacity: 0; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Farm icons row */
+.loading-farm-icons {
+  display: flex;
+  gap: 12px;
+  font-size: 20px;
+  margin-top: 4px;
+}
+.loading-farm-icons span {
+  display: inline-block;
+  animation: iconHop 1.6s ease-in-out infinite;
+}
+.loading-farm-icons span:nth-child(1) { animation-delay: 0s; }
+.loading-farm-icons span:nth-child(2) { animation-delay: 0.2s; }
+.loading-farm-icons span:nth-child(3) { animation-delay: 0.4s; }
+.loading-farm-icons span:nth-child(4) { animation-delay: 0.6s; }
+.loading-farm-icons span:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes iconHop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (max-width: 480px) {
+  .loading-board {
+    padding: 28px 18px 20px;
+    border-radius: 22px;
+  }
+  .loading-title {
+    font-size: 20px;
+  }
+  .loading-avatar-wrap {
+    width: 82px;
+    height: 82px;
+  }
+}
+
 
