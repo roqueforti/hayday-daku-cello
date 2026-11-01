@@ -57,6 +57,14 @@ export class Cart {
     return this.items.size;
   }
 
+  getTotalQuantity() {
+    let total = 0;
+    for (const item of this.items.values()) {
+      total += Number(item.quantity) || 0;
+    }
+    return total;
+  }
+
   getAllItems() {
     return Array.from(this.items.values());
   }
@@ -65,12 +73,14 @@ export class Cart {
     const lines = [];
     let count = 0;
     let total = 0;
+    let totalQty = 0;
 
     for (const item of this.items.values()) {
       const p = item.product;
       const subtotal = item.getSubtotal();
       total += subtotal;
       count++;
+      totalQty += Number(item.quantity) || 0;
       const subtotalFormatted = 'Rp' + Math.round(subtotal).toLocaleString('id-ID');
       lines.push(`• *${p.name}*: ${item.quantity} ${p.unitType} = *${subtotalFormatted}*`);
     }
@@ -81,7 +91,8 @@ export class Cart {
       "📋 *RINCIAN PESANAN:*\n\n" +
       lines.join("\n\n") +
       "\n\n━━━━━━━━━━━━━━━━━\n" +
-      "📦 *Total Item:* " + count + " jenis produk\n" +
+      "📦 *Total Jenis:* " + count + " jenis produk\n" +
+      "🔢 *Total Jumlah Item:* " + totalQty.toLocaleString('id-ID') + " item\n" +
       "💰 *TOTAL PEMBAYARAN:* *Rp" + Math.round(total).toLocaleString('id-ID') + "*\n" +
       "━━━━━━━━━━━━━━━━━\n";
 

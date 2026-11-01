@@ -147,6 +147,7 @@ export default function StorePage() {
 
   const totalAmount = cart.getTotalPrice();
   const totalCount = cart.getTotalItemCount();
+  const totalQuantity = cart.getTotalQuantity();
 
   return (
     <div className="store-app-wrap">
@@ -390,7 +391,7 @@ export default function StorePage() {
                   padding: '3px 10px',
                   fontWeight: 700
                 }}>
-                  {totalCount} item
+                  {totalCount} jenis ({totalQuantity.toLocaleString('id-ID')} item)
                 </span>
               </div>
 
@@ -498,7 +499,7 @@ export default function StorePage() {
       <div className="bar">
         <div className="in">
           <div className="tot">
-            <small>{totalCount > 0 ? `${totalCount} item dipilih` : 'Belum ada item dipilih'}</small>
+            <small>{totalCount > 0 ? `${totalCount} jenis (${totalQuantity.toLocaleString('id-ID')} item)` : 'Belum ada item dipilih'}</small>
             <span>Rp{Math.round(totalAmount).toLocaleString('id-ID')}</span>
           </div>
           <button
@@ -594,7 +595,7 @@ export default function StorePage() {
             {/* Total Pembayaran & Tombol Lanjut */}
             <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '2px solid #ebdcc8' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                <span style={{ fontSize: '14px', fontWeight: 700, color: '#6e4a25' }}>Total Estimasi ({totalCount} jenis produk):</span>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#6e4a25' }}>Total Estimasi ({totalCount} jenis produk • {totalQuantity.toLocaleString('id-ID')} item):</span>
                 <span style={{ fontSize: '20px', fontWeight: 900, color: '#277220', fontFamily: 'JetBrains Mono, monospace' }}>
                   Rp{Math.round(totalAmount).toLocaleString('id-ID')}
                 </span>
@@ -627,7 +628,7 @@ export default function StorePage() {
         <div className="modal-bg active" onClick={() => setIsMobileReceiptOpen(false)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-title">
-              <span>🧾 Rincian Pesanan ({totalCount} item)</span>
+              <span>🧾 Rincian Pesanan ({totalCount} jenis • {totalQuantity.toLocaleString('id-ID')} item)</span>
               <button className="modal-close" onClick={() => setIsMobileReceiptOpen(false)}>✕</button>
             </div>
             <div className="receipt-items-list" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
