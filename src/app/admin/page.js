@@ -25,7 +25,7 @@ export default function AdminPage() {
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const [storeData, setStoreData] = useState({ wa: '', thx: '', sections: [] });
+  const [storeData, setStoreData] = useState({ wa: '', thx: '', qris: '', sections: [] });
   const [isDirty, setIsDirty] = useState(false);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
   const [toastMessage, setToastMessage] = useState('');
@@ -260,7 +260,8 @@ export default function AdminPage() {
 
     const settingsData = [
       { "Kunci Pengaturan": "Nomor WhatsApp", "Nilai": storeData.wa },
-      { "Kunci Pengaturan": "Teks Footer / Catatan", "Nilai": storeData.thx }
+      { "Kunci Pengaturan": "Teks Footer / Catatan", "Nilai": storeData.thx },
+      { "Kunci Pengaturan": "String QRIS Statis", "Nilai": storeData.qris || '' }
     ];
 
     const wb = XLSX.utils.book_new();
@@ -293,6 +294,7 @@ export default function AdminPage() {
 
         let newWa = storeData.wa;
         let newThx = storeData.thx;
+        let newQris = storeData.qris;
 
         if (wb.Sheets["Pengaturan Toko"]) {
           const settingsRows = XLSX.utils.sheet_to_json(wb.Sheets["Pengaturan Toko"]);
@@ -301,6 +303,7 @@ export default function AdminPage() {
             const v = (row["Nilai"] || "").toString().trim();
             if (k.includes("whatsapp") && v) newWa = v;
             if (k.includes("footer") && v) newThx = v;
+            if (k.includes("qris") && v) newQris = v;
           });
         }
 
@@ -343,7 +346,7 @@ export default function AdminPage() {
         });
 
         const newSections = catOrder.map(name => new Category(catMap[name]));
-        setStoreData({ wa: newWa, thx: newThx, sections: newSections });
+        setStoreData({ wa: newWa, thx: newThx, qris: newQris, sections: newSections });
         setIsDirty(true);
         showToast("Data Excel berhasil di-import! Silakan simpan. 📊✅");
       } catch (err) {
@@ -970,6 +973,24 @@ export default function AdminPage() {
                   placeholder="🌻 Terima kasih sudah berbelanja di Hay Day Daku Cello 🌻"
                   className="app-text-input"
                 />
+              </div>
+
+              <div className="app-input-group" style={{ marginTop: '16px' }}>
+                <label className="app-label">Kode String QRIS Toko (EMVCo)</label>
+                <textarea
+                  rows={3}
+                  value={storeData.qris || ''}
+                  onChange={(e) => {
+                    setStoreData({ ...storeData, qris: e.target.value.trim() });
+                    setIsDirty(true);
+                  }}
+                  placeholder="000201010211..."
+                  className="app-text-input"
+                  style={{ fontFamily: 'monospace', fontSize: '11.5px' }}
+                />
+                <span className="app-helper-text">
+                  String QRIS statis toko Anda (Daku cello, Mainan). Nominal belanjaan akan otomatis disisipkan saat pelanggan melakukan pembayaran QRIS.
+                </span>
               </div>
 
               <div style={{ marginTop: '20px' }}>

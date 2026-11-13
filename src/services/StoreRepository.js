@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { getFirestoreDb } from '../lib/firebase';
 import { Category } from '../models/Category';
-import { DEFAULT_WA, DEFAULT_THX, DEFAULT_SECTIONS } from '../lib/constants';
+import { DEFAULT_WA, DEFAULT_THX, DEFAULT_QRIS, DEFAULT_SECTIONS } from '../lib/constants';
 
 const LOCAL_STORAGE_KEY = 'hayday_daku_cello_data';
 
@@ -34,6 +34,7 @@ export class StoreRepository {
       const payload = {
         wa: storeState.wa || DEFAULT_WA,
         thx: storeState.thx || DEFAULT_THX,
+        qris: storeState.qris || DEFAULT_QRIS,
         sections: storeState.sections.map(s => s.toLegacy())
       };
       localStorage.setItem(this.storageKey, JSON.stringify(payload));
@@ -48,6 +49,7 @@ export class StoreRepository {
     const payload = {
       wa: storeState.wa || DEFAULT_WA,
       thx: storeState.thx || DEFAULT_THX,
+      qris: storeState.qris || DEFAULT_QRIS,
       sections: storeState.sections.map(s => s.toLegacy()),
       updatedAt: serverTimestamp()
     };
@@ -124,15 +126,17 @@ export class StoreRepository {
   parseStoreData(data) {
     const wa = data.wa || DEFAULT_WA;
     const thx = data.thx || DEFAULT_THX;
+    const qris = data.qris || DEFAULT_QRIS;
     const rawSections = Array.isArray(data.sections) ? data.sections : DEFAULT_SECTIONS;
     const sections = rawSections.map(secData => new Category(secData));
-    return { wa, thx, sections };
+    return { wa, thx, qris, sections };
   }
 
   createDefaultStoreState() {
     return {
       wa: DEFAULT_WA,
       thx: DEFAULT_THX,
+      qris: DEFAULT_QRIS,
       sections: DEFAULT_SECTIONS.map(s => new Category(s))
     };
   }

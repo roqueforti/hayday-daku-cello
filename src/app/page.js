@@ -5,6 +5,7 @@ import { storeRepository } from '../services/StoreRepository';
 import { Cart } from '../models/Cart';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { LoadingScreen } from '../components/LoadingScreen';
+import { QrisModal } from '../components/QrisModal';
 
 export default function StorePage() {
   const [storeData, setStoreData] = useState(() => storeRepository.createDefaultStoreState());
@@ -127,6 +128,7 @@ export default function StorePage() {
   }, [storeData, searchQuery]);
 
   const [isOrderConfirmOpen, setIsOrderConfirmOpen] = useState(false);
+  const [isQrisModalOpen, setIsQrisModalOpen] = useState(false);
 
   const handleOpenCheckoutModal = () => {
     if (cart.getTotalItemCount() === 0) {
@@ -600,23 +602,55 @@ export default function StorePage() {
                   Rp{Math.round(totalAmount).toLocaleString('id-ID')}
                 </span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '8px' }}>
-                <button
-                  type="button"
-                  className="btn btn-default"
-                  onClick={() => setIsOrderConfirmOpen(false)}
-                  style={{ justifyContent: 'center', padding: '10px', fontWeight: 700 }}
-                >
-                  Ubah Pesanan
-                </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={handleSendOrderToWA}
-                  style={{ justifyContent: 'center', padding: '10px', fontSize: '14px', fontWeight: 800 }}
+                  onClick={() => {
+                    setIsOrderConfirmOpen(false);
+                    setIsQrisModalOpen(true);
+                  }}
+                  style={{
+                    justifyContent: 'center',
+                    padding: '12px 14px',
+                    fontSize: '15px',
+                    fontWeight: 800,
+                    background: 'linear-gradient(135deg, #1f6b1b 0%, #308f2a 100%)',
+                    boxShadow: '0 4px 14px rgba(31, 107, 27, 0.35)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
                 >
-                  Kirim ke WhatsApp 💬
+                  <span>💳</span> Bayar via QRIS Dinamis (Otomatis)
                 </button>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                  <button
+                    type="button"
+                    className="btn btn-default"
+                    onClick={() => setIsOrderConfirmOpen(false)}
+                    style={{ justifyContent: 'center', padding: '10px', fontWeight: 700 }}
+                  >
+                    Ubah Pesanan
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-default"
+                    onClick={handleSendOrderToWA}
+                    style={{
+                      justifyContent: 'center',
+                      padding: '10px',
+                      fontSize: '13.5px',
+                      fontWeight: 700,
+                      color: '#075E54',
+                      borderColor: '#25D366',
+                      background: '#f2fcf5'
+                    }}
+                  >
+                    Chat WA Saja 💬
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -682,6 +716,21 @@ export default function StorePage() {
         type="danger"
         onConfirm={clearAllCart}
         onCancel={() => setConfirmClearCartOpen(false)}
+      />
+
+      {/* Modal QRIS Dinamis Otomatis */}
+      <QrisModal
+        isOpen={isQrisModalOpen}
+        onClose={() => setIsQrisModalOpen(false)}
+        totalAmount={totalAmount}
+        totalCount={totalCount}
+        totalQuantity={totalQuantity}
+        customerNote={customerNote}
+        cart={cart}
+        storeData={storeData}
+        onOrderSuccess={() => {
+          showToast("Pesanan siap dikonfirmasi ke WhatsApp! 🚀");
+        }}
       />
 
       {/* Toast Alert */}
