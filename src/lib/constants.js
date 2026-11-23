@@ -7,68 +7,427 @@ export const DEFAULT_GAS_URL = process.env.NEXT_PUBLIC_GAS_URL || "";
 
 export const DEFAULT_SECTIONS = [
   {
-    t: "🧰 Alat & Bahan",
-    items: [
-      { id: "sekop", e: "assets/icons/sekop.png", n: "Sekop", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-      { id: "kapak", e: "assets/icons/kapak.png", n: "Kapak", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
-      { id: "gergaji", e: "assets/icons/gergaji.png", n: "Gergaji", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" }
-    ]
-  },
-  {
-    t: "🥛 Dapur & Peternakan",
-    items: [
-      { id: "krim", e: "assets/icons/krim.png", n: "Krim", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#f57c1f" },
-      { id: "gulaputih", e: "assets/icons/gulaputih.png", n: "Gula Putih", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e9b200" },
-      { id: "gulamerah", e: "assets/icons/gulamerah.png", n: "Gula Merah", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#27b83a" },
-      { id: "babi", e: "assets/icons/babi.png", n: "Daging Babi", u: 100, ut: "pcs", p: 1200, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" },
-      { id: "telor", e: "assets/icons/telor.png", n: "Telor", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#2d73e6" },
-      { id: "mentega", e: "assets/icons/mentega.png", n: "Mentega", u: 100, ut: "pcs", p: 1000, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-      { id: "keju", e: "assets/icons/keju.png", n: "Keju", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#e8359b" },
-      { id: "madu", e: "assets/icons/madu.png", n: "Madu", u: 100, ut: "pcs", p: 2000, d: "Min. beli 10 • harga per 100 pcs", c: "#e0232f" }
-    ]
-  },
-  {
-    t: "🌊 Laut",
-    items: [
-      { id: "ikan", e: "assets/icons/ikan.png", n: "Ikan", u: 100, ut: "pcs", p: 1500, d: "Min. beli 10 • harga per 100 pcs", c: "#7a2fe0" },
-      { id: "lopster", e: "assets/icons/lopster.png", n: "Lopster", u: 100, ut: "pcs", p: 2500, d: "Min. beli 10 • harga per 100 pcs", c: "#13a9a0" }
-    ]
-  },
-  {
-    t: "🏡 Tagar BEM (per paket)",
-    pk: 1,
-    items: [
+    "pk": 0,
+    "items": [
       {
-        id: "bem1",
-        e: "assets/icons/bem.png",
-        icons: ["assets/icons/Bolt.png", "assets/icons/Plank.png", "assets/icons/Duct Tape.png"],
-        n: "Tagar BEM",
-        u: 1,
-        ut: "paket",
-        p: 1500,
-        d: "Include Baut, Papan, Lakban",
-        c: "#2e9a3a"
+        "id": "sekop",
+        "n": "Sekop",
+        "p": 1000,
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "e": "assets/icons/sekop.png",
+        "ut": "pcs",
+        "c": "#7a2fe0",
+        "u": 100
       },
       {
-        id: "bem30",
-        e: "assets/icons/bem.png",
-        icons: ["assets/icons/Bolt.png", "assets/icons/Plank.png", "assets/icons/Duct Tape.png"],
-        n: "Tagar BEM (30 pcs)",
-        u: 1,
-        ut: "paket",
-        p: 28500,
-        d: "Include Baut, Papan, Lakban (30 pcs)",
-        c: "#2d73e6"
+        "e": "assets/icons/kapak.png",
+        "id": "kapak",
+        "c": "#e8359b",
+        "u": 100,
+        "n": "Kapak",
+        "p": 1000,
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "ut": "pcs"
+      },
+      {
+        "p": 1500,
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "id": "gergaji",
+        "n": "Gergaji",
+        "c": "#e0232f",
+        "ut": "pcs",
+        "u": 100,
+        "e": "assets/icons/gergaji.png"
       }
-    ]
+    ],
+    "t": "🧰 Alat & Bahan"
   },
   {
-    t: "🪙 Koin LV 40++ (Lumbung kosong 250)",
-    pk: 1,
-    items: [
-      { id: "k1", e: "assets/icons/koin.png", n: "1 Juta Koin", u: 1, ut: "paket", p: 8000, d: "Lumbung kosong 250", c: "#7a2fe0" },
-      { id: "k10", e: "assets/icons/koin.png", n: "10 Juta Koin", u: 1, ut: "paket", p: 70000, d: "Lumbung kosong 250", c: "#e8359b" }
-    ]
+    "pk": 0,
+    "items": [
+      {
+        "n": "Krim",
+        "ut": "pcs",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "p": 1000,
+        "id": "krim",
+        "e": "assets/icons/krim.png",
+        "u": 100,
+        "c": "#f57c1f"
+      },
+      {
+        "c": "#e9b200",
+        "u": 100,
+        "e": "assets/icons/gulaputih.png",
+        "ut": "pcs",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "p": 1500,
+        "id": "gulaputih",
+        "n": "Gula Putih"
+      },
+      {
+        "ut": "pcs",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "p": 1000,
+        "n": "Gula Merah",
+        "u": 100,
+        "c": "#27b83a",
+        "id": "gulamerah",
+        "e": "assets/icons/gulamerah.png"
+      },
+      {
+        "id": "babi",
+        "n": "Daging Babi",
+        "p": 1200,
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "ut": "pcs",
+        "e": "assets/icons/babi.png",
+        "c": "#13a9a0",
+        "u": 100
+      },
+      {
+        "e": "assets/icons/telor.png",
+        "id": "telor",
+        "u": 100,
+        "c": "#2d73e6",
+        "n": "Telor",
+        "ut": "pcs",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "p": 1000
+      },
+      {
+        "ut": "pcs",
+        "p": 1000,
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "n": "Mentega",
+        "u": 100,
+        "c": "#7a2fe0",
+        "id": "mentega",
+        "e": "assets/icons/mentega.png"
+      },
+      {
+        "c": "#e8359b",
+        "min": 20,
+        "u": 100,
+        "ut": "pcs",
+        "p": 1500,
+        "id": "keju",
+        "n": "Keju",
+        "e": "assets/icons/keju.png",
+        "d": "Min. beli 20 • harga per 100 pcs"
+      },
+      {
+        "id": "item_1792585533841",
+        "d": "Min. Beli 20.harga per 100pcs",
+        "ut": "pcs",
+        "e": "assets/icons/Goat Cheese.png",
+        "n": "Keju kambing",
+        "p": 2500,
+        "min": 20,
+        "c": "#46b23c",
+        "u": 100
+      },
+      {
+        "p": 1500,
+        "d": "Min. Beli 10.harga per 100pcs",
+        "id": "item_1792620525627",
+        "n": "Sirup",
+        "c": "#46b23c",
+        "ut": "pcs",
+        "u": 100,
+        "e": "assets/icons/Syrup.png"
+      },
+      {
+        "d": "Min. Beli 10.harga per 100pcs",
+        "e": "assets/icons/Milk.png",
+        "min": 0,
+        "id": "item_1792672242168",
+        "n": "Susu sapi",
+        "p": 1200,
+        "ut": "pcs",
+        "u": 100,
+        "c": "#46b23c"
+      }
+    ],
+    "t": "🥛 Dapur & Peternakan"
+  },
+  {
+    "items": [
+      {
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "p": 1500,
+        "ut": "pcs",
+        "n": "Ikan",
+        "c": "#7a2fe0",
+        "id": "ikan",
+        "u": 100,
+        "e": "assets/icons/ikan.png"
+      },
+      {
+        "n": "Lopster",
+        "ut": "pcs",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "p": 2500,
+        "id": "lopster",
+        "e": "assets/icons/lopster.png",
+        "u": 100,
+        "c": "#13a9a0"
+      },
+      {
+        "ut": "pcs",
+        "c": "#46b23c",
+        "u": 100,
+        "n": "Bulu bebek",
+        "id": "item_1793150328793",
+        "p": 2500,
+        "e": "assets/icons/Duck Feather.png",
+        "min": 20,
+        "d": "Min. beli 20 • harga per 100 pcs"
+      }
+    ],
+    "t": "🌊 Laut",
+    "pk": 0
+  },
+  {
+    "pk": 1,
+    "items": [
+      {
+        "p": 1500,
+        "ut": "paket",
+        "icons": [
+          "assets/icons/Bolt.png",
+          "assets/icons/Plank.png",
+          "assets/icons/Duct Tape.png"
+        ],
+        "n": "Tagar BEM",
+        "c": "#2e9a3a",
+        "u": 1,
+        "id": "bem1",
+        "d": "Per paket",
+        "e": "assets/icons/bem.png"
+      },
+      {
+        "e": "assets/icons/bem.png",
+        "icons": [
+          "assets/icons/Bolt.png",
+          "assets/icons/Plank.png",
+          "assets/icons/Duct Tape.png"
+        ],
+        "min": 0,
+        "d": "Per paket",
+        "u": 1,
+        "id": "bem30",
+        "c": "#2d73e6",
+        "n": "30Tagar BEM",
+        "ut": "paket",
+        "p": 30000
+      }
+    ],
+    "t": "🏡 Tagar BEM (per paket)"
+  },
+  {
+    "items": [
+      {
+        "id": "k1",
+        "n": "Juta Koin lv 40++",
+        "d": "Lumbung kosong 250",
+        "p": 8000,
+        "ut": "paket",
+        "e": "assets/icons/koin.png",
+        "u": 1,
+        "c": "#7a2fe0"
+      },
+      {
+        "u": 1,
+        "c": "#e8359b",
+        "e": "assets/icons/koin.png",
+        "id": "k10",
+        "d": "Lumbung kosong 250",
+        "p": 70000,
+        "n": "Juta Koin lv 40++",
+        "ut": "paket"
+      }
+    ],
+    "t": "🪙 Koin LV 40++ (Lumbung kosong 250)",
+    "pk": 1
+  },
+  {
+    "items": [
+      {
+        "id": "item_1792640988855",
+        "d": "Min. Beli 20.harga per 100pcs",
+        "min": 20,
+        "ut": "pcs",
+        "e": "assets/icons/Soy Sauce.png",
+        "n": "Kecap asin",
+        "p": 3200,
+        "c": "#46b23c",
+        "u": 100
+      },
+      {
+        "p": 3000,
+        "n": "Minyak zaitun",
+        "u": 100,
+        "c": "#46b23c",
+        "ut": "pcs",
+        "d": "Min. Beli 10.harga per 100pcs",
+        "id": "item_1792641515177",
+        "min": 0,
+        "e": "assets/icons/Olive Oil.png"
+      },
+      {
+        "ut": "pcs",
+        "n": "Saus tomat",
+        "min": 0,
+        "p": 3000,
+        "id": "item_1792641574420",
+        "u": 100,
+        "c": "#46b23c",
+        "d": "Min. Beli 10.harga per 100pcs",
+        "e": "assets/icons/Tomato Sauce.png"
+      },
+      {
+        "e": "assets/icons/Mayonnaise.png",
+        "d": "Min. Beli 10.harga per 100pcs",
+        "min": 0,
+        "u": 100,
+        "c": "#46b23c",
+        "id": "item_1792641709687",
+        "p": 3200,
+        "n": "Mayones",
+        "ut": "pcs"
+      },
+      {
+        "e": "assets/icons/Lemon Curd.png",
+        "id": "item_1792641751669",
+        "min": 20,
+        "ut": "pcs",
+        "d": "Min. Beli 10.harga per 100pcs",
+        "u": 100,
+        "c": "#46b23c",
+        "n": "Didih lemon",
+        "p": 3700
+      },
+      {
+        "e": "assets/icons/Salsa.png",
+        "min": 0,
+        "d": "Min. Beli 10.harga per 100pcs",
+        "id": "item_1792641813955",
+        "u": 100,
+        "c": "#46b23c",
+        "n": "Salsa",
+        "ut": "pcs",
+        "p": 3100
+      }
+    ],
+    "pk": 0,
+    "t": "Pembuat saus"
+  },
+  {
+    "items": [
+      {
+        "id": "item_1793149029931",
+        "d": "Min. beli 20 • harga per 100 pcs",
+        "min": 20,
+        "ut": "pcs",
+        "e": "assets/icons/Beeswax.png",
+        "p": 2500,
+        "n": "Lilin lebah",
+        "u": 100,
+        "c": "#46b23c"
+      },
+      {
+        "e": "assets/icons/Honey.png",
+        "id": "item_1793149143512",
+        "min": 20,
+        "d": "Min. beli 20 • harga per 100 pcs",
+        "ut": "pcs",
+        "c": "#46b23c",
+        "u": 100,
+        "n": "Madu",
+        "p": 2000
+      }
+    ],
+    "t": "Pengekstrak madu",
+    "pk": 0
+  },
+  {
+    "items": [
+      {
+        "e": "assets/icons/Bread.png",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "c": "#46b23c",
+        "id": "item_1794226541035",
+        "u": 100,
+        "n": "Roti",
+        "min": 10,
+        "ut": "pcs",
+        "p": 4000
+      }
+    ],
+    "t": "Toko Roti",
+    "pk": 0
+  },
+  {
+    "items": [
+      {
+        "p": 4000,
+        "n": "Besi batanga",
+        "u": 100,
+        "c": "#46b23c",
+        "ut": "pcs",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "min": 10,
+        "id": "item_1794655121551",
+        "e": "assets/icons/Iron Bar.png"
+      },
+      {
+        "p": 4000,
+        "ut": "pcs",
+        "n": "Batu bara",
+        "c": "#46b23c",
+        "id": "item_1794801507513",
+        "u": 100,
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "min": 10,
+        "e": "assets/icons/Refined Coal.png"
+      },
+      {
+        "id": "item_1794801655243",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "ut": "pcs",
+        "e": "assets/icons/Gold Bar.png",
+        "p": 4000,
+        "n": "Emas",
+        "min": 10,
+        "u": 100,
+        "c": "#46b23c"
+      },
+      {
+        "ut": "pcs",
+        "u": 100,
+        "c": "#46b23c",
+        "n": "Perak",
+        "id": "item_1794801834044",
+        "p": 4000,
+        "min": 10,
+        "e": "assets/icons/Silver Bar.png",
+        "d": "Min. beli 10 • harga per 100 pcs"
+      },
+      {
+        "c": "#46b23c",
+        "u": 100,
+        "min": 10,
+        "p": 4000,
+        "n": "Platinum",
+        "e": "assets/icons/Platinum Bar.png",
+        "ut": "pcs",
+        "d": "Min. beli 10 • harga per 100 pcs",
+        "id": "item_1794801987793"
+      }
+    ],
+    "t": "Peleburan",
+    "pk": 0
   }
 ];
 
