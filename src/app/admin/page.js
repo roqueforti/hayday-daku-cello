@@ -9,6 +9,7 @@ import { ItemModal } from '../../components/ItemModal';
 import { CategoryModal } from '../../components/CategoryModal';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import { LoadingScreen } from '../../components/LoadingScreen';
+import { GAS_SCRIPT_CODE } from '../../lib/gasScriptCode';
 
 const ADMIN_HASH = "12222e06fa6847a3b4a8f6fe79ea75d8ce39bfdbef5f054ea4a902cb0a48ef3d";
 const AUTH_KEY = "hayday_admin_auth_v2";
@@ -25,12 +26,19 @@ export default function AdminPage() {
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const [storeData, setStoreData] = useState({ wa: '', thx: '', qris: '', sections: [] });
+  const [storeData, setStoreData] = useState({ wa: '', thx: '', qris: '', gasUrl: '', sections: [] });
   const [isDirty, setIsDirty] = useState(false);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
   const [toastMessage, setToastMessage] = useState('');
   const [mobileTab, setMobileTab] = useState('catalog'); // 'catalog' | 'settings' | 'tools'
   const [adminSearch, setAdminSearch] = useState('');
+
+  // Google Apps Script state
+  const [isTestingGas, setIsTestingGas] = useState(false);
+  const [gasTestResult, setGasTestResult] = useState(null);
+  const [isSyncingGas, setIsSyncingGas] = useState(false);
+  const [showGasModal, setShowGasModal] = useState(false);
+  const [gasCodeCopied, setGasCodeCopied] = useState(false);
 
   // Modals state
   const [itemModalState, setItemModalState] = useState({ isOpen: false, categoryIndex: 0, productIndex: -1, initialProduct: null });
@@ -131,6 +139,57 @@ export default function AdminPage() {
       showToast("⚠️ Gagal ke cloud, tersimpan di lokal.");
       setIsDirty(true);
     }
+  };
+
+  const handleTestGas = async () => {
+    if (!storeData.gasUrl) {
+      setGasTestResult({ success: false, error: "Masukkan URL Google Apps Script terlebih dahulu." });
+      return;
+    }
+    setIsTestingGas(true);
+    setGasTestResult(null);
+    try {
+      const res = await storeRepository.testConnection(storeData.gasUrl);
+      setGasTestResult(res);
+      if (res.success) {
+        showToast("Koneksi Google Apps Script Berhasil! 🟢");
+      } else {
+        showToast("Koneksi gagal: " + res.error);
+      }
+    } catch (e) {
+      setGasTestResult({ success: false, error: e.message });
+    } finally {
+      setIsTestingGas(false);
+    }
+  };
+
+  const handleSyncToGas = async () => {
+    if (!storeData.gasUrl) {
+      alert("Masukkan URL Google Apps Script terlebih dahulu sebelum sinkronisasi!");
+      return;
+    }
+    setIsSyncingGas(true);
+    showToast("Mengunggah semua data ke Google Sheets... 📤");
+    try {
+      const res = await storeRepository.saveToCloud(storeData);
+      if (res.cloud) {
+        showToast("Seluruh katalog berhasil disinkronkan ke Google Sheets! 🎉");
+        setGasTestResult({ success: true, message: "Sinkronisasi berhasil! Data tersimpan di Google Sheets." });
+      } else {
+        showToast("⚠️ Gagal ke cloud, data tersimpan di lokal.");
+      }
+    } catch (e) {
+      alert("Gagal sinkronisasi: " + e.message);
+    } finally {
+      setIsSyncingGas(false);
+    }
+  };
+
+  const handleCopyGasCode = () => {
+    navigator.clipboard.writeText(GAS_SCRIPT_CODE);
+    setGasCodeCopied(true);
+    showToast("Kode Apps Script disalin ke clipboard! 📋");
+    setTimeout(() => setGasCodeCopied(false), 2500);
   };
 
   const handleSaveItemModal = async (catIdx, prodIdx, product) => {
@@ -261,7 +320,8 @@ export default function AdminPage() {
     const settingsData = [
       { "Kunci Pengaturan": "Nomor WhatsApp", "Nilai": storeData.wa },
       { "Kunci Pengaturan": "Teks Footer / Catatan", "Nilai": storeData.thx },
-      { "Kunci Pengaturan": "String QRIS Statis", "Nilai": storeData.qris || '' }
+      { "Kunci Pengaturan": "String QRIS Statis", "Nilai": storeData.qris || '' },
+      { "Kunci Pengaturan": "URL Google Apps Script", "Nilai": storeData.gasUrl || '' }
     ];
 
     const wb = XLSX.utils.book_new();
@@ -295,6 +355,7 @@ export default function AdminPage() {
         let newWa = storeData.wa;
         let newThx = storeData.thx;
         let newQris = storeData.qris;
+        let newGasUrl = storeData.gasUrl;
 
         if (wb.Sheets["Pengaturan Toko"]) {
           const settingsRows = XLSX.utils.sheet_to_json(wb.Sheets["Pengaturan Toko"]);
@@ -304,6 +365,7 @@ export default function AdminPage() {
             if (k.includes("whatsapp") && v) newWa = v;
             if (k.includes("footer") && v) newThx = v;
             if (k.includes("qris") && v) newQris = v;
+            if ((k.includes("apps script") || k.includes("google") || k.includes("gas") || k.includes("sheet")) && v) newGasUrl = v;
           });
         }
 
@@ -346,7 +408,7 @@ export default function AdminPage() {
         });
 
         const newSections = catOrder.map(name => new Category(catMap[name]));
-        setStoreData({ wa: newWa, thx: newThx, qris: newQris, sections: newSections });
+        setStoreData({ wa: newWa, thx: newThx, qris: newQris, gasUrl: newGasUrl, sections: newSections });
         setIsDirty(true);
         showToast("Data Excel berhasil di-import! Silakan simpan. 📊✅");
       } catch (err) {
@@ -942,7 +1004,120 @@ export default function AdminPage() {
         {/* TAB 2: PENGATURAN TOKO (SETTINGS) */}
         {mobileTab === 'settings' && (
           <div className="mobile-settings-view">
-            <div className="app-card-panel">
+            {/* Database Cloud Google Apps Script (Lifetime) */}
+            <div className="app-card-panel" style={{ border: '2px solid #81c784', background: '#fbfefb' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '8px' }}>
+                <h2 className="section-heading" style={{ margin: 0, color: '#1b5e20' }}>🌐 Database Cloud (Google Sheets)</h2>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    background: storeData.gasUrl ? '#e8f5e9' : '#fff3e0',
+                    color: storeData.gasUrl ? '#2e7d32' : '#e65100',
+                    border: `1px solid ${storeData.gasUrl ? '#a5d6a7' : '#ffe082'}`
+                  }}
+                >
+                  {storeData.gasUrl ? '🟢 Cloud Active (Lifetime)' : '🟡 Local Storage Only'}
+                </span>
+              </div>
+              <p className="section-subtext" style={{ marginBottom: '12px' }}>
+                Database 100% gratis selamanya menggunakan Google Sheets melalui Google Apps Script Web App (pengganti Firebase).
+              </p>
+
+              <div className="app-input-group">
+                <label className="app-label">URL Google Apps Script Web App</label>
+                <input
+                  type="text"
+                  value={storeData.gasUrl || ''}
+                  onChange={(e) => {
+                    const val = e.target.value.trim();
+                    setStoreData({ ...storeData, gasUrl: val });
+                    storeRepository.setGasUrl(val);
+                    setIsDirty(true);
+                    setGasTestResult(null);
+                  }}
+                  placeholder="https://script.google.com/macros/s/.../exec"
+                  className="app-text-input"
+                  style={{ fontFamily: 'monospace', fontSize: '12px' }}
+                />
+                <span className="app-helper-text">
+                  Masukkan Web App URL yang berakhiran <b>/exec</b> dari Google Apps Script Anda.
+                </span>
+              </div>
+
+              {gasTestResult && (
+                <div
+                  style={{
+                    marginTop: '10px',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    fontSize: '12.5px',
+                    background: gasTestResult.success ? '#e8f5e9' : '#ffebee',
+                    color: gasTestResult.success ? '#1b5e20' : '#c62828',
+                    border: `1px solid ${gasTestResult.success ? '#c8e6c9' : '#ffcdd2'}`
+                  }}
+                >
+                  {gasTestResult.success ? '✅ ' + (gasTestResult.message || 'Terhubung dengan sukses!') : '❌ ' + gasTestResult.error}
+                </div>
+              )}
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '14px' }}>
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={handleTestGas}
+                  disabled={isTestingGas || !storeData.gasUrl}
+                  style={{ justifyContent: 'center', padding: '10px', fontSize: '13px', fontWeight: 700 }}
+                >
+                  {isTestingGas ? '⏳ Menguji...' : '⚡ Tes Koneksi'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={handleSyncToGas}
+                  disabled={isSyncingGas || !storeData.gasUrl}
+                  style={{
+                    justifyContent: 'center',
+                    padding: '10px',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    color: '#2e7d32',
+                    borderColor: '#81c784',
+                    background: '#f1f8e9'
+                  }}
+                >
+                  {isSyncingGas ? '⏳ Menyimpan...' : '📤 Upload Data ke Sheet'}
+                </button>
+              </div>
+
+              <div style={{ marginTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowGasModal(true)}
+                  style={{
+                    width: '100%',
+                    background: '#f6fbf5',
+                    border: '1.5px dashed #81c784',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    color: '#2e7d32',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>📖</span> Lihat Panduan Setup & Salin Kode Apps Script
+                </button>
+              </div>
+            </div>
+
+            <div className="app-card-panel" style={{ marginTop: '14px' }}>
               <h2 className="section-heading">Kontak & Catatan Toko</h2>
               <p className="section-subtext">Nomor WhatsApp tujuan order dan pesan footer di nota pesanan.</p>
 
@@ -1169,6 +1344,87 @@ export default function AdminPage() {
         onConfirm={confirmDialog.onConfirm}
         onCancel={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
       />
+
+      {/* Modal Panduan Setup Google Apps Script */}
+      {showGasModal && (
+        <div className="modal-bg active" onClick={() => setShowGasModal(false)} style={{ zIndex: 1200 }}>
+          <div
+            className="modal-card modal-card-lg"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '580px', maxHeight: '88vh', display: 'flex', flexDirection: 'column' }}
+          >
+            <div className="modal-title">
+              <span>📖 Panduan Setup Google Apps Script (Lifetime)</span>
+              <button className="modal-close" onClick={() => setShowGasModal(false)}>✕</button>
+            </div>
+
+            <div style={{ overflowY: 'auto', paddingRight: '4px', flex: 1, fontSize: '13px', color: '#4a3319', lineHeight: 1.5 }}>
+              <p style={{ marginTop: 0 }}>
+                Ikuti 4 langkah mudah ini untuk membuat database cloud Google Sheets gratis selamanya:
+              </p>
+
+              <div style={{ background: '#fdfaf5', border: '1px solid #ebdcc8', borderRadius: '10px', padding: '12px', marginBottom: '12px' }}>
+                <b style={{ color: '#2e7d32' }}>1. Buat Google Sheets Baru</b>
+                <div>Buka <b>sheets.new</b> di browser, lalu beri nama spreadsheet Anda (misal: <i>Database Hay Day Daku Cello</i>).</div>
+              </div>
+
+              <div style={{ background: '#fdfaf5', border: '1px solid #ebdcc8', borderRadius: '10px', padding: '12px', marginBottom: '12px' }}>
+                <b style={{ color: '#2e7d32' }}>2. Buka Apps Script & Tempel Kode</b>
+                <div>Di menu atas Google Sheets, klik <b>Ekstensi</b> ➔ <b>Apps Script</b>. Hapus semua kode bawaan, lalu klik tombol hijau di bawah untuk menyalin seluruh kodenya dan tempel (Paste) di sana, lalu Simpan (Ctrl+S).</div>
+                <button
+                  type="button"
+                  onClick={handleCopyGasCode}
+                  style={{
+                    marginTop: '8px',
+                    background: gasCodeCopied ? '#2e7d32' : '#43a047',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  {gasCodeCopied ? '✅ Kode Berhasil Disalin!' : '📋 Salin Seluruh Kode (Code.gs)'}
+                </button>
+              </div>
+
+              <div style={{ background: '#fdfaf5', border: '1px solid #ebdcc8', borderRadius: '10px', padding: '12px', marginBottom: '12px' }}>
+                <b style={{ color: '#2e7d32' }}>3. Terapkan (Deploy) Sebagai Web App</b>
+                <div>
+                  Klik tombol biru <b>Deploy (Terapkan)</b> di pojok kanan atas ➔ <b>Deployment baru</b>.
+                  <ul style={{ margin: '4px 0 0', paddingLeft: '18px' }}>
+                    <li>Pilih jenis: <b>Aplikasi web (Web app)</b></li>
+                    <li>Jalankan sebagai: <b>Saya (Me)</b></li>
+                    <li>Siapa yang memiliki akses: <b>Siapa saja (Anyone)</b> <i>(Wajib agar website bisa akses)</i></li>
+                  </ul>
+                  Klik <b>Deploy</b>, berikan izin akses Google, lalu salin URL yang berakhiran <b>/exec</b>.
+                </div>
+              </div>
+
+              <div style={{ background: '#fdfaf5', border: '1px solid #ebdcc8', borderRadius: '10px', padding: '12px' }}>
+                <b style={{ color: '#2e7d32' }}>4. Masukkan URL ke Kolom Pengaturan</b>
+                <div>Tempelkan URL tersebut ke kolom <b>URL Google Apps Script</b> di dashboard admin ini, lalu klik <b>Tes Koneksi</b> & <b>Simpan Pengaturan</b>.</div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid #ebdcc8', display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                type="button"
+                className="btn btn-default"
+                onClick={() => setShowGasModal(false)}
+                style={{ padding: '8px 16px', fontWeight: 700 }}
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Toast Alert */}
       <div className={`toast ${toastMessage ? 's' : ''}`}>{toastMessage}</div>
