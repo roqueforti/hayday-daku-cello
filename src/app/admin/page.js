@@ -308,6 +308,7 @@ export default function AdminPage() {
           "Satuan Dasar": it.unit,
           "Jenis Satuan": it.unitType,
           "Minimal Beli": it.minQty !== null && it.minQty !== undefined ? it.minQty : '',
+          "Jumlah Stok": it.stock !== null && it.stock !== undefined ? it.stock : '',
           "Harga (Rp)": it.price,
           "Deskripsi / Catatan": it.description,
           "Warna Label": it.color,
@@ -328,7 +329,7 @@ export default function AdminPage() {
     const wsProducts = XLSX.utils.json_to_sheet(productsData);
     wsProducts["!cols"] = [
       { wch: 22 }, { wch: 18 }, { wch: 24 }, { wch: 14 },
-      { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 32 }, { wch: 14 },
+      { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 14 }, { wch: 32 }, { wch: 14 },
       { wch: 26 }, { wch: 18 }
     ];
     XLSX.utils.book_append_sheet(wb, wsProducts, "Daftar Produk");
@@ -394,12 +395,16 @@ export default function AdminPage() {
             catOrder.push(catName);
           }
 
+          const stokRaw = row["Jumlah Stok"] !== undefined ? row["Jumlah Stok"] : row["Stok"];
+          const parsedStok = stokRaw !== undefined && stokRaw !== '' && !isNaN(Number(stokRaw)) ? Number(stokRaw) : null;
+
           catMap[catName].items.push(new Product({
             id: (row["ID Produk"] || "").toString().trim() || ('item_' + Date.now()),
             name: (row["Nama Produk"] || "").toString().trim(),
             u: row["Satuan Dasar"] !== undefined ? Number(row["Satuan Dasar"]) : 100,
             ut: (row["Jenis Satuan"] || "pcs").toString().trim(),
             min: row["Minimal Beli"] !== undefined && row["Minimal Beli"] !== '' ? Number(row["Minimal Beli"]) : null,
+            stok: parsedStok,
             p: Number(row["Harga (Rp)"]) || 0,
             d: (row["Deskripsi / Catatan"] || "").toString().trim(),
             c: (row["Warna Label"] || "#46b23c").toString().trim(),
@@ -914,15 +919,22 @@ export default function AdminPage() {
                         const actualIdx = originalIdx >= 0 ? originalIdx : pIdx;
 
                         return (
-                          <div key={prod.id || pIdx} className="hayday-crate-card">
+                          <div key={prod.id || pIdx} className={`hayday-crate-card ${prod.isOutOfStock() ? 'is-oos' : ''}`}>
                             {/* Wooden Tray Display */}
                             <div
-                              className="hayday-crate-tray"
+                              className={`hayday-crate-tray ${prod.isOutOfStock() ? 'out-of-stock' : ''}`}
                               onClick={() => openEditItemModal(sIdx, actualIdx)}
                             >
                               <div className="crate-tray-badge">
                                 {prod.unit}x {prod.unitType}
                               </div>
+
+                              {/* Penanda HABIS di Wadah Peti Kayu */}
+                              {prod.isOutOfStock() && (
+                                <div className="admin-crate-oos-overlay">
+                                  <span>HABIS</span>
+                                </div>
+                              )}
 
                               <div className="crate-tray-icon">
                                 {prod.icons && prod.icons.length > 1 ? (
@@ -945,6 +957,22 @@ export default function AdminPage() {
                               onClick={() => openEditItemModal(sIdx, actualIdx)}
                             >
                               <div className="crate-item-name">{prod.name}</div>
+
+                              {/* Indikator Status Stok Admin */}
+                              {prod.isOutOfStock() ? (
+                                <div className="admin-stock-pill oos">
+                                  ❌ Stok Habis (0)
+                                </div>
+                              ) : prod.hasStockLimit() ? (
+                                <div className={`admin-stock-pill ${prod.stock <= 20 ? 'low' : 'available'}`}>
+                                  📦 Stok: <b>{prod.stock}</b> {prod.unitType}
+                                </div>
+                              ) : (
+                                <div className="admin-stock-pill unlimited">
+                                  ♾️ Stok: Bebas
+                                </div>
+                              )}
+
                               <div className="crate-item-price">
                                 Rp{prod.price.toLocaleString('id-ID')}
                                 <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)', marginLeft: '4px' }}>
@@ -1763,6 +1791,73 @@ export default function AdminPage() {
             inset 0 4px 6px rgba(90, 50, 10, 0.35),
             inset 0 -3px 4px rgba(255, 255, 255, 0.3);
           overflow: visible;
+        }
+        .hayday-crate-tray.out-of-stock {
+          filter: grayscale(60%);
+          background: linear-gradient(180deg, #d3c4b1 0%, #beaf9b 100%);
+          border-color: #a89985;
+        }
+        .admin-crate-oos-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(185, 28, 28, 0.45);
+          border-radius: 12px;
+          z-index: 3;
+        }
+        .admin-crate-oos-overlay span {
+          background: #dc2626;
+          color: #ffffff;
+          font-family: 'Lilita One', Impact, sans-serif;
+          font-size: 14px;
+          letter-spacing: 1px;
+          padding: 2px 10px;
+          border-radius: 999px;
+          border: 1.5px solid #fff;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+          transform: rotate(-6deg);
+        }
+        .hayday-crate-card.is-oos {
+          background: #fbf5f2;
+          border-color: #bb9e8c;
+          box-shadow: 0 4px 0 #9f8373, 0 6px 12px rgba(56, 26, 7, 0.15);
+        }
+
+        .admin-stock-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          font-family: 'Fredoka', 'Nunito', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 999px;
+          width: fit-content;
+          margin-top: 3px;
+          letter-spacing: 0.1px;
+        }
+        .admin-stock-pill.oos {
+          background: #fee2e2;
+          color: #b91c1c;
+          border: 1px solid #fca5a5;
+          font-weight: 800;
+        }
+        .admin-stock-pill.low {
+          background: #fff7ed;
+          color: #c2410c;
+          border: 1px solid #fed7aa;
+        }
+        .admin-stock-pill.available {
+          background: #f0fdf4;
+          color: #166534;
+          border: 1px solid #bbf7d0;
+        }
+        .admin-stock-pill.unlimited {
+          background: #f3f4f6;
+          color: #4b5563;
+          border: 1px solid #e5e7eb;
         }
         .hayday-crate-tray::before {
           content: "";

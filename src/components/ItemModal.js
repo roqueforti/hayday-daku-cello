@@ -16,6 +16,7 @@ export function ItemModal({
   const [unit, setUnit] = useState(100);
   const [unitType, setUnitType] = useState('pcs');
   const [minQty, setMinQty] = useState('');
+  const [stock, setStock] = useState('');
   const [price, setPrice] = useState(1000); // total harga untuk `unit` dasar
   const [pricePerUnit, setPricePerUnit] = useState('10'); // harga per 1 pcs / satuan
   const [color, setColor] = useState('#46b23c');
@@ -34,6 +35,7 @@ export function ItemModal({
         setUnit(u);
         setUnitType(initialProduct.unitType || 'pcs');
         setMinQty(initialProduct.minQty !== null && initialProduct.minQty !== undefined ? initialProduct.minQty : '');
+        setStock(initialProduct.stock !== null && initialProduct.stock !== undefined ? String(initialProduct.stock) : '');
         setPrice(p);
         setPricePerUnit(Number.isInteger(ppu) ? String(ppu) : ppu.toFixed(2));
         setColor(initialProduct.color || '#46b23c');
@@ -45,6 +47,7 @@ export function ItemModal({
         setUnit(100);
         setUnitType('pcs');
         setMinQty('');
+        setStock('');
         setPrice(1000);
         setPricePerUnit('10');
         setColor('#46b23c');
@@ -99,6 +102,7 @@ export function ItemModal({
     }
 
     const parsedMinQty = minQty !== '' && minQty !== null && !isNaN(Number(minQty)) ? Number(minQty) : null;
+    const parsedStock = stock !== '' && stock !== null && !isNaN(Number(stock)) ? Math.max(0, Number(stock)) : null;
 
     const product = new Product({
       id: initialProduct?.id || ('item_' + Date.now()),
@@ -106,6 +110,7 @@ export function ItemModal({
       u: Number(unit) || 1,
       ut: unitType,
       min: parsedMinQty,
+      stok: parsedStock,
       p: Number(price) || 0,
       c: color,
       d: description.trim(),
@@ -320,6 +325,111 @@ export function ItemModal({
                 />
                 <div className="hayday-hint">
                   👉 <b>Ketik di sini</b> kalau pembeli nggak boleh beli cuma 1. Misal minimal harus beli <b>10</b> biji. Kalau kosong, otomatis 10.
+                </div>
+              </div>
+
+              {/* Jumlah Stok Produk */}
+              <div className="fgroup">
+                <label className="hayday-label">📦 Jumlah Stok Tersedia</label>
+                <input
+                  type="number"
+                  className="hayday-input"
+                  min="0"
+                  step="1"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  placeholder="Kosongkan jika stok tidak terbatas"
+                />
+                {/* Tombol Cepat Pilihan Stok */}
+                <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => setStock('0')}
+                    style={{
+                      fontFamily: 'Fredoka, sans-serif',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '3px 10px',
+                      borderRadius: '999px',
+                      border: '1.5px solid #fca5a5',
+                      background: stock === '0' ? '#fee2e2' : '#ffffff',
+                      color: '#b91c1c',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🚫 Habis (0)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStock('20')}
+                    style={{
+                      fontFamily: 'Fredoka, sans-serif',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '3px 10px',
+                      borderRadius: '999px',
+                      border: '1.5px solid #fed7aa',
+                      background: stock === '20' ? '#ffedd5' : '#ffffff',
+                      color: '#c2410c',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    20
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStock('50')}
+                    style={{
+                      fontFamily: 'Fredoka, sans-serif',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '3px 10px',
+                      borderRadius: '999px',
+                      border: '1.5px solid #bbf7d0',
+                      background: stock === '50' ? '#dcfce7' : '#ffffff',
+                      color: '#15803d',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    50
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStock('100')}
+                    style={{
+                      fontFamily: 'Fredoka, sans-serif',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '3px 10px',
+                      borderRadius: '999px',
+                      border: '1.5px solid #bbf7d0',
+                      background: stock === '100' ? '#dcfce7' : '#ffffff',
+                      color: '#15803d',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    100
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStock('')}
+                    style={{
+                      fontFamily: 'Fredoka, sans-serif',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '3px 10px',
+                      borderRadius: '999px',
+                      border: '1.5px solid #e5e7eb',
+                      background: stock === '' ? '#f3f4f6' : '#ffffff',
+                      color: '#4b5563',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    ♾️ Tak Terbatas
+                  </button>
+                </div>
+                <div className="hayday-hint">
+                  👉 <b>Ketik jumlah stok</b> (contoh: <code>50</code> atau <code>100</code>). Ketik <code>0</code> jika <b>stok habis</b>. Kosongkan jika stok selalu tersedia tanpa batas.
                 </div>
               </div>
 

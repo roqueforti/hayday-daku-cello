@@ -572,7 +572,7 @@ function saveStoreData(data) {
   prodSheet.clear();
 
   var rows = [
-    ["Kategori", "Tipe Kategori", "ID Produk", "Nama Produk", "Satuan Dasar", "Jenis Satuan", "Harga (Rp)", "Minimal Beli", "Deskripsi", "Icon / Gambar", "Warna"]
+    ["Kategori", "Tipe Kategori", "ID Produk", "Nama Produk", "Satuan Dasar", "Jenis Satuan", "Harga (Rp)", "Minimal Beli", "Stok", "Deskripsi", "Icon / Gambar", "Warna"]
   ];
 
   payload.sections.forEach(function(sec) {
@@ -590,6 +590,7 @@ function saveStoreData(data) {
         it.ut || it.unitType || "pcs",
         it.p !== undefined ? it.p : (it.price || 0),
         it.min !== undefined && it.min !== null ? it.min : "",
+        it.stok !== undefined && it.stok !== null ? it.stok : (it.stock !== undefined && it.stock !== null ? it.stock : ""),
         it.d || it.description || "",
         it.e || it.icon || "",
         it.c || it.color || "#46b23c"

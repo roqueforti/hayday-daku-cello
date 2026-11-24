@@ -72,23 +72,44 @@ export default function StorePage() {
       newCart.setItem(item.product, item.quantity);
     }
 
+    if (product.isOutOfStock()) {
+      newCart.removeItem(product.id);
+      setCart(newCart);
+      showToast(`Maaf, stok ${product.name} sedang habis! 🚫`);
+      return;
+    }
+
     const min = product.getMinQuantity();
-    const parsed = Number(newQty);
+    let parsed = Number(newQty);
 
     if (isNaN(parsed) || parsed <= 0) {
       newCart.removeItem(product.id);
       showToast(`Dihapus: ${product.name}`);
-    } else if (parsed < min) {
-      // Jika diisi kurang dari batas minimum, otomatis setel ke minimum
-      newCart.setItem(product, min);
-      showToast(`Min. pembelian untuk ${product.name} adalah ${min} ${product.unitType}`);
     } else {
-      newCart.setItem(product, parsed);
+      if (product.hasStockLimit() && parsed > product.stock) {
+        parsed = product.stock;
+        showToast(`Maksimal pembelian untuk ${product.name} adalah ${product.stock} ${product.unitType}`);
+      }
+      if (parsed < min) {
+        // Jika stok tersedia lebih kecil dari minimal beli reguler
+        if (product.hasStockLimit() && product.stock < min) {
+          newCart.setItem(product, product.stock);
+        } else {
+          newCart.setItem(product, min);
+          showToast(`Min. pembelian untuk ${product.name} adalah ${min} ${product.unitType}`);
+        }
+      } else {
+        newCart.setItem(product, parsed);
+      }
     }
     setCart(newCart);
   };
 
   const handleStepQty = (product, delta) => {
+    if (product.isOutOfStock()) {
+      showToast(`Maaf, stok ${product.name} sedang habis! 🚫`);
+      return;
+    }
     const current = cart.getQuantity(product.id);
     const step = product.getStepQuantity();
     const min = product.getMinQuantity();
@@ -100,6 +121,12 @@ export default function StorePage() {
       next = current + (delta * step);
       if (next < min && delta < 0) next = 0;
     }
+
+    if (product.hasStockLimit() && next > product.stock) {
+      next = product.stock;
+      showToast(`Maksimal stok tercapai: ${product.stock} ${product.unitType}`);
+    }
+
     updateCartQuantity(product, next);
   };
 
@@ -304,6 +331,8 @@ export default function StorePage() {
                     {sec.items.map((prod) => {
                       const qty = cart.getQuantity(prod.id);
                       const isSelected = qty > 0;
+                      const isOutOfStock = prod.isOutOfStock();
+                      const hasStockLimit = prod.hasStockLimit();
                       const displayPrice = isSelected ? prod.calculatePriceForQuantity(qty) : prod.price;
                       const displayQty = isSelected ? qty : prod.unit;
                       const descText = prod.description && prod.description.trim()
@@ -311,9 +340,17 @@ export default function StorePage() {
                         : (sec.isPackage ? "Per paket" : `Min. beli ${prod.getMinQuantity()} • harga per ${prod.getUnitLabel()}`);
 
                       return (
-                        <div key={prod.id} className={`card ${isSelected ? 'on' : ''}`}>
+                        <div key={prod.id} className={`card ${isSelected ? 'on' : ''} ${isOutOfStock ? 'out-of-stock' : ''}`}>
                           <div className="crate-box">
-                            <div className="crate-qty">{displayQty}x</div>
+                            <div className="crate-qty">{isOutOfStock ? '0x' : `${displayQty}x`}</div>
+
+                            {/* Banner Penanda Stok Habis di Dalam Wadah Peti */}
+                            {isOutOfStock && (
+                              <div className="crate-oos-overlay">
+                                <span>HABIS</span>
+                              </div>
+                            )}
+
                             <div className="ico">
                               {prod.icons && prod.icons.length > 1 ? (
                                 <div className="ico-bundle">
@@ -336,10 +373,31 @@ export default function StorePage() {
                           </div>
 
                           <div className="nm">{prod.name}</div>
+
+                          {/* Penanda Status Stok Produk */}
+                          {isOutOfStock ? (
+                            <div className="stock-badge oos">
+                              🚫 Stok Habis
+                            </div>
+                          ) : hasStockLimit ? (
+                            <div className={`stock-badge ${prod.stock <= 20 ? 'low' : 'available'}`}>
+                              📦 Sisa Stok: <b>{prod.stock}</b> {prod.unitType}
+                            </div>
+                          ) : null}
+
                           <div className="desc">{descText}</div>
 
                           <div className="card-ctrl-container">
-                            {qty === 0 ? (
+                            {isOutOfStock ? (
+                              <button
+                                type="button"
+                                className="add btn-out-of-stock"
+                                disabled
+                                title="Stok produk ini sedang habis"
+                              >
+                                🚫 Stok Habis
+                              </button>
+                            ) : qty === 0 ? (
                               <button
                                 type="button"
                                 className="add"
@@ -355,10 +413,19 @@ export default function StorePage() {
                                     type="number"
                                     inputMode="numeric"
                                     min={prod.getMinQuantity()}
+                                    max={hasStockLimit ? prod.stock : undefined}
                                     value={qty}
                                     onChange={(e) => updateCartQuantity(prod, e.target.value)}
                                   />
-                                  <button type="button" onClick={() => handleStepQty(prod, 1)}>+</button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleStepQty(prod, 1)}
+                                    disabled={hasStockLimit && qty >= prod.stock}
+                                    className={hasStockLimit && qty >= prod.stock ? "btn-disabled" : ""}
+                                    title={hasStockLimit && qty >= prod.stock ? "Maksimal stok tercapai" : "Tambah"}
+                                  >
+                                    +
+                                  </button>
                                 </div>
                                 <div className="sub">
                                   {prod.unitType === 'paket' && qty === 1
@@ -1203,6 +1270,103 @@ export default function StorePage() {
           font-size: 17px;
           box-shadow: 0 3px 0 #1b6d14;
           z-index: 5;
+        }
+
+        /* Styling Produk Stok Habis (Out of Stock) */
+        .card.out-of-stock {
+          background: #fbf5f2;
+          border-color: #bb9e8c;
+          box-shadow: 0 4px 0 #9f8373, 0 6px 12px rgba(56, 26, 7, 0.15);
+        }
+        .card.out-of-stock:hover {
+          transform: none;
+        }
+        .card.out-of-stock .crate-box {
+          background: linear-gradient(180deg, #d3c4b1 0%, #beaf9b 100%);
+          border-color: #a89985;
+        }
+        .card.out-of-stock .ico {
+          filter: grayscale(85%) opacity(0.65);
+        }
+        .card.out-of-stock .price-tag-wrap {
+          opacity: 0.7;
+        }
+        .crate-oos-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(185, 28, 28, 0.45);
+          backdrop-filter: blur(1.5px);
+          border-radius: 12px;
+          z-index: 4;
+        }
+        .crate-oos-overlay span {
+          background: #dc2626;
+          color: #ffffff;
+          font-family: "Lilita One", Impact, sans-serif;
+          font-size: 19px;
+          letter-spacing: 2px;
+          padding: 4px 14px;
+          border-radius: 999px;
+          border: 2px solid #ffffff;
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+          transform: rotate(-7deg);
+          animation: pulseBanner 2s ease-in-out infinite;
+        }
+        @keyframes pulseBanner {
+          0%, 100% { transform: rotate(-7deg) scale(1); }
+          50% { transform: rotate(-7deg) scale(1.05); }
+        }
+
+        /* Penanda Stok Produk (Stock Badges) */
+        .stock-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          font-family: "Fredoka", "Nunito", sans-serif;
+          font-size: 11.5px;
+          font-weight: 700;
+          padding: 2.5px 9px;
+          border-radius: 999px;
+          margin: 3px auto 2px;
+          width: fit-content;
+          letter-spacing: 0.2px;
+        }
+        .stock-badge.oos {
+          background: #fee2e2;
+          color: #b91c1c;
+          border: 1.5px solid #fca5a5;
+          font-weight: 800;
+        }
+        .stock-badge.low {
+          background: #fff7ed;
+          color: #c2410c;
+          border: 1.5px solid #fed7aa;
+          animation: pulseLowStock 1.6s ease-in-out infinite alternate;
+        }
+        @keyframes pulseLowStock {
+          from { opacity: 0.85; transform: scale(0.98); }
+          to { opacity: 1; transform: scale(1.02); }
+        }
+        .stock-badge.available {
+          background: #f0fdf4;
+          color: #166534;
+          border: 1.5px solid #bbf7d0;
+        }
+
+        .btn-out-of-stock {
+          background: #9ca3af !important;
+          box-shadow: 0 3px 0 #6b7280 !important;
+          cursor: not-allowed !important;
+          opacity: 0.85;
+        }
+        .ctl button.btn-disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
+          box-shadow: none;
         }
 
         /* Wadah Peti Kayu Bagian Dalam (Wood Box Tray) */

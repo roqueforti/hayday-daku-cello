@@ -10,8 +10,23 @@ export class Product {
     this.price = Number(data.p !== undefined ? data.p : (data.price || 0));
     this.description = data.d || data.description || '';
     this.color = data.c || data.color || '#46b23c';
-    this.minQty = data.min !== undefined ? Number(data.min) : null;
+    this.minQty = (data.min !== undefined && data.min !== null && data.min !== '') ? Number(data.min) : null;
+    this.stock = (data.stok !== undefined && data.stok !== null && data.stok !== '')
+      ? Number(data.stok)
+      : ((data.stock !== undefined && data.stock !== null && data.stock !== '') ? Number(data.stock) : null);
     this.options = data.opsi || data.options || '';
+  }
+
+  hasStockLimit() {
+    return this.stock !== null && this.stock !== undefined && !isNaN(this.stock);
+  }
+
+  isOutOfStock() {
+    return this.hasStockLimit() && this.stock <= 0;
+  }
+
+  getStock() {
+    return this.hasStockLimit() ? this.stock : null;
   }
 
   getUnitValue() {
@@ -68,6 +83,9 @@ export class Product {
     }
     if (this.minQty !== null && this.minQty !== undefined) {
       obj.min = this.minQty;
+    }
+    if (this.hasStockLimit()) {
+      obj.stok = this.stock;
     }
     if (this.options) {
       obj.opsi = this.options;
